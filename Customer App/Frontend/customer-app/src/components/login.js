@@ -1,20 +1,35 @@
 // Login.js
 import React, { useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
+import { FaGoogle } from 'react-icons/fa'
 import { Form, Input, Button } from 'antd';
+import { auth , googleProvider} from "../config/firebase";
+import {signInWithEmailAndPassword,signInWithPopup} from 'firebase/auth';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleEmailPasswordLogin = (values) => {
-    console.log('Email:', values.email);
-    console.log('Password:', values.password);
+  const handleEmailPasswordLogin = async (values) => {
+    const { email, password } = values;
+    try {
+      await signInWithEmailAndPassword(auth,email, password);
+      // Redirect to a protected route or do something else upon successful login
+      navigate('/home');
+    } catch (error) {
+      console.error('Error logging in with email/password:', error);
+      alert('Login Failed.')
+    }
   };
 
-  const handleGoogleSignIn = () => {
-    // Handle Google sign-in here
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithPopup(auth,googleProvider);
+      // Redirect to a protected route or do something else upon successful login
+      navigate('/home');
+    } catch (error) {
+      console.error('Error logging in with Google:', error);
+      alert('Login Failed.')
+    }
   };
 
   return (
@@ -61,7 +76,7 @@ function Login() {
           </Form.Item>
         </Form>
         <center>
-          <Button onClick={handleGoogleSignIn}>Login with Google</Button> <br />
+          <Button icon={<FaGoogle />} onClick={handleGoogleSignIn}>Login with Google</Button> <br />
           
           Don't have an account? <Link to="/signup">Sign up</Link>
         </center>

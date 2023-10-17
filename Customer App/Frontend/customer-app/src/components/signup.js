@@ -1,20 +1,34 @@
 // Signup.js
 import React, { useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
+import { FaGoogle } from 'react-icons/fa'
 import { Form, Input, Button } from 'antd';
+import { auth , googleProvider} from "../config/firebase";
+import {createUserWithEmailAndPassword,signInWithPopup} from 'firebase/auth';
 
 function Signup() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSignUpEmailPassword = (values) => {
-    console.log('Email:', values.email);
-    console.log('Password:', values.password);
+  const handleSignUpEmailPassword = async (values) => {
+    const { email, password } = values;
+    try {
+      await createUserWithEmailAndPassword(auth,email, password);
+      // Redirect to a protected route or do something else upon successful sign-up
+      navigate('/home');
+    } catch (error) {
+      console.error('Error signing up with email/password:', error);
+      alert(error)
+    }
   };
 
-  const handleGoogleSignUp = () => {
-    
+  const handleGoogleSignUp = async () => {
+    try {
+      await signInWithPopup(auth,googleProvider);
+      // Redirect to a protected route or do something else upon successful sign-up
+      navigate('/home');
+    } catch (error) {
+      console.error('Error signing up with Google:', error);
+    }
   };
 
   return (
@@ -61,7 +75,7 @@ function Signup() {
           </Form.Item>
         </Form>
         <center>
-          <Button onClick={handleGoogleSignUp}>Login with Google</Button>
+          <Button icon={<FaGoogle />} onClick={handleGoogleSignUp}>Login with Google</Button>
           <div>
             Already have an account? <Link to="/">Login</Link>
           </div>
