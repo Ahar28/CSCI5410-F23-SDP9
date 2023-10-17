@@ -1,4 +1,4 @@
-// Signup.js
+// import modules and functions
 import React, { useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import { FaGoogle } from 'react-icons/fa'
@@ -6,31 +6,50 @@ import { Form, Input, Button } from 'antd';
 import { auth , googleProvider} from "../config/firebase";
 import {createUserWithEmailAndPassword,signInWithPopup} from 'firebase/auth';
 
+// Sign Up function
+// elements from
+// [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password 
+// and google sign-in,” Medium, 
+// https://blog.bitsrc.io/firebase-authentication-with-react-for-beginners-implementing-email-password-and-google-sign-in-e62d9094e22 (accessed Oct. 17, 2023). 
 function Signup() {
+  // navigate variable to use for BrowserRouter
   const navigate = useNavigate();
 
+  // function used if sign up done through Email and Password
   const handleSignUpEmailPassword = async (values) => {
+    
     const { email, password } = values;
+    
     try {
+      // Call in-built firebase function to sign up with email and password
       await createUserWithEmailAndPassword(auth,email, password);
-      // Redirect to a protected route or do something else upon successful sign-up
+
+      // Redirect to restaurantList Page
       navigate('/home');
     } catch (error) {
+      // Log and alert the error
       console.error('Error signing up with email/password:', error);
       alert(error)
     }
   };
 
+  // function used if sign up done through Google Single Sign on
   const handleGoogleSignUp = async () => {
+    
     try {
+      // Call in-built firebase function to log in with google single sign on pop up
       await signInWithPopup(auth,googleProvider);
-      // Redirect to a protected route or do something else upon successful sign-up
+
+      // Redirect to restaurantList Page
       navigate('/home');
     } catch (error) {
+      // Log and alert the error
       console.error('Error signing up with Google:', error);
+      alert('Sign Up error' + error);
     }
   };
 
+  // Frontend elements
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <div style={{ width: '50%' }}>

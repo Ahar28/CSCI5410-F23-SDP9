@@ -9,6 +9,7 @@ import {BrowserRouter} from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  // Selecting Browser Router for routing different pages
   <React.StrictMode>
     <BrowserRouter>
       <App />

@@ -4,6 +4,12 @@ import {getAuth, GoogleAuthProvider} from 'firebase/auth'
 // // TODO: Add SDKs for Firebase products that you want to use
 // // https://firebase.google.com/docs/web/setup#available-libraries
 
+
+// Referenced
+// [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password 
+// and google sign-in,” Medium, 
+// https://blog.bitsrc.io/firebase-authentication-with-react-for-beginners-implementing-email-password-and-google-sign-in-e62d9094e22 (accessed Oct. 17, 2023). 
+
 // Your web app's Firebase configuration
 export const firebaseConfig = {
   apiKey: "AIzaSyCH2_Nc7sEHZoRsaHESUc32lpe9QFq5SeU",
