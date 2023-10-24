@@ -6,6 +6,7 @@ import { Button } from 'antd';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { Card } from 'antd';
+import axios from 'axios';
 const { Meta } = Card;
 // Restaurant List function
 // elements from 
@@ -42,9 +43,17 @@ function RestaurantList() {
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
   }, []);
-  useEffect(()=>{
-
-  })
+  // useEffect(()=>{
+  //   async function fetchRestuarants (){
+  //   const headers = {
+  //     'Content-type':'application/json'
+  //   }
+  //   const resData = await axios.get("https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",{headers});
+  //   const resJsonData = JSON.parse(resData.body);
+  //   console.log(resJsonData);
+  // }
+  // fetchRestuarants();
+  // },[restaurants])
   const handleOnClick = async () =>{
     navigate('/restaurantpage')
   }

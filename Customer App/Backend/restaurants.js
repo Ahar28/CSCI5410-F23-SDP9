@@ -4,11 +4,12 @@ AWS.config.update({
 })
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const resTab = 'restaurant_details';
+const resTab = 'restaurant_details'; 
 const restaurantPath = '/restaurant';
 const restaurantsPath = '/restaurants';
 const menuPath = restaurantPath+'/menu';
 const availabilityPath = restaurantPath+'/availabletime';
+const listPath = restaurantsPath + '/list';
 exports.handler = async function(event,context) {
     let response;
     switch(true){
@@ -24,6 +25,8 @@ exports.handler = async function(event,context) {
         case event.context["http-method"]=='GET' && event.context["resource-path"]==availabilityPath:
             response = await getAvailability(event.params.querystring.restaurantId);
             break;
+        case event.context["http-method"]=='GET' && event.context["resource-path"]==listPath:
+            response = await getListofRestaurants();
     }
     return response;
 };
@@ -54,6 +57,32 @@ async function getRestaurants(){
     return {
         statusCode:200,
         body:JSON.stringify(data)
+    };
+    } catch(error){
+        return {error};
+    }
+}
+async function getListofRestaurants(){
+    try{
+    const params={
+        TableName: resTab
+    };
+    const data = await scanDynamoRecords(params,[]);
+    let sendData=[];
+    console.log(data)
+    for(let obj of data){
+        let currObj = {
+            restaurant_name : obj.restaurant_name,
+            restaurant_id : obj.restaurant_id,
+            address : obj.address,
+            images : obj.images,
+            is_open : obj.is_open
+        }
+        sendData.push(currObj);
+    }
+    return {
+        statusCode:200,
+        body:JSON.stringify(sendData)
     };
     } catch(error){
         return {error};
