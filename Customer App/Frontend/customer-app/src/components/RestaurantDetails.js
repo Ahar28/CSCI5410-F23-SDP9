@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './../RestaurantDetails.css'
 import { Button } from 'antd';
+import axios from 'axios';
 function RestaurantDetails (){
     const navigate=useNavigate();
+    const {restaurant_id}=useParams();
     const [restaurantData,setRestaurantData]=useState({
-        restaurantName:'indian cuisine',
+        restaurant_name:'indian cuisine',
         address:"100, This street, Halifax, NS A1B 2C3",
         images:["https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg"],
-        isOpen:true,
+        is_open:true,
         menu:[
             {
                 image:"https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-                isAvailable:true,
-                menuReviewOverall:{
-                    totalRatingCounts:2,
-                    totalRatingValues:8
+                is_available:true,
+                menu_review_overall:{
+                    total_numberratings:2,
+                    total_ratingvalue:8
                 },
-                itemName:'Starter',
-                percentOffer:10,
+                name:'Starter',
+                percent_offer:10,
                 price:12.99,
                 reviews:[
                     {
@@ -35,13 +37,13 @@ function RestaurantDetails (){
             },
             {
                 image:"https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-                isAvailable:true,
-                menuReviewOverall:{
-                    totalRatingCounts:1,
-                    totalRatingValues:5
+                is_available:true,
+                menu_review_overall:{
+                    total_numberratings:1,
+                    total_ratingvalue:5
                 },
-                itemName:'Shahi Paneer',
-                percentOffer:5,
+                name:'Shahi Paneer',
+                percent_offer:5,
                 price:18.99,
                 reviews:[
                     {
@@ -52,8 +54,8 @@ function RestaurantDetails (){
                 ]
             }
         ],
-        restaurantOffer:'up to 10% off',
-        restaurantReviews:[
+        restaurant_offer:'up to 10% off',
+        restaurant_reviews:[
             {
                 rating:5,
                 review:'good Restaurant',
@@ -65,9 +67,9 @@ function RestaurantDetails (){
                 user_id:2
             }
         ],
-        restaurantReviewOverall:{
-            totalRatingCounts:2,
-            totalRatingValues:9
+        restaurant_review_overall:{
+            total_numberratings:2,
+            total_ratingvalue:9
         },
         tables:[
             {
@@ -81,47 +83,57 @@ function RestaurantDetails (){
         ],
         timings:{
             monday:{
-                openingTime:1100,
-                closingTime:2200
+                opening_time:1100,
+                closing_time:2200
             },
             tuesday:{
-                openingTime:1100,
-                closingTime:2200
+                opening_time:1100,
+                closing_time:2200
             },
             wednesday:{
-                openingTime:1100,
-                closingTime:2200
+                opening_time:1100,
+                closing_time:2200
             },
             thursday:{
-                openingTime:1100,
-                closingTime:2200
+                opening_time:1100,
+                closing_time:2200
             },
             friday:{
-                openingTime:1100,
-                closingTime:2200
+                opening_time:1100,
+                closing_time:2200
             },
             saturday:{
-                openingTime:1100,
-                closingTime:2200
+                opening_time:1100,
+                closing_time:2200
             },
             sunday:{
-                openingTime:1100,
-                closingTime:2200
+                opening_time:1100,
+                closing_time:2200
             }
         }
     })
-    useEffect=()=>{
-
-    }
+    useEffect(()=>{
+        async function fetchRestuarantDetail(){
+            const headers = {
+              'Content-type':'application/json'
+            }
+            const resData = await axios.get(`https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${restaurant_id}`,{headers});
+            console.log(resData)
+            const resJsonData = JSON.parse(resData.data.body);
+            setRestaurantData(resJsonData.Item);
+            console.log(resJsonData.Item)
+          }
+          fetchRestuarantDetail();
+    },[])
     const handleReserveClick=()=>{
         navigate('/')//add reservation page name
     }
     return(<div className='restaurant-details'>
-        <h1>{restaurantData.restaurantName}</h1>
+        <h1>{restaurantData.restaurant_name}</h1>
       <div>
         <strong>Address:</strong> {restaurantData.address}
       </div>
-      <div> {restaurantData.isOpen ? <strong>Open</strong> : <strong>Closed</strong>}
+      <div> {restaurantData.is_open ? <strong>Open</strong> : <strong>Closed</strong>}
       </div>
       <div className='images'>
         {restaurantData.images.map((image, index) => (
@@ -135,18 +147,18 @@ function RestaurantDetails (){
             <div className='menu-item'>
               <img src={item.image} alt={`Menu Item Image ${index}`} />
             </div>
-            <div>{item.itemName}</div>
+            <div>{item.name}</div>
             <div>{item.price}</div>
           </li>
         ))}
       </ul>
 
       <h2>Restaurant Offer</h2>
-      <div>{restaurantData.restaurantOffer}</div>
+      <div>{restaurantData.restaurant_offer}</div>
 
       <h2>Restaurant Reviews</h2>
       <ul>
-        {restaurantData.restaurantReviews.map((review, index) => (
+        {restaurantData.restaurant_reviews.map((review, index) => (
           <li key={index}>
             <div>Rating: {review.rating}</div>
             <div>{review.review}</div>
@@ -165,13 +177,13 @@ function RestaurantDetails (){
       </ul>
 
       <h2>Timings</h2>
-      <div>Monday:    {restaurantData.timings.monday.openingTime}    - {restaurantData.timings.monday.closingTime}</div>
-      <div>Tuesday:   {restaurantData.timings.tuesday.openingTime}   - {restaurantData.timings.tuesday.closingTime}</div>
-      <div>wednesday: {restaurantData.timings.wednesday.openingTime} - {restaurantData.timings.wednesday.closingTime}</div>
-      <div>Thursday:  {restaurantData.timings.thursday.openingTime}  - {restaurantData.timings.thursday.closingTime}</div>
-      <div>Friday:    {restaurantData.timings.friday.openingTime}    - {restaurantData.timings.friday.closingTime}</div>
-      <div>saturday:  {restaurantData.timings.saturday.openingTime}  - {restaurantData.timings.saturday.closingTime}</div>
-      <div>Sunday:    {restaurantData.timings.sunday.openingTime}    - {restaurantData.timings.sunday.closingTime}</div>
+      <div>Monday:    {restaurantData.timings.monday.opening_time}    - {restaurantData.timings.monday.closing_time}</div>
+      <div>Tuesday:   {restaurantData.timings.tuesday.opening_time}   - {restaurantData.timings.tuesday.closing_time}</div>
+      <div>wednesday: {restaurantData.timings.wednesday.opening_time} - {restaurantData.timings.wednesday.closing_time}</div>
+      <div>Thursday:  {restaurantData.timings.thursday.opening_time}  - {restaurantData.timings.thursday.closing_time}</div>
+      <div>Friday:    {restaurantData.timings.friday.opening_time}    - {restaurantData.timings.friday.closing_time}</div>
+      <div>saturday:  {restaurantData.timings.saturday.opening_time}  - {restaurantData.timings.saturday.closing_time}</div>
+      <div>Sunday:    {restaurantData.timings.sunday.opening_time}    - {restaurantData.timings.sunday.closing_time}</div>
 
       <Button onClick={handleReserveClick}>Reserve</Button>
     </div>);

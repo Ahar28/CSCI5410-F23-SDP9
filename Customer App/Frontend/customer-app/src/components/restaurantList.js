@@ -20,9 +20,9 @@ function RestaurantList() {
   // User Detail variable
   const [user, setUser] = useState(null);
   const [restaurants,setRestaurants]= useState([
-    {id:1,name:'Restaurant 1',image: 'https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg'},
-    {id:2,name:'Restaurant 2',image:'https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg'},
-    {id:3,name:'Restaurant 3',image:'https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg'}
+    {id:1,restaurant_name:'Restaurant 1',images: ['https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg']},
+    {id:2,restaurant_name:'Restaurant 2',images:['https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg']},
+    {id:3,restaurant_name:'Restaurant 3',images:['https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg']}
   ])
 
   // Function called when page is loaded, kind of like main function or init function
@@ -43,20 +43,19 @@ function RestaurantList() {
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
   }, []);
-  // useEffect(()=>{
-  //   async function fetchRestuarants (){
-  //   const headers = {
-  //     'Content-type':'application/json'
-  //   }
-  //   const resData = await axios.get("https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",{headers});
-  //   const resJsonData = JSON.parse(resData.body);
-  //   console.log(resJsonData);
-  // }
-  // fetchRestuarants();
-  // },[restaurants])
-  const handleOnClick = async () =>{
-    navigate('/restaurantpage')
+  useEffect(()=>{
+    async function fetchRestuarants (){
+    const headers = {
+      'Content-type':'application/json'
+    }
+    const resData = await axios.get("https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",{headers});
+    console.log(resData)
+    const resJsonData = JSON.parse(resData.data.body);
+    setRestaurants(resJsonData);
   }
+  fetchRestuarants();
+  },[])
+  
   // Sign Out function
   const handleSignOut = async () => {
     
@@ -72,7 +71,9 @@ function RestaurantList() {
       alert('Sign out error')
     }
   };
-
+  const handleViewDetails = async (restaurant_id) =>{
+    navigate(`/restaurantpage/${restaurant_id}`)
+  }
   // Frontend elements
   return (
     <div>
@@ -91,15 +92,15 @@ function RestaurantList() {
             cover={
               <img
                 alt="example"
-                src={restaurant.image}
+                src={restaurant.images[0]}
               />
             }
             actions={[
-              <Button type='primary' onClick={handleOnClick}>View Details</Button>
+              <Button type='primary' onClick={()=>handleViewDetails(restaurant.restaurant_id)}>View Details</Button>
             ]}
           >
             <Meta
-              title={restaurant.name}
+              title={restaurant.restaurant_name}
             />
           </Card>
           ))}
