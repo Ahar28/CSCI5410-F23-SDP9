@@ -9,7 +9,6 @@ admin.initializeApp({
 
 exports.handler = async (event, context) => {
   try {
-    console.log("ahar testing");
     // Initialize Firestore
     const db = admin.firestore();
    
@@ -22,19 +21,12 @@ exports.handler = async (event, context) => {
       // Add other data fields as needed
     };
 
-    console.log("data to store json " + JSON.stringify(dataToStore))
-
     // Reference to the Firestore collection
-    console.log("reached before collection reference")
     const collectionRef = db.collection('Customer-Reservation'); // Replace with your collection name
-    console.log("reached after collection reference")
-
+    
     // Add a new document with a generated ID
-    console.log("reached before adding the doc line")
     const docRef = await collectionRef.add(dataToStore);
-    console.log("reached after adding the doc line")
 
-    console.log("here comes the return json")
     return {
       statusCode: 200,
       body: JSON.stringify({
