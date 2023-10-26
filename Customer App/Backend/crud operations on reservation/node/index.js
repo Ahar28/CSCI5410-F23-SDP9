@@ -1,47 +1,66 @@
-  const admin = require('firebase-admin');
+/**
+ * get reservation details
+*/
 
-  // Initializing Firebase Admin SDK with service account credentials
-  const serviceAccount = require('./serviceAccountKey.json'); // file path for service account credentials
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://serverless-term-assignment.firebaseio.com', // Firebase project URL
-  });
+const admin = require('firebase-admin');
 
-  exports.handler = async (event, context) => {
-    try {
-      // Initialize Firestore
-      const db = admin.firestore();
+// Initializing Firebase Admin SDK with service account credentials
+const serviceAccount = require('./serviceAccountKey.json'); // file path for service account credentials
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://serverless-term-assignment.firebaseio.com', // Firebase project URL
+});
+
+// to test it locally
+/*
+ const event = {
+  user_id: 777
+};
+const context = {};
+*/
+
+exports.handler = async (event, context) => {
+  try {
+    // Initialize Firestore
+    const db = admin.firestore();
+    const user_id = event['user_id'] 
+
+    // Reference to the Firestore collection
+    const collectionRef = db.collection('Customer-Reservation'); // collection name
     
-      // Data to be added to the Firestore document
-      const dataToStore = {
-        user_id: event.user_id, 
-        restaurant_id: event.restaurant_id,
-        no_of_people: event.no_of_people,
-        //timestamp: new Date().toISOString(),
-        //  other data fields to be added as needed
-      };
+    // getting the document 
+    const docRef = await collectionRef.where('user_id','==', user_id).get();
+    
+    if (docRef.empty) {
+    console.log('No matching documents.');
+    return;
+    }  
 
-      // Reference to the Firestore collection
-      const collectionRef = db.collection('Customer-Reservation'); // collection name
-      
-      // Add a new document with an auto generated ID
-      const docRef = await collectionRef.add(dataToStore);
+    docRef.forEach(doc => {
+    console.log("doc_id : "+ doc.id )
+    console.log(doc.id, '=>', doc.data());
+    });
 
-      // return message
-      return {
-        statusCode: 200,
-        body: JSON.stringify({
-          message: 'Document added successfully',
-          document_id: docRef.id,
-        }),
-      };
-    } catch (error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          error: 'Failed to add document',
-          message: error.message,
-        }),
-      };
-    }
-  };
+    // success reponse message
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'Document retreived successfully',
+        document: JSON.stringify(docRef),
+      }),
+    };
+  } catch (error) {
+    // error reponse message
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: 'Failed to retreive document',
+        message: error.message,
+      }),
+    };
+  }
+};
+
+//to test it locally
+//const result = exports.handler(event, context);
+//console.log(result);
