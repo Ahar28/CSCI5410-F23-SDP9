@@ -22,14 +22,16 @@ const context = {};
 exports.handler = async (event, context) => {
   try {
     // Initialize Firestore
+
+    console.log("====",event,event.queryStringParameters)
     const db = admin.firestore();
-    const user_id = event['user_id'] 
+    user_id = event['queryStringParameters']['user_id'] 
 
     // Reference to the Firestore collection
     const collectionRef = db.collection('Customer-Reservation'); // collection name
     
     // getting the document 
-    const docRef = await collectionRef.where('user_id','==', user_id).get();
+    const docRef = await collectionRef.where('user_id','==', parseInt(user_id)).get();
     
     if (docRef.empty) {
     console.log('No matching documents.');
@@ -44,15 +46,23 @@ exports.handler = async (event, context) => {
     // success reponse message
     return {
       statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      isBase64Encoded: false,
       body: JSON.stringify({
         message: 'Document retreived successfully',
-        document: JSON.stringify(docRef),
+        document: docRef.docs.map(doc => doc.data()),
       }),
     };
   } catch (error) {
     // error reponse message
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      isBase64Encoded: false,
       body: JSON.stringify({
         error: 'Failed to retreive document',
         message: error.message,
