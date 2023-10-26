@@ -1,76 +1,124 @@
-/**
- * get reservation details
-*/
-
 const admin = require('firebase-admin');
+const axios = require("axios");
+const Responses = require("./ApiResponses");
 
-// Initializing Firebase Admin SDK with service account credentials
-const serviceAccount = require('./serviceAccountKey.json'); // file path for service account credentials
+// Initialize Firebase Admin SDK with your service account credentials
+const serviceAccount = require('./serviceAccountKey.json'); // Update with your file path
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://serverless-term-assignment.firebaseio.com', // Firebase project URL
+  databaseURL: 'https://serverless-term-assignment.firebaseio.com', // Replace with your Firebase project URL
 });
 
-// to test it locally
-/*
- const event = {
-  user_id: 777
-};
-const context = {};
-*/
-
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
   try {
+    
     // Initialize Firestore
-
-    console.log("====",event,event.queryStringParameters)
     const db = admin.firestore();
-    user_id = event['queryStringParameters']['user_id'] 
+   
+    const reservationDetails = JSON.parse(event.body);
+    const { 
+        restaurantId, 
+        reservationDate, 
+        requiredCapacity, 
+        userId
+         } = reservationDetails;
+
+    const newReservationDate = new Date(reservationDate);   
+
+    const response = await axios.get(
+          `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=2`
+        );     
+
+    const restaurantDetails = response.data;
+    
+    if (restaurantId !== restaurantDetails.restaurant_id) {
+      return Responses._400({
+        message: "The restaurant does not exist",
+      });
+    }
+
+    const restaurantOpening = restaurantDetails.opening_time;
+    const restaurantClosing = restaurantDetails.closing_time;
+    const [openingHour, openingMinute] = restaurantOpening
+      .split(":")
+      .map(Number);
+    const [closingHour, closingMinute] = restaurantClosing
+      .split(":")
+      .map(Number);
+
+    // Create opening and closing date from reservation date and restaurant timings
+    const openingDate = new Date(newReservationDate);
+    const closingDate = new Date(newReservationDate);
+    openingDate.setHours(openingHour, openingMinute, 0, 0);
+    closingDate.setHours(closingHour, closingMinute, 0, 0);
+
+    // Adjust for closing times past midnight
+    if (restaurantClosing < restaurantOpening) {
+      closingDate.setDate(closingDate.getDate() + 1);
+    }
+
+    if (
+      newReservationDate >= openingDate &&
+      newReservationDate <= closingDate
+    ) {
+      const reservationsDocs = db.collection("Customer-Reservation");
+      const addedReservation = await reservationsDocs.add({
+        restaurant_id: restaurantId,
+        reservation_date:
+          admin.firestore.Timestamp.fromDate(newReservationDate),
+        required_capacity: requiredCapacity,
+        user_id: userId,
+      });
+
+      return Responses._200({
+        message: " Your Reservation has been made successfully",
+        reservation_id: addedReservation.id,
+      });
+    } else {
+      return Responses._400({
+        message: "Reservation time is outside the restaurant's opening hours",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return Responses._400({
+      message: "Error booking restaurant reservations",
+    });
+  }
+    /*
+    // Data to be added to the Firestore document
+    const dataToStore = {
+      user_id: event.user_id, // Replace with the actual data you want to store
+      restaurant_id: event.restaurant_id,
+      no_of_people: event.no_of_people,
+      //timestamp: new Date().toISOString(),
+      // Add other data fields as needed
+    };
+
+    console.log("data to store json " + JSON.stringify(dataToStore))
 
     // Reference to the Firestore collection
-    const collectionRef = db.collection('Customer-Reservation'); // collection name
-    
-    // getting the document 
-    const docRef = await collectionRef.where('user_id','==', parseInt(user_id)).get();
-    
-    if (docRef.empty) {
-    console.log('No matching documents.');
-    return;
-    }  
+    const collectionRef = db.collection('Customer-Reservation'); // Replace with your collection name
 
-    docRef.forEach(doc => {
-    console.log("doc_id : "+ doc.id )
-    console.log(doc.id, '=>', doc.data());
-    });
-
-    // success reponse message
+    // Add a new document with a generated ID  
+    const docRef = await collectionRef.add(dataToStore);
+  
+    
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      isBase64Encoded: false,
       body: JSON.stringify({
-        message: 'Document retreived successfully',
-        document: docRef.docs.map(doc => doc.data()),
+        message: 'Reservation made successfully ',
+        document_id: docRef.id,
       }),
     };
   } catch (error) {
-    // error reponse message
     return {
       statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      isBase64Encoded: false,
       body: JSON.stringify({
-        error: 'Failed to retreive document',
+        error: 'Failed to add document',
         message: error.message,
       }),
     };
-  }
+  } */ 
 };
-
-//to test it locally
-//const result = exports.handler(event, context);
-//console.log(result);

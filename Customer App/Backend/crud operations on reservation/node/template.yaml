@@ -13,3 +13,15 @@ Resources:
           Properties:
             Path: /getreservationbyuserid
             Method: get
+  BookRestaurantReservationsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs14.x
+      Timeout: 20
+      Events:
+        BookRestaurantReservationsApiEvent:
+          Type: Api
+          Properties:
+            Path: /createreservation
+            Method: post
