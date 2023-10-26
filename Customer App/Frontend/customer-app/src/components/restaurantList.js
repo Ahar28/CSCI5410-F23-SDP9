@@ -5,19 +5,25 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from 'antd';
 import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
-
+import { Card } from 'antd';
+import axios from 'axios';
+const { Meta } = Card;
 // Restaurant List function
 // elements from 
 // [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password 
 // and google sign-in,” Medium, 
 // https://blog.bitsrc.io/firebase-authentication-with-react-for-beginners-implementing-email-password-and-google-sign-in-e62d9094e22 (accessed Oct. 17, 2023). 
 function RestaurantList() {
-  
   // navigate variable to use for BrowserRouter
   const navigate = useNavigate();
 
   // User Detail variable
   const [user, setUser] = useState(null);
+  const [restaurants,setRestaurants]= useState([
+    {id:1,restaurant_name:'Restaurant 1',images: ['https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg']},
+    {id:2,restaurant_name:'Restaurant 2',images:['https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg']},
+    {id:3,restaurant_name:'Restaurant 3',images:['https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg']}
+  ])
 
   // Function called when page is loaded, kind of like main function or init function
   useEffect(() => {
@@ -37,6 +43,18 @@ function RestaurantList() {
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
   }, []);
+  useEffect(()=>{
+    async function fetchRestuarants (){
+    const headers = {
+      'Content-type':'application/json'
+    }
+    const resData = await axios.get("https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",{headers});
+    console.log(resData)
+    const resJsonData = JSON.parse(resData.data.body);
+    setRestaurants(resJsonData);
+  }
+  fetchRestuarants();
+  },[])
   
   // Sign Out function
   const handleSignOut = async () => {
@@ -53,7 +71,9 @@ function RestaurantList() {
       alert('Sign out error')
     }
   };
-
+  const handleViewDetails = async (restaurant_id) =>{
+    navigate(`/restaurantpage/${restaurant_id}`)
+  }
   // Frontend elements
   return (
     <div>
@@ -63,9 +83,29 @@ function RestaurantList() {
 
       <div>
         <h1>Restaurant List</h1>
-        {user && (
-          <p>Welcome, {user.displayName} ({user.email})</p>
-        )}
+        <ul>
+          {restaurants.map((restaurant) => (
+            <Card
+            style={{
+              width: 300,
+            }}
+            cover={
+              <img
+                alt="example"
+                src={restaurant.images[0]}
+              />
+            }
+            actions={[
+              <Button type='primary' onClick={()=>handleViewDetails(restaurant.restaurant_id)}>View Details</Button>
+            ]}
+          >
+            <Meta
+              title={restaurant.restaurant_name}
+            />
+          </Card>
+          ))}
+        </ul>
+        
       </div>
     </div>
   );
