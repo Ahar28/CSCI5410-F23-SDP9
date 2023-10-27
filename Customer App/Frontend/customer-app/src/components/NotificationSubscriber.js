@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './../NotificationSubscriber.css';
 
 function NotificationSubscriber() {
+  
+  const [ws, setWs] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [offers, setOffers] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
