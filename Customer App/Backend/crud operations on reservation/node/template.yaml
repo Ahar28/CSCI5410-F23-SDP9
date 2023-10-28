@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  GetUserReservationsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs14.x
+      Timeout: 20
+      Events:
+        GetUserReservationsApiEvent:
+          Type: Api
+          Properties:
+            Path: /getreservationbyuserid
+            Method: get
+  BookRestaurantReservationsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs14.x
+      Timeout: 20
+      Events:
+        BookRestaurantReservationsApiEvent:
+          Type: Api
+          Properties:
+            Path: /createreservation
+            Method: post

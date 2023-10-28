@@ -1,0 +1,13 @@
+# Ignore node_modules
+node_modules/
+
+
+### VS Code ###
+.vscode/
+
+### zip files ###
+.zip
+
+
+### mac files
+.DS_Store
