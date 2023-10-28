@@ -1,0 +1,1 @@
+export const KOMMUNICATE_APP_ID = "beca5a193a8fb6c4625b0b72960566d8";

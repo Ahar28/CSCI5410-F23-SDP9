@@ -7,6 +7,14 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { Card } from 'antd';
 import axios from 'axios';
+import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
+import { KOMMUNICATE_APP_ID } from '../config/kommunicate';
+
+Kommunicate.init(KOMMUNICATE_APP_ID, {
+  automaticChatOpenOnNavigation: true,
+  popupWidget: true
+});
+
 const { Meta } = Card;
 // Restaurant List function
 // elements from 
