@@ -18,49 +18,53 @@ exports.handler = async (event) =>
     try {
             // Initialize Firestore
             const db = admin.firestore();
-            //console.log("printing event ====+++ ",event, "+++====","\n");
             
+            /**
+             * new reservation details sent in by postman
+             */
             const reservationDetails = JSON.parse(event.body);
-            console.log("printing reservation Details  : "+ reservationDetails);
+            //console.log("printing reservation Details   : ", reservationDetails);
             
             const {
                     reservation_id,
                     restaurant_id,
-                    reservationDate,
+                    reservationDatePostman,
                     no_of_people,
                     user_id,
                 }   = reservationDetails;
+        
+            /*
+            console.log("Postman data....")
  
-            console.log("Printing values after getting and storing : \n");
             console.log("reservation_id ="+ reservation_id);
             console.log("restaurant_id ="+ restaurant_id);
-            console.log("reservationDate ="+ reservationDate);
+            console.log("reservationDatePostman ="+ reservationDatePostman);
             console.log("no_of_people ="+ no_of_people);
             console.log("user_id ="+ user_id);
+*/
  
             const reservationDocRef = db.collection("Customer-Reservation").doc(reservation_id);
  
-            console.log("printing reservationDocRef : "+ reservationDocRef + "\n");  
+            //console.log("printing reservationDocRef : ", reservationDocRef + "\n");  
             const reservation = await reservationDocRef.get();
-            console.log("printing reservation : ", reservation);
+            //console.log("printing reservation : ", reservation);
  
             if (!reservation.exists)
             {
                 return {
                         statusCode : 400,
-                        
                         body: JSON.stringify({
                         message: "Restaurant reservation does not exist",
                 }),
-                
                 };
             }  
-            console.log("+++testing++++")      
+ 
             const currentReservationData = { ...reservation.data() };
             //console.log("reservation. data() ... ",...reservation.data())
-            console.log("currentReservationData is : ")
-            console.log(currentReservationData);
+            //console.log("currentReservationData is : ", currentReservationData)
  
+ 
+            //converting the current date to UTC
             const currentDate = new Date();
             const currentUtcDate = new Date(
             Date.UTC(
@@ -73,9 +77,13 @@ exports.handler = async (event) =>
             )
             );
  
+            /**
+             * accessing the old reservation date
+             */
             const currentReservationDate = currentReservationData.reservation_date.toDate();
-            console.log("currentReservationDate : ",currentReservationDate);
+            //console.log("currentReservationDate : ",currentReservationDate);
             
+            // converting the old reservation date to UTC format
             const reservationUtcDate = new Date(
                                                     Date.UTC(
                                                         currentReservationDate.getUTCFullYear(),
@@ -88,20 +96,27 @@ exports.handler = async (event) =>
                                                     );
              
  
- 
+            /**
+             * checking if the time at which the user is making the request is 1 hour prior to the old booking/reservation time
+             */
             if ((reservationUtcDate - currentUtcDate) / (1000 * 60) >= 60)
             {
                 const response = await axios.get(
                     `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${restaurant_id}`
                     //change here
                 );
-                
-                console.log("response is  : \n", response.data);
-                const restaurantDetails = response.data;
+            
+                const restaurantDetailsBody = response.data.body;
+                const restaurantDetails = JSON.parse(restaurantDetailsBody)
+ 
+                //console.log(parsedrestaurantDetails.Item.restaurant_id);
+                //console.log("restaurantDetails.body .......=====+++++---->>>>",restaurantDetails.body);
+                //console.log("currentReservationData.restaurant_id = ",typeof currentReservationData.restaurant_id)
+                //console.log("parsedrestaurantDetails.Item.restaurant_id = ",typeof parseInt(parsedrestaurantDetails.Item.restaurant_id));
                 
  
-                if ( currentReservationData.restaurant_id !== restaurantDetails.Item.restaurant_id )
-                    {
+                if ( currentReservationData.restaurant_id != restaurantDetails.Item.restaurant_id)
+                {
                         return {
                             statusCode : 400,
                             body: JSON.stringify({
@@ -110,12 +125,15 @@ exports.handler = async (event) =>
                         };
                     }
                 
-                const newReservationDate = new Date(reservationDate);
-                var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-                const day = newReservationDate;
-                var dayName = days[day.getDay()];
+                
+                //const newReservationDate = new Date(reservationDatePostman);
+                var daysofweek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                //const day = newReservationDate;
+                const day = new Date(reservationDatePostman)
+                var dayName = daysofweek[day.getDay()];
                 console.log("Day name is :",dayName)
         
+ 
                 const restaurantOpening = restaurantDetails.Item.timings[dayName].opening_time;
                 const restaurantClosing = restaurantDetails.Item.timings[dayName].closing_time;
                 
@@ -127,23 +145,28 @@ exports.handler = async (event) =>
                 const closingMinute = parseInt(restaurantClosing.toString().substring(2, 4));
  
                 // Create opening and closing date from reservation date and restaurant timings
-                const openingDate = new Date(newReservationDate);
-                const closingDate = new Date(newReservationDate);
+                const openingDate = new Date(reservationDatePostman);
+                const closingDate = new Date(reservationDatePostman);
                 openingDate.setHours(openingHour, openingMinute, 0, 0);
                 closingDate.setHours(closingHour, closingMinute, 0, 0);
+ 
  
             // Adjust for closing times past midnight
                 if (restaurantClosing < restaurantOpening)
                 {
                     closingDate.setDate(closingDate.getDate() + 1);
                 }
+                const newReservationDate = new Date(reservationDatePostman)
+                console.log("reservationDatePostman  ++ ==",newReservationDate);
+                console.log("openingDate  == ++ ",openingDate);
+                console.log("closingDate  ++ == ",closingDate);
  
             if ( newReservationDate >= openingDate && newReservationDate <= closingDate)
             {
                 let updatedReservation = {};
  
-                if (restaurantId) {
-                    updatedReservation.restaurant_id = restaurantId;
+                if (restaurant_id) {
+                    updatedReservation.restaurant_id = restaurant_id;
                 }
         
                 if (newReservationDate) {
@@ -151,12 +174,12 @@ exports.handler = async (event) =>
                     admin.firestore.Timestamp.fromDate(newReservationDate);
                 }
         
-                if (requiredCapacity) {
-                    updatedReservation.required_capacity = requiredCapacity;
+                if (no_of_people) {
+                    updatedReservation.no_of_people = no_of_people;
                 }
         
-                if (userId) {
-                    updatedReservation.user_id = userId;
+                if (user_id) {
+                    updatedReservation.user_id = user_id;
                 }
         
                 await reservationDocRef.update(updatedReservation);
@@ -169,6 +192,7 @@ exports.handler = async (event) =>
                 };
             }
                 else{
+                    console.log("this is else loop");
                     return {
                         statusCode: 400,
                         body: JSON.stringify({
@@ -204,4 +228,3 @@ exports.handler = async (event) =>
                         };
             }
 }
- 
