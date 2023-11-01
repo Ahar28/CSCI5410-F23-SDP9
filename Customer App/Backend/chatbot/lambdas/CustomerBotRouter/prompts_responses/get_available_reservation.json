@@ -1,0 +1,5 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
+    "ReservationDate": "Can you please provide the reservation date?",
+    "Fulfilment": "Got it. Here are the available slots for {restaurant_name} on {reservation_date}:\n {available_reservation}.\nAnything else?"
+}
