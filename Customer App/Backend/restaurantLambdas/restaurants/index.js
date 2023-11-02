@@ -5,7 +5,7 @@ AWS.config.update({
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const resTab = 'restaurant_details'; 
-async function getRestaurants(){
+exports.handler = async (event) => {
     try{
     const params={
         TableName: resTab

@@ -1,79 +1,50 @@
- import React, { useState } from 'react';
- 
+import React, { useState } from "react";
+import { Container, Form, Row, Col, Button } from "react-bootstrap";
+
 const ReservationForm = () => {
+  const [dateTime, setDateTime] = useState("");
+  const [numberOfPeople, setNumberOfPeople] = useState("");
 
-  const [dateTime, setDateTime] = useState('');
-
-  const [numberOfPeople, setNumberOfPeople] = useState('');
- 
   const handleSubmit = (e) => {
-
     e.preventDefault();
-
     // You can handle the form submission here, for example, by making an API request to create the reservation.
-
-    console.log('Reservation Date & Time:', dateTime);
-
-    console.log('Number of People:', numberOfPeople);
-
   };
- 
+
+  const handleChange = (e, key) => {
+    if (key === "numberOfPeople") {
+      setNumberOfPeople(e.target.value);
+    }
+  };
+
   return (
-
     <div>
-
-      <h2>Reservation Form</h2>
-
-      <form onSubmit={handleSubmit}>
-
-        <div>
-
-          <label htmlFor="dateTime">Date & Time:</label>
-
-          <input
-
-            type="datetime-local"
-
-            id="dateTime"
-
-            value={dateTime}
-
-            onChange={(e) => setDateTime(e.target.value)}
-
-            required
-
-          />
-
-        </div>
-
-        <div>
-
-          <label htmlFor="numberOfPeople">Number of People:</label>
-
-          <input
-
-            type="number"
-
-            id="numberOfPeople"
-
-            value={numberOfPeople}
-
-            onChange={(e) => setNumberOfPeople(e.target.value)}
-
-            required
-
-          />
-
-        </div>
-
-        <button type="submit">Reserve Table</button>
-
-      </form>
-
+      <h2 style={{ textAlign: "center" }}>Reserve your table</h2>
+      <Container>
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <Form.Group as={Col} controlId="formGridEmail">
+              <Form.Label>No of People</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="party size "
+                value={numberOfPeople}
+                onChange={(e) => handleChange(e, "numberOfPeople")}
+                min={1}
+                max={20}
+              />
+              <Form.Label>Date</Form.Label>
+              <Form.Control type="date" />
+              <Form.Label>Time</Form.Label>
+              <Form.Control type="time" />
+            </Form.Group>
+          </Row>
+          <Button variant="primary" type="submit" style={{ marginTop: "20px" }}>
+            Reserve table
+          </Button>
+        </Form>
+      </Container>
     </div>
-
   );
-
 };
- 
+
 export default ReservationForm;
