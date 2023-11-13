@@ -8,6 +8,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NotificationSubscriber from "./components/NotificationSubscriber";
 import ReservationForm from "./components/Reservation";
+import ReservationsByUserID from "./components/ReservationsByUserID";
 
 function App() {
   // Routing tree
@@ -22,7 +23,11 @@ function App() {
           path="/restaurantpage/:restaurant_id"
           element={<RestaurantDetails />}
         />
-        <Route path="/Reservation" element={<ReservationForm />} />
+        <Route
+          path="/Reservation/:restaurant_id"
+          element={<ReservationForm />}
+        />
+        <Route path="/view-reservations" element={<ReservationsByUserID />} />
       </Routes>
     </div>
   );
