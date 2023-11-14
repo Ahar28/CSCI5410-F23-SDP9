@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const ReservationForm = () => {
+  debugger;
   //const { restaurant_id } = useParams();
   //const [dateTime, setDateTime] = useState("");
   const { restaurant_id } = useParams();
-  const reservationDate = restaurant_id;
+  //const reservationDate = restaurant_id;
   const [user_id, setUserID] = useState("");
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
@@ -22,7 +24,11 @@ const ReservationForm = () => {
     setUserID(user_id);
   });
 
-  console.log(user_id);
+  const {
+    state: { restaurantData },
+  } = useLocation();
+
+  console.log("====+++++=====", restaurantData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,13 +46,14 @@ const ReservationForm = () => {
   };
 
   const handleReservation = async () => {
+    var response;
     try {
       const datetime = `${date} ${time}`;
       // Make an API POST request to create a reservation
 
-      const response = await axios.post(
-        "https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
-        //"https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
+      response = await axios.post(
+        //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
+        "https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
         //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
         {
           no_of_people: parsedNoOfPeople,
@@ -57,8 +64,11 @@ const ReservationForm = () => {
       );
 
       // Handle a successful reservation
-      setReservationData(response.data);
+      //setReservationData(response.data);
+
+      // navigate("/home");
     } catch (error) {
+      console.log(response);
       // Handle  errors, e.g., display an error message to the user
       console.error("Error creating reservation: ", error);
       setReservationData(null);

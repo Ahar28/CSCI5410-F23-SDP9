@@ -1,135 +1,141 @@
-import React, { useState, useEffect } from 'react';
- 
-const ReservationEdit = () => {
+/**
+ * edit reservation
+ */
 
-  const [reservations, setReservations] = useState([]);
+/**
+ * send the data from the card to fill in the form and then upon clicking should hit the udpate api
+ */
 
-  const [selectedReservation, setSelectedReservation] = useState(null);
+import React, { useState, useEffect } from "react";
+import { Container, Form, Row, Col, Button } from "react-bootstrap";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-  const [newDateTime, setNewDateTime] = useState('');
-
-  const [newNumberOfPeople, setNewNumberOfPeople] = useState('');
- 
-  // Simulated reservation data, you should replace this with data from your API.
-
-  const dummyReservations = [
-
-    { id: 1, dateTime: '2023-10-28T19:00', numberOfPeople: 4 },
-
-    { id: 2, dateTime: '2023-11-05T18:30', numberOfPeople: 2 },
-
-    { id: 3, dateTime: '2023-11-12T20:15', numberOfPeople: 6 },
-
-  ];
- 
-  // Simulate fetching reservations from an API.
+const EditReservationForm = () => {
+  const { restaurant_id } = useParams();
+  //const reservationDate = restaurant_id;
+  const [user_id, setUserID] = useState("");
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
+  const [no_of_people, setNumberOfPeople] = useState("");
+  const [reservationData, setReservationData] = useState(null);
+  const parsedNoOfPeople = parseInt(no_of_people, 10);
+  const parsedRestaurantId = parseInt(restaurant_id, 10);
 
   useEffect(() => {
+    const user_id = sessionStorage.getItem("userId");
+    setUserID(user_id);
+  });
 
-    // Replace this with an actual API call to fetch user reservations.
+  // const {
+  //   state: { restaurantData },
+  // } = useLocation();
 
-    // For now, we use dummy data.
+  // console.log("====+++++=====", restaurantData);
 
-    setReservations(dummyReservations);
-
-  }, []);
- 
-  const handleEditReservation = () => {
-
-    if (selectedReservation && newDateTime && newNumberOfPeople) {
-
-      // Send a request to edit the selected reservation on the server with new data.
-
-      // You should replace this with an actual API request.
-
-      // After successful editing, you can update the state or take any other desired action.
-
-      console.log(`Edited reservation with ID: ${selectedReservation.id}`);
-
-      console.log(`New Date & Time: ${newDateTime}`);
-
-      console.log(`New Number of People: ${newNumberOfPeople}`);
-
-    }
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
   };
- 
+
+  const handleChange = (e, key) => {
+    if (key === "no_of_people") {
+      setNumberOfPeople(e.target.value);
+    } else if (key === "date") {
+      setDate(e.target.value);
+    }
+    if (key === "time") {
+      setTime(e.target.value);
+    }
+  };
+
+  /**
+   * handle update request here
+   */
+  /*
+  const handleReservation = async () => {
+    var response;
+    try {
+      const datetime = `${date} ${time}`;
+      // Make an API POST request to create a reservation
+
+      response = await axios.post(
+        //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
+        "https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
+        //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
+        {
+          no_of_people: parsedNoOfPeople,
+          reservationDate: datetime,
+          user_id,
+          restaurant_id: parsedRestaurantId,
+        }
+      );
+
+      // Handle a successful reservation
+      //setReservationData(response.data);
+
+      // navigate("/home");
+    } catch (error) {
+      console.log(response);
+      // Handle  errors, e.g., display an error message to the user
+      console.error("Error creating reservation: ", error);
+      setReservationData(null);
+    }
+  };
+*/
   return (
-
     <div>
+      <h2 style={{ textAlign: "center" }}>Edit your Reservation</h2>
+      <Container>
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <Row>
+              <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
+            </Row>
+            <Form.Group as={Col} controlId="formGridEmail">
+              <Form.Label>No of People</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="party size "
+                value={no_of_people}
+                onChange={(e) => handleChange(e, "no_of_people")}
+                min={1}
+                max={20}
+              />
+              <Form.Label>Date</Form.Label>
+              <Form.Control
+                type="date"
+                value={date}
+                onChange={(e) => handleChange(e, "date")}
+              />
+              <Form.Label>Time</Form.Label>
+              <Form.Control
+                type="time"
+                value={time}
+                step="1"
+                onChange={(e) => handleChange(e, "time")}
+              />
+            </Form.Group>
+          </Row>
+          <Button
+            variant="primary"
+            type="submit"
+            style={{ marginTop: "20px" }}
+            onClick={() => handleReservation()}
+          >
+            Confirm Changes
+          </Button>
+        </Form>
 
-      <h2>Edit Reservation</h2>
-
-      <label>Select a reservation to edit:</label>
-
-      <select
-
-        value={selectedReservation ? selectedReservation.id : ''}
-
-        onChange={(e) => {
-
-          const reservationId = parseInt(e.target.value, 10);
-
-          const selected = reservations.find((reservation) => reservation.id === reservationId);
-
-          setSelectedReservation(selected);
-
-        }}
-
-      >
-
-        <option value="">Select a reservation</option>
-
-        {reservations.map((reservation) => (
-
-          <option key={reservation.id} value={reservation.id}>
-
-            {reservation.dateTime}
-
-          </option>
-
-        ))}
-
-      </select>
-
-      {selectedReservation && (
-
-        <div>
-
-          <label>New Date & Time:</label>
-
-          <input
-
-            type="datetime-local"
-
-            value={newDateTime}
-
-            onChange={(e) => setNewDateTime(e.target.value)}
-
-          />
-
-          <label>New Number of People:</label>
-
-          <input
-
-            type="number"
-
-            value={newNumberOfPeople}
-
-            onChange={(e) => setNewNumberOfPeople(e.target.value)}
-
-          />
-
-          <button onClick={handleEditReservation}>Edit Reservation</button>
-
-        </div>
-
-      )}
-
+        {reservationData && (
+          <div>
+            <p>Reservation Changes made successfully!</p>
+            <pre>{JSON.stringify(reservationData, null, 2)}</pre>
+          </div>
+        )}
+      </Container>
     </div>
-
   );
-
 };
- 
-export default ReservationEdit;
+
+export default EditReservationForm;

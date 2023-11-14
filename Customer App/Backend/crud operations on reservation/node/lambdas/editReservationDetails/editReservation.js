@@ -103,7 +103,7 @@ exports.handler = async (event) =>
             {
                 const response = await axios.get(
                     `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${restaurant_id}`
-                    //change here
+                   
                 );
             
                 const restaurantDetailsBody = response.data.body;
