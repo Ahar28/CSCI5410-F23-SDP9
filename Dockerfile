@@ -12,8 +12,7 @@ RUN npm install
 
 COPY ${rootsrc} .
 
-RUN npm run build
-
+RUN CI=false npm run build
 
 FROM nginx:1.19
 
