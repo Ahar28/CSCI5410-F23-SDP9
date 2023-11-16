@@ -10,6 +10,8 @@ COPY ${src} .
 
 RUN npm install
 
+RUN npm install --legacy-peer-deps
+
 COPY ${rootsrc} .
 
 RUN npm run build
