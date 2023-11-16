@@ -2,7 +2,7 @@ FROM node:18 as build
 
 WORKDIR /customer-app
 
-ARG src="/Customer App/Frontend/customer-app/package*.json/"
+ARG src="/Customer App/Frontend/customer-app/package.json/"
 ARG rootsrc="/Customer App/Frontend/customer-app/"
 ARG nginxsrc="/Customer App/Frontend/customer-app/nginx/nginx.conf"
 
