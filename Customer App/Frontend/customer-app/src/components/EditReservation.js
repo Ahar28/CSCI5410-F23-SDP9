@@ -1,8 +1,5 @@
 /**
- * edit reservation
- */
-
-/**
+ * edit reservtion
  * send the data from the card to fill in the form and then upon clicking should hit the udpate api
  */
 
@@ -52,7 +49,7 @@ const EditReservationForm = () => {
   /**
    * handle update request here
    */
-  /*
+
   const handleReservation = async () => {
     var response;
     try {
@@ -82,7 +79,7 @@ const EditReservationForm = () => {
       setReservationData(null);
     }
   };
-*/
+
   return (
     <div>
       <h2 style={{ textAlign: "center" }}>Edit your Reservation</h2>

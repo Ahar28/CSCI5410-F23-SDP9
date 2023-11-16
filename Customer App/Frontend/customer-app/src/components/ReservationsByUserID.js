@@ -53,15 +53,15 @@ const ReservationsByUserID = () => {
 
     try {
       // Make an API DELETE request to delete the reservation
-      const response = await axios.delete(
-        `https://ftkd2l6ffi.execute-api.us-east-1.amazonaws.com/dev/deletereservation/id=${documentid}`
-      );
+      const response = await axios
+        .delete
+        //   `https://ftkd2l6ffi.execute-api.us-east-1.amazonaws.com/dev/deletereservation/id=${documentid}`
+        ();
 
       // Handle a successful deletion
       console.log("Reservation deleted successfully:", response);
       // You may want to fetch the reservations again after deletion
       // to update the UI with the latest data.
-      fetchReservations();
     } catch (error) {
       // Handle errors, e.g., display an error message to the user
       console.error("Error deleting reservation: ", error);
