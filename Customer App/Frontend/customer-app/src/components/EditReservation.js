@@ -14,6 +14,7 @@ const EditReservationForm = () => {
   //const reservationDate = restaurant_id;
   const [user_id, setUserID] = useState("");
   const [time, setTime] = useState("");
+  const [isloading, setloading] = useState(false);
   const [date, setDate] = useState("");
   const [no_of_people, setNumberOfPeople] = useState("");
   const [reservationData, setReservationData] = useState(null);
@@ -81,57 +82,67 @@ const EditReservationForm = () => {
   };
 
   return (
-    <div>
+    <Container style={{ maxWidth: "600px" }}>
       <h2 style={{ textAlign: "center" }}>Edit your Reservation</h2>
-      <Container>
-        <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
+        <Row>
           <Row>
-            <Row>
-              <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
-            </Row>
-            <Form.Group as={Col} controlId="formGridEmail">
-              <Form.Label>No of People</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="party size "
-                value={no_of_people}
-                onChange={(e) => handleChange(e, "no_of_people")}
-                min={1}
-                max={20}
-              />
-              <Form.Label>Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={date}
-                onChange={(e) => handleChange(e, "date")}
-              />
-              <Form.Label>Time</Form.Label>
-              <Form.Control
-                type="time"
-                value={time}
-                step="1"
-                onChange={(e) => handleChange(e, "time")}
-              />
-            </Form.Group>
+            <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
           </Row>
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>No of People</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="party size "
+              value={no_of_people}
+              onChange={(e) => handleChange(e, "no_of_people")}
+              min={1}
+              max={20}
+            />
+            <Form.Label>Date</Form.Label>
+            <Form.Control
+              type="date"
+              value={date}
+              onChange={(e) => handleChange(e, "date")}
+            />
+            <Form.Label>Time</Form.Label>
+            <Form.Control
+              type="time"
+              value={time}
+              step="1"
+              onChange={(e) => handleChange(e, "time")}
+            />
+          </Form.Group>
+        </Row>
+        {!isloading ? (
           <Button
             variant="primary"
             type="submit"
-            style={{ marginTop: "20px" }}
+            style={{ margin: "20px auto" }}
             onClick={() => handleReservation()}
           >
             Confirm Changes
           </Button>
-        </Form>
-
-        {reservationData && (
-          <div>
-            <p>Reservation Changes made successfully!</p>
-            <pre>{JSON.stringify(reservationData, null, 2)}</pre>
-          </div>
+        ) : (
+          <Spinner animation="border" style={{ margin: "20px auto" }} />
         )}
-      </Container>
-    </div>
+        <Button
+          variant="primary"
+          type="submit"
+          style={{ margin: "20px 20px", backgroundColor: "red" }}
+          onClick={() => handleReservation()}
+        >
+          Delete Reservation
+        </Button>
+      </Form>
+
+      {reservationData && (
+        <div>
+          <p>Reservation updated successfully!</p>
+          <pre>{JSON.stringify(reservationData, null, 2)}</pre>
+        </div>
+      )}
+    </Container>
   );
 };
 
