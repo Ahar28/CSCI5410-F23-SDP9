@@ -10,11 +10,16 @@ exports.handler = async (event) => {
     const restaurantId=body.restaurant_id;
     const menuName = body.menu_name;
     const offer = body.offer;
+    const userId=body.userId;
     try {
         const params = {
             TableName: resTab,
             Key: {
                 restaurant_id: restaurantId,
+            },
+            ConditionExpression: 'user_id = :userId',
+            ExpressionAttributeValues: {
+                ':userId': userId,
             },
         };
         

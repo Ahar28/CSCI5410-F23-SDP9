@@ -9,7 +9,7 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const bucketName = 'sdp9restimages';
 const resTab = 'restaurant_details';
 exports.handler = async (event) => {
-  const {restaurantName,base64Images,isOpen,address} = event['body-json'];
+  const {restaurantName,base64Images,isOpen,address,userId} = event['body-json'];
   const restaurantId = uuid.v4();
   let uploadedImageLinks = uploadImages(base64Images,restaurantName);
   const params = {
@@ -19,7 +19,8 @@ exports.handler = async (event) => {
       restaurant_name: restaurantName, 
       address: address,
       is_open:isOpen,
-      images:uploadedImageLinks
+      images:uploadedImageLinks,
+      user_id:userId
     },
   }
   try{

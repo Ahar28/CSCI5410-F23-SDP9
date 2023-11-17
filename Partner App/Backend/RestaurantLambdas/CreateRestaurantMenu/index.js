@@ -1,4 +1,3 @@
-
 const AWS = require("aws-sdk");
 AWS.config.update({
     region:'us-east-1'
@@ -8,7 +7,7 @@ const s3 = new AWS.S3();
 const resTab = 'restaurant_details';
 const bucketName= 'sdp9restimages'
 exports.handler = async (event) => {
-  const {restaurantId,restaurantName,menuName,menuImage,isAvailable,price} = event['body-json'];
+  const {restaurantId,restaurantName,menuName,menuImage,isAvailable,price,userId} = event['body-json'];
   let uploadedImageLink = uploadImages(menuImage,restaurantName,menuName);
   const params = {
     TableName: resTab,
@@ -25,6 +24,10 @@ exports.handler = async (event) => {
         },
       ],
       ':empty_list': [],
+    },
+    ConditionExpression: 'user_id = :userId',
+    ExpressionAttributeValues: {
+      ':userId': userId,
     },
     ReturnValues: 'ALL_NEW',
   };

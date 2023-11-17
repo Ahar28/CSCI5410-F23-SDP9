@@ -10,12 +10,17 @@ exports.handler = async (event) => {
     const restaurantId=body.restaurant_id;
     const menuName = body.menu_name;
     const newAvailability=body.isAvailable;
+    const userId = body.userId;
     try {
         // Get the restaurant item from DynamoDB based on restaurantId
         const params = {
             TableName: resTab,
             Key: {
                 restaurant_id: restaurantId,
+            },
+            ConditionExpression: 'user_id = :userId',
+            ExpressionAttributeValues: {
+                ':userId': userId,
             },
         };
         
