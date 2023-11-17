@@ -55,7 +55,8 @@ const ReservationForm = () => {
         //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
         //"https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
         //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
-        "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation",
+        // "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
+        "https://837jfnbfoh.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //crateReservationwithLayers
         {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
