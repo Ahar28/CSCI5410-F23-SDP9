@@ -1,4 +1,3 @@
-import { Content } from "antd/es/layout/layout";
 import React, { useState, useEffect } from "react";
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
@@ -6,7 +5,6 @@ import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const ReservationForm = () => {
-  debugger;
   //const { restaurant_id } = useParams();
   //const [dateTime, setDateTime] = useState("");
   const { restaurant_id } = useParams();
@@ -55,8 +53,8 @@ const ReservationForm = () => {
         //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
         //"https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
         //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
-        // "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
-        "https://837jfnbfoh.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //crateReservationwithLayers
+        "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
+        //"https://837jfnbfoh.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //crateReservationwithLayers
         {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
