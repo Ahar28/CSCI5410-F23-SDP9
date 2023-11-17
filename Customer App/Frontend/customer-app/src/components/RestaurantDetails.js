@@ -160,22 +160,33 @@ function RestaurantDetails() {
           <img src={image} alt={`Restaurant Image ${index}`} key={index} />
         ))}
       </div>
-      <h2>Menu</h2>
-      <ul>
-        {restaurantData.menu.map((item, index) => (
-          <li key={index}>
-            <div className="menu-item">
-              <img src={item.image} alt={`Menu Item Image ${index}`} />
-            </div>
-            <div>{item.name}</div>
-            <div>{item.price}</div>
-          </li>
-        ))}
-      </ul>
+      {restaurantData.menu && restaurantData.menu.length > 0 && (
+  <div>
+    <h2>Menu</h2>
+    <ul>
+      {restaurantData.menu.map((item, index) => (
+        <li key={index}>
+          <div className="menu-item">
+            <img src={item.image} alt={`Menu Item Image ${index}`} />
+          </div>
+          <div>{item.name}</div>
+          <div>{item.price}</div>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
 
-      <h2>Restaurant Offer</h2>
-      <div>{restaurantData.restaurant_offer}</div>
 
+{restaurantData.restaurant_offer && (
+  <div>
+    <h2>Restaurant Offer</h2>
+    <div>{restaurantData.restaurant_offer}</div>
+  </div>
+)}
+
+      { restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length>0 && (
+        <div>
       <h2>Restaurant Reviews</h2>
       <ul>
         {restaurantData.restaurant_reviews.map((review, index) => (
@@ -185,7 +196,11 @@ function RestaurantDetails() {
           </li>
         ))}
       </ul>
+      </div>
+      )}
 
+{ restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length>0 && (
+        <div>
       <h2>Tables</h2>
       <ul>
         {restaurantData.tables.map((table, index) => (
@@ -195,6 +210,8 @@ function RestaurantDetails() {
           </li>
         ))}
       </ul>
+      </div>
+)}
 
       <h2>Timings</h2>
       <div>
