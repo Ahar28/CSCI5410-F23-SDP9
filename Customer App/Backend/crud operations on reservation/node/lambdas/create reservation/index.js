@@ -74,10 +74,6 @@ exports.handler = async (event) => {
         user_id: userId,
       });
 
-      // return Responses._200({
-      //   message: " Your Reservation has been made successfully",
-      //   reservation_id: addedReservation.id,
-      // });
       return {
         statusCode: 200,
         headers: {
@@ -93,9 +89,7 @@ exports.handler = async (event) => {
         }),
       };
     } else {
-      // return Responses._400({
-      //   message: "Reservation time is outside the restaurant's opening hours",
-      // });
+ 
       return {
         statusCode: 400,
         body: JSON.stringify({
@@ -105,12 +99,7 @@ exports.handler = async (event) => {
     }
   } catch (error) {
     console.log(error);
-    //   return {
-    //     statusCode: 400,
-    //     body: JSON.stringify({
-    //         message: "Reservation time is outside the restaurant's opening hours",
-    //     }),
-    // };
+    
     return {
       statusCode: 400,
       body: JSON.stringify({

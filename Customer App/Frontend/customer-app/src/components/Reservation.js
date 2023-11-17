@@ -53,8 +53,9 @@ const ReservationForm = () => {
 
       response = await axios.post(
         //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
-        "https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
+        //"https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
         //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
+        "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation",
         {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
