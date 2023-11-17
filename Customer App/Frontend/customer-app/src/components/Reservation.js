@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 const ReservationForm = () => {
   //const { restaurant_id } = useParams();
   //const [dateTime, setDateTime] = useState("");
   const { restaurant_id } = useParams();
+  const navigate = useNavigate();
   //const reservationDate = restaurant_id;
+  const [isloading, setloading] = useState(false);
   const [user_id, setUserID] = useState("");
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
@@ -26,8 +29,6 @@ const ReservationForm = () => {
     state: { restaurantData },
   } = useLocation();
 
-  console.log("====+++++=====", restaurantData);
-
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -44,6 +45,7 @@ const ReservationForm = () => {
   };
 
   const handleReservation = async () => {
+    setloading(true);
     var response;
     try {
       const datetime = `${date} ${time}`;
@@ -64,9 +66,9 @@ const ReservationForm = () => {
       );
 
       // Handle a successful reservation
-      //setReservationData(response.data);
-
-      // navigate("/home");
+      setReservationData(response.data);
+      setloading(false);
+      navigate("/view-reservations");
     } catch (error) {
       console.log(response);
       // Handle  errors, e.g., display an error message to the user
@@ -76,57 +78,61 @@ const ReservationForm = () => {
   };
 
   return (
-    <div>
+    <Container style={{ maxWidth: "600px" }}>
       <h2 style={{ textAlign: "center" }}>Reserve your table</h2>
-      <Container>
-        <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
+        <Row>
           <Row>
-            <Row>
-              <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
-            </Row>
-            <Form.Group as={Col} controlId="formGridEmail">
-              <Form.Label>No of People</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="party size "
-                value={no_of_people}
-                onChange={(e) => handleChange(e, "no_of_people")}
-                min={1}
-                max={20}
-              />
-              <Form.Label>Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={date}
-                onChange={(e) => handleChange(e, "date")}
-              />
-              <Form.Label>Time</Form.Label>
-              <Form.Control
-                type="time"
-                value={time}
-                step="1"
-                onChange={(e) => handleChange(e, "time")}
-              />
-            </Form.Group>
+            <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
           </Row>
-          <Button
-            variant="primary"
-            type="submit"
-            style={{ marginTop: "20px" }}
-            onClick={() => handleReservation()}
-          >
-            Reserve table
-          </Button>
-        </Form>
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>No of People</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="party size "
+              value={no_of_people}
+              onChange={(e) => handleChange(e, "no_of_people")}
+              min={1}
+              max={20}
+            />
+            <Form.Label>Date</Form.Label>
+            <Form.Control
+              type="date"
+              value={date}
+              onChange={(e) => handleChange(e, "date")}
+            />
+            <Form.Label>Time</Form.Label>
+            <Form.Control
+              type="time"
+              value={time}
+              step="1"
+              onChange={(e) => handleChange(e, "time")}
+            />
+          </Form.Group>
+        </Row>
+        <Row>
+          {!isloading ? (
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ margin: "20px auto" }}
+              onClick={() => handleReservation()}
+            >
+              Reserve table
+            </Button>
+          ) : (
+            <Spinner animation="border" style={{ margin: "20px auto" }} />
+          )}
+        </Row>
+      </Form>
 
-        {reservationData && (
-          <div>
-            <p>Reservation created successfully!</p>
-            <pre>{JSON.stringify(reservationData, null, 2)}</pre>
-          </div>
-        )}
-      </Container>
-    </div>
+      {reservationData && (
+        <div>
+          <p>Reservation created successfully!</p>
+          <pre>{JSON.stringify(reservationData, null, 2)}</pre>
+        </div>
+      )}
+    </Container>
   );
 };
 
