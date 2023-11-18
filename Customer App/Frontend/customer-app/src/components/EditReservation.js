@@ -28,7 +28,7 @@ const EditReservationForm = () => {
   useEffect(() => {
     if (reservationData) {
       debugger;
-      setNumberOfPeople(reservationData.data.required_capacity.toString());
+      setNumberOfPeople(reservationData.data.no_of_people.toString());
       // setDate(reservationData.reservation_date);
       // setTime(reservationData.reservation_time);
       setrestaurantId(reservationData.data.restaurant_id);
