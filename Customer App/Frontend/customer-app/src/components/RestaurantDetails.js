@@ -137,8 +137,14 @@ function RestaurantDetails() {
     fetchRestuarantDetail();
   }, []);
 
-  const handleReserveClick = () => {
-    navigate("/Reservation"); //add reservation page name
+  // const handleReserveClick = async (restaurant_id) => {
+  //   navigate("/Reservation/${restaurant_id}"); // reservation page name
+  // };
+
+  const handleReserveClick = async (restaurant_id) => {
+    navigate(`/Reservation/${restaurant_id}`, {
+      state: { restaurantData }, // Pass restaurantData as state
+    });
   };
 
   return (
@@ -226,7 +232,9 @@ function RestaurantDetails() {
         {restaurantData.timings.sunday.closing_time}
       </div>
 
-      <Button onClick={handleReserveClick}>Reserve</Button>
+      <Button onClick={() => handleReserveClick(restaurantData.restaurant_id)}>
+        Reserve
+      </Button>
     </div>
   );
 }
