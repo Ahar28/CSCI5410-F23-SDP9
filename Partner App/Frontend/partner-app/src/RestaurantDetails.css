@@ -1,0 +1,106 @@
+/* RestaurantDetails.css */
+.restaurant-details {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  .images img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Style for images in the Menu section */
+  .menu-item img {
+    max-width: 100px;
+    height: auto;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  
+  h2 {
+    font-size: 20px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+  strong {
+    font-weight: bold;
+  }
+  
+  /* Styling for individual menu items */
+  .menu-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #fff;
+  }
+  
+  .menu-item img {
+    max-width: 100px;
+  }
+  
+  .menu-item-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .menu-item-price {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  /* Styling for reviews */
+  .review {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #fff;
+  }
+  
+  .review-rating {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .review-text {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  /* Styling for tables */
+  .table {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #fff;
+  }
+  
+  .table-number {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .table-size {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  /* Styling for opening/closing times */
+  .timings {
+    font-size: 16px;
+    color: #333;
+  }
+  

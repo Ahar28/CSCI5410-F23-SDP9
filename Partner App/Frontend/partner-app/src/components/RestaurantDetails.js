@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./../RestaurantDetails.css";
 import { Button } from "antd";
 import axios from "axios";
+import { auth } from "../config/firebase";
 
 function RestaurantDetails() {
   const navigate = useNavigate();
@@ -136,10 +137,9 @@ function RestaurantDetails() {
     }
     fetchRestuarantDetail();
   }, []);
-
-  const handleReserveClick = () => {
-    navigate("/Reservation"); //add reservation page name
-  };
+  const handleEditClick=(restaurant_id)=>{
+    navigate(`/restuarant/edit/${restaurant_id}`)
+  }
 
   return (
     <div className="restaurant-details">
@@ -212,7 +212,6 @@ function RestaurantDetails() {
       </ul>
       </div>
 )}
-
 { restaurantData.timings && restaurantData.timings.length>0 && (
   <div>
       <h2>Timings</h2>
@@ -246,7 +245,10 @@ function RestaurantDetails() {
       </div>
       </div>
 )}
-      <Button onClick={handleReserveClick}>Reserve</Button>
+  {restaurantData.user_id === auth.currentUser.uid && (
+      <Button onClick={()=>handleEditClick(restaurantData.restaurant_id)}>Edit</Button>
+    )}
+
     </div>
   );
 }
