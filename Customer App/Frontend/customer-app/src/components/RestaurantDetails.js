@@ -137,8 +137,14 @@ function RestaurantDetails() {
     fetchRestuarantDetail();
   }, []);
 
-  const handleReserveClick = () => {
-    navigate("/Reservation"); //add reservation page name
+  // const handleReserveClick = async (restaurant_id) => {
+  //   navigate("/Reservation/${restaurant_id}"); // reservation page name
+  // };
+
+  const handleReserveClick = async (restaurant_id) => {
+    navigate(`/Reservation/${restaurant_id}`, {
+      state: { restaurantData }, // Pass restaurantData as state
+    });
   };
 
   return (
