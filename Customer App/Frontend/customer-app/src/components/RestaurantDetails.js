@@ -252,7 +252,9 @@ function RestaurantDetails() {
       </div>
       </div>
 )}
-      <Button onClick={handleReserveClick}>Reserve</Button>
+      <Button onClick={() => handleReserveClick(restaurantData.restaurant_id)}>
+        Reserve
+      </Button>
     </div>
   );
 }
