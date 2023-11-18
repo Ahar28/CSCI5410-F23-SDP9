@@ -20,6 +20,7 @@ const EditReservationForm = () => {
   console.log("restaurant_id : ", reservationData.restaurant_id);
 
   useEffect(() => {
+    debugger;
     console.log("reservationData ahar :", reservationData);
     const user_id = sessionStorage.getItem("userId");
     setUserID(user_id);
@@ -28,7 +29,7 @@ const EditReservationForm = () => {
   useEffect(() => {
     if (reservationData) {
       debugger;
-      setNumberOfPeople(reservationData.data.no_of_people.toString());
+      setNumberOfPeople(reservationData.data.no_of_people);
       // setDate(reservationData.reservation_date);
       // setTime(reservationData.reservation_time);
       setrestaurantId(reservationData.data.restaurant_id);
@@ -79,6 +80,7 @@ const EditReservationForm = () => {
 
   const handleEditReservation = async () => {
     setloading(true);
+    debugger;
     var response;
     try {
       const datetime = `${date} ${time}`;
