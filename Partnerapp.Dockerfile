@@ -2,10 +2,8 @@ FROM node:16.15.1 as build
 
 WORKDIR /PartnerApp
 
-ARG src2="/Customer App/Frontend/customer-app/package.json"
-ARG src ="/Partner App/Frontend/partner-app/package.json"
+ARG src="/Partner App/Frontend/partner-app/package.json"
 
-ARG rootsrc2="/Customer App/Frontend/customer-app/"
 ARG rootsrc="/Partner App/Frontend/partner-app/"
 
 # ARG nginxsrc="/Customer App/Frontend/customer-app/nginx/nginx.conf"
