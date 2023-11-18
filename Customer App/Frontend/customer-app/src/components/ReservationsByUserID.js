@@ -21,8 +21,16 @@ const ReservationsByUserID = () => {
           `https://7jk304w1wf.execute-api.us-east-1.amazonaws.com/dev/getreservationbyuserid?user_id=${user_id}`
         );
         setReservations(response.data.document);
-        console.log("response is +++", response);
-        console.log("reservations ===++  ", reservations);
+        console.log("response is --++__++", response);
+        console.log("response.data is --++__++", response.data);
+        console.log(
+          "response.data.document is --++__++",
+          response.data.document
+        );
+        console.log(
+          "response.data.document.data is --++__++",
+          response.data.document.data
+        );
       } catch (error) {
         console.error("Error fetching reservations: ", error);
       }
@@ -31,11 +39,19 @@ const ReservationsByUserID = () => {
     fetchReservations();
   }, []);
 
-  const handleEditClick = async () => {
-    navigate(
-      `/edit-reservation`
-      // , { state: { restaurantData }, // Pass restaurantData as state }
-    );
+  // const handleEditClick = async () => {
+  //   navigate(
+  //     `/edit-reservation`
+  //     // , { state: { restaurantData }, // Pass restaurantData as state }
+  //   );
+  // };
+
+  const handleEditClick = (reservation) => {
+    debugger;
+    console.log(reservation);
+    navigate(`/edit-reservation`, {
+      state: { reservationData: reservation },
+    });
   };
 
   // const handleDeleteClick = (reservation) => {
@@ -85,18 +101,23 @@ const ReservationsByUserID = () => {
                   <Card.Title>Reservation ID: {index + 1}</Card.Title>
                   <Card.Text>
                     {/* <strong>User ID:</strong> {reservation.user_id}
-                    <br /> */}
+                      <br /> */}
                     {/* <strong>Restaurant ID:</strong> {reservation.restaurant_id}
-                    <br /> */}
-                    <strong>Required Capacity:</strong>{" "}
-                    {reservation.required_capacity}
+                      <br /> */}
+                    <strong>No of People :</strong>{" "}
+                    {reservation.data.no_of_people}
+                    <br />
+                    <strong>Doc id : </strong> {reservation.id}
                     <br />
                     <strong>Reservation Date:</strong>{" "}
                     {new Date(
-                      reservation.reservation_date._seconds * 1000
+                      reservation.data.reservation_date._seconds * 1000
                     ).toLocaleString()}
                     <br></br>
-                    <Button onClick={() => handleEditClick()} variant="primary">
+                    <Button
+                      onClick={() => handleEditClick(reservation)}
+                      variant="primary"
+                    >
                       Edit
                     </Button>
                     {"     "}
@@ -114,23 +135,6 @@ const ReservationsByUserID = () => {
           ))}
         </Row>
       </Container>
-      {/* Delete Confirmation Modal */}
-      {/* <Modal show={showModal} onHide={handleDeleteCancel}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Confirmation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete this reservation?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleDeleteCancel}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleDeleteConfirmation}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </>
   );
 };

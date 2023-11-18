@@ -44,7 +44,7 @@ const ReservationForm = () => {
     }
   };
 
-  const handleReservation = async () => {
+  const handleReservation = async (restaurant_id) => {
     setloading(true);
     var response;
     try {
@@ -61,7 +61,7 @@ const ReservationForm = () => {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
           user_id,
-          restaurant_id: parsedRestaurantId,
+          restaurant_id: parseInt(restaurant_id, 10),
         }
       );
 
@@ -105,7 +105,7 @@ const ReservationForm = () => {
             <Form.Control
               type="time"
               value={time}
-              step="1"
+              // step="1"
               onChange={(e) => handleChange(e, "time")}
             />
           </Form.Group>
@@ -116,7 +116,7 @@ const ReservationForm = () => {
               variant="primary"
               type="submit"
               style={{ margin: "20px auto" }}
-              onClick={() => handleReservation()}
+              onClick={() => handleReservation(restaurant_id)}
             >
               Reserve table
             </Button>

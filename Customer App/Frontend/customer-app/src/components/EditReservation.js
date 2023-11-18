@@ -1,39 +1,69 @@
-/**
- * edit reservtion
- * send the data from the card to fill in the form and then upon clicking should hit the udpate api
- */
-
 import React, { useState, useEffect } from "react";
-import { Container, Form, Row, Col, Button } from "react-bootstrap";
+import { Container, Form, Row, Col, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 const EditReservationForm = () => {
   const { restaurant_id } = useParams();
-  //const reservationDate = restaurant_id;
+  const location = useLocation();
+  const { reservationData } = location.state || {};
+  const navigate = useNavigate();
+
   const [user_id, setUserID] = useState("");
   const [time, setTime] = useState("");
   const [isloading, setloading] = useState(false);
   const [date, setDate] = useState("");
+  const [rest_id, setrestaurantId] = useState("");
   const [no_of_people, setNumberOfPeople] = useState("");
-  const [reservationData, setReservationData] = useState(null);
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
+  console.log("restaurant_id : ", reservationData.restaurant_id);
 
   useEffect(() => {
+    console.log("reservationData ahar :", reservationData);
     const user_id = sessionStorage.getItem("userId");
     setUserID(user_id);
-  });
+  }, []);
 
-  // const {
-  //   state: { restaurantData },
-  // } = useLocation();
+  useEffect(() => {
+    if (reservationData) {
+      debugger;
+      setNumberOfPeople(reservationData.data.required_capacity.toString());
+      // setDate(reservationData.reservation_date);
+      // setTime(reservationData.reservation_time);
+      setrestaurantId(reservationData.data.restaurant_id);
+      // Assuming reservationData.reservation_date is a plain object
+      const seconds = reservationData.data.reservation_date._seconds;
+      const nanoseconds = reservationData.data.reservation_date._nanoseconds;
 
-  // console.log("====+++++=====", restaurantData);
+      // Create a new Date object
+      const newreservationDate = new Date(seconds * 1000 + nanoseconds / 1e6);
+
+      // Format date as "yyyy-MM-dd"
+      const formattedDate = newreservationDate.toISOString().split("T")[0];
+
+      // Format time manually as "HH:mm"
+      const hours = newreservationDate.getHours();
+      const minutes = newreservationDate.getMinutes();
+
+      debugger;
+      const formattedHours = hours.toString().padStart(2, "0");
+      const formattedMinutes = minutes.toString().padStart(2, "0");
+
+      const formattedTime = `${formattedHours}:${formattedMinutes}`;
+
+      setDate(formattedDate);
+      console.log(formattedDate);
+      console.log(formattedTime);
+
+      setTime(formattedTime);
+      // set other form fields based on your data structure
+    }
+  }, [reservationData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Add your form submission logic here
   };
 
   const handleChange = (e, key) => {
@@ -47,37 +77,50 @@ const EditReservationForm = () => {
     }
   };
 
-  /**
-   * handle update request here
-   */
-
-  const handleReservation = async () => {
+  const handleEditReservation = async () => {
+    setloading(true);
     var response;
     try {
       const datetime = `${date} ${time}`;
-      // Make an API POST request to create a reservation
 
-      response = await axios.post(
-        //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
-        "https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
-        //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
+      // Make an API PUT request to update the reservation
+      response = await axios.put(
+        `https://pqnultyhi3.execute-api.us-east-1.amazonaws.com/dev/edit-reservation`,
         {
           no_of_people: parsedNoOfPeople,
-          reservationDate: datetime,
+          newreservationDate: datetime,
           user_id,
-          restaurant_id: parsedRestaurantId,
+          reservation_id: reservationData.id,
+          restaurant_id: reservationData.data.restaurant_id,
         }
       );
 
-      // Handle a successful reservation
-      //setReservationData(response.data);
-
-      // navigate("/home");
+      // Handle a successful reservation update
+      setloading(false);
+      navigate("/view-reservations");
     } catch (error) {
       console.log(response);
-      // Handle  errors, e.g., display an error message to the user
-      console.error("Error creating reservation: ", error);
-      setReservationData(null);
+      // Handle errors, e.g., display an error message to the user
+      console.error("Error updating reservation: ", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    setloading(true);
+    var response;
+    try {
+      // Make an API DELETE request to delete the reservation
+      response = await axios.delete(
+        `https://example-api.com/delete-reservation/${reservationData.reservation_id}`
+      );
+
+      // Handle a successful deletion
+      setloading(false);
+      navigate("/view-reservations");
+    } catch (error) {
+      console.log(response);
+      // Handle errors, e.g., display an error message to the user
+      console.error("Error deleting reservation: ", error);
     }
   };
 
@@ -87,7 +130,7 @@ const EditReservationForm = () => {
       <Form onSubmit={handleSubmit}>
         <Row>
           <Row>
-            <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
+            <Form.Label>Restaurant ID is : {rest_id} </Form.Label>
           </Row>
           <Form.Group as={Col} controlId="formGridEmail">
             <Form.Label>No of People</Form.Label>
@@ -109,39 +152,36 @@ const EditReservationForm = () => {
             <Form.Control
               type="time"
               value={time}
-              step="1"
+              //step="1"
               onChange={(e) => handleChange(e, "time")}
             />
           </Form.Group>
         </Row>
-        {!isloading ? (
-          <Button
-            variant="primary"
-            type="submit"
-            style={{ margin: "20px auto" }}
-            onClick={() => handleReservation()}
-          >
-            Confirm Changes
-          </Button>
-        ) : (
-          <Spinner animation="border" style={{ margin: "20px auto" }} />
-        )}
-        <Button
-          variant="primary"
-          type="submit"
-          style={{ margin: "20px 20px", backgroundColor: "red" }}
-          onClick={() => handleReservation()}
-        >
-          Delete Reservation
-        </Button>
+        <Row>
+          {!isloading ? (
+            <>
+              <Button
+                variant="primary"
+                type="submit"
+                style={{ margin: "20px auto" }}
+                onClick={() => handleEditReservation()}
+              >
+                Confirm Changes
+              </Button>
+              <Button
+                variant="danger"
+                type="button"
+                style={{ margin: "20px 20px" }}
+                onClick={() => handleDelete()}
+              >
+                Delete Reservation
+              </Button>
+            </>
+          ) : (
+            <Spinner animation="border" style={{ margin: "20px auto" }} />
+          )}
+        </Row>
       </Form>
-
-      {reservationData && (
-        <div>
-          <p>Reservation updated successfully!</p>
-          <pre>{JSON.stringify(reservationData, null, 2)}</pre>
-        </div>
-      )}
     </Container>
   );
 };

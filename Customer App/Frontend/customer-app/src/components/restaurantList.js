@@ -123,7 +123,11 @@ function RestaurantList() {
   const handleViewDetails = async (restaurant_id) => {
     navigate(`/restaurantpage/${restaurant_id}`);
   };
-  
+
+  const handleViewReservation = async () => {
+    navigate(`/view-reservations`);
+  };
+
   // Frontend elements
   return (
     <div>
@@ -131,6 +135,7 @@ function RestaurantList() {
         <Button icon={<LogoutOutlined />} onClick={handleSignOut}>
           Sign Out
         </Button>
+        <Button onClick={handleViewReservation}>Your Reservations</Button>
       </div>
 
       <div>
