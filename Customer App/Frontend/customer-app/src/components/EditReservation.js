@@ -17,7 +17,7 @@ const EditReservationForm = () => {
   const [no_of_people, setNumberOfPeople] = useState("");
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
-  console.log("restaurant_id : ", reservationData.restaurant_id);
+  // console.log("restaurant_id : ", reservationData.restaurant_id);
 
   useEffect(() => {
     debugger;
@@ -29,7 +29,7 @@ const EditReservationForm = () => {
   useEffect(() => {
     if (reservationData) {
       debugger;
-      setNumberOfPeople(reservationData.data.no_of_people);
+      setNumberOfPeople(reservationData.data.required_capacity.toString());
       // setDate(reservationData.reservation_date);
       // setTime(reservationData.reservation_time);
       setrestaurantId(reservationData.data.restaurant_id);
@@ -101,7 +101,7 @@ const EditReservationForm = () => {
       setloading(false);
       navigate("/view-reservations");
     } catch (error) {
-      console.log(response);
+      // console.log(response);
       // Handle errors, e.g., display an error message to the user
       console.error("Error updating reservation: ", error);
     }
