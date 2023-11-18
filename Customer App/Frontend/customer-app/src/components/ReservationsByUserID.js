@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Row, Col, Button } from "react-bootstrap";
+import { Container, Card, Row, Col, Button, Modal } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const ReservationsByUserID = () => {
   const [reservations, setReservations] = useState([]);
   const navigate = useNavigate();
-  //for delete
   const [showModal, setShowModal] = useState(false);
   const [reservationToDelete, setReservationToDelete] = useState(null);
 
@@ -21,16 +20,6 @@ const ReservationsByUserID = () => {
           `https://7jk304w1wf.execute-api.us-east-1.amazonaws.com/dev/getreservationbyuserid?user_id=${user_id}`
         );
         setReservations(response.data.document);
-        console.log("response is --++__++", response);
-        console.log("response.data is --++__++", response.data);
-        console.log(
-          "response.data.document is --++__++",
-          response.data.document
-        );
-        console.log(
-          "response.data.document.data is --++__++",
-          response.data.document.data
-        );
       } catch (error) {
         console.error("Error fetching reservations: ", error);
       }
@@ -39,13 +28,6 @@ const ReservationsByUserID = () => {
     fetchReservations();
   }, []);
 
-  // const handleEditClick = async () => {
-  //   navigate(
-  //     `/edit-reservation`
-  //     // , { state: { restaurantData }, // Pass restaurantData as state }
-  //   );
-  // };
-
   const handleEditClick = (reservation) => {
     debugger;
     console.log(reservation);
@@ -53,11 +35,6 @@ const ReservationsByUserID = () => {
       state: { reservationData: reservation },
     });
   };
-
-  // const handleDeleteClick = (reservation) => {
-  //   setReservationToDelete(reservation);
-  //   setShowModal(true);
-  // };
 
   const handleDeleteClick = (reservation) => {
     setReservationToDelete(reservation);
@@ -69,15 +46,21 @@ const ReservationsByUserID = () => {
 
     try {
       // Make an API DELETE request to delete the reservation
-      const response = await axios
-        .delete
-        //   `https://ftkd2l6ffi.execute-api.us-east-1.amazonaws.com/dev/deletereservation/id=${documentid}`
-        ();
+      await axios.delete(
+        // `https://ftkd2l6ffi.execute-api.us-east-1.amazonaws.com/dev/deletereservation?id=${reservationToDelete.id}`
+        `https://gg9z253h82.execute-api.us-east-1.amazonaws.com/dev/delete-reservation?id=${reservationToDelete.id}` //api = deleteReservationAhar
+      );
 
       // Handle a successful deletion
-      console.log("Reservation deleted successfully:", response);
+      console.log("Reservation deleted successfully");
+      debugger;
+      navigate("/view-reservations");
+      // Reload the page
+      debugger;
+      window.location.reload();
       // You may want to fetch the reservations again after deletion
       // to update the UI with the latest data.
+      fetchReservations();
     } catch (error) {
       // Handle errors, e.g., display an error message to the user
       console.error("Error deleting reservation: ", error);
@@ -89,8 +72,15 @@ const ReservationsByUserID = () => {
     setReservationToDelete(null);
   };
 
+  const handleViewRestauantsClick = () => {
+    navigate("/home");
+  };
+
   return (
     <>
+      <Button variant="primary" onClick={() => handleViewRestauantsClick()}>
+        View Restaurants
+      </Button>
       <Container>
         <h2 style={{ textAlign: "center" }}>All Reservations</h2>
         <Row>
@@ -105,7 +95,10 @@ const ReservationsByUserID = () => {
                     {/* <strong>Restaurant ID:</strong> {reservation.restaurant_id}
                       <br /> */}
                     <strong>No of People :</strong>{" "}
-                    {reservation.data.no_of_people}
+                    {/* {reservation.data.no_of_people} */}
+                    {reservation.data.no_of_people
+                      ? reservation.data.no_of_people
+                      : reservation.data.required_capacity}
                     <br />
                     <strong>Doc id : </strong> {reservation.id}
                     <br />
@@ -121,10 +114,9 @@ const ReservationsByUserID = () => {
                       Edit
                     </Button>
                     {"     "}
-                    {/* <Button onClick={() => handleDeleteClick()}>Delete</Button> */}
                     <Button
-                      onClick={() => handleDeleteClick(reservation)}
                       variant="danger"
+                      onClick={() => handleDeleteClick(reservation)}
                     >
                       Delete
                     </Button>
@@ -135,6 +127,23 @@ const ReservationsByUserID = () => {
           ))}
         </Row>
       </Container>
+      {/* Delete Confirmation Modal */}
+      <Modal show={showModal} onHide={handleDeleteCancel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Confirmation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this reservation?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleDeleteCancel}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirmation}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
