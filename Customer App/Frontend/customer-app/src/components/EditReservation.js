@@ -105,25 +105,6 @@ const EditReservationForm = () => {
     }
   };
 
-  const handleDelete = async () => {
-    setloading(true);
-    var response;
-    try {
-      // Make an API DELETE request to delete the reservation
-      response = await axios.delete(
-        `https://example-api.com/delete-reservation/${reservationData.reservation_id}`
-      );
-
-      // Handle a successful deletion
-      setloading(false);
-      navigate("/view-reservations");
-    } catch (error) {
-      console.log(response);
-      // Handle errors, e.g., display an error message to the user
-      console.error("Error deleting reservation: ", error);
-    }
-  };
-
   return (
     <Container style={{ maxWidth: "600px" }}>
       <h2 style={{ textAlign: "center" }}>Edit your Reservation</h2>
@@ -167,14 +148,6 @@ const EditReservationForm = () => {
                 onClick={() => handleEditReservation()}
               >
                 Confirm Changes
-              </Button>
-              <Button
-                variant="danger"
-                type="button"
-                style={{ margin: "20px 20px" }}
-                onClick={() => handleDelete()}
-              >
-                Delete Reservation
               </Button>
             </>
           ) : (
