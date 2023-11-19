@@ -1,9 +1,6 @@
 # Ignore node_modules
 node_modules/
 
-# Ignore files
-ReservationNode
-
 ### VS Code ###
 .vscode/
 
