@@ -22,6 +22,7 @@ function RestaurantDetails() {
   const [isAddTablePopupOpen,setAddTablePopup]=useState(false);
   const [isAddRestaurantOfferPopupOpen,setAddRestaurantOfferPopup]=useState(false);
   const [isChangeAvailabilityPopupOpen,setChangeAvailabilityPopup]=useState(false);
+  const [itemName,setItemName]=useState('');
   const [restaurantData, setRestaurantData] = useState({
     restaurant_name: "indian cuisine",
     address: "100, This street, Halifax, NS A1B 2C3",
@@ -134,32 +135,76 @@ function RestaurantDetails() {
   });
   
   const openMenuPopup=()=>{
-    console.log("in open menu popup")
     setAddMenuPopup(true);
   }
   const closeAddMenuPopup=()=>{
     setAddMenuPopup(false);
   }
-  const handleMenuChange=(menuData)=>{
-    console.log(menuData);
+  const handleMenuChange=async(menuData)=>{
+    const bodyData = {
+      restaurantId:restaurantData.restaurant_id,
+      menuName:menuData.menuName,
+      menuImage:menuData.menuImage,
+      isAvailable:menuData.isAvailable,
+      price:menuData.price,
+      userId:auth.currentUser.uid
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/menu`,bodyData,
+      { headers }
+  );
+  console.log(resData);
   }
-  const openAddMenuOfferPopup=()=>{
+  const openAddMenuOfferPopup=(menuName)=>{
+    setItemName(menuName);
     setAddMenuOfferPopup(true)
   }
   const closeAddMenuOfferPopup=()=>{
     setAddMenuOfferPopup(false)
   }
-  const handleAddMenuOfferPopup=(menuOffer)=>{
-    console.log(menuOffer);
+  const handleAddMenuOfferPopup=async(menuOffer)=>{
+    const bodyData = {
+      menu_name:itemName,
+      offer:menuOffer,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/menu/offer`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  setItemName('');
   }
-  const openUpdateMenuAvailabilityPopup=()=>{
+  const openUpdateMenuAvailabilityPopup=(menuName)=>{
+    setItemName(menuName);
     setUpdateMenuAvailabilityPopup(true)
   }
   const closeUpdateMenuAvailabilityPopup=()=>{
     setUpdateMenuAvailabilityPopup(false);
   }
-  const handleUpdateMenuAvailability=(menuData)=>{
-    console.log(menuData)
+  const handleUpdateMenuAvailability=async(menuAvailability)=>{
+    const bodyData = {
+      menu_name:itemName,
+      isAvailable:menuAvailability,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/menu/availability`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  setItemName('');
   }
   const openAddTablePopup=()=>{
     setAddTablePopup(true);
@@ -167,8 +212,20 @@ function RestaurantDetails() {
   const closeAddTablePopup=()=>{
     setAddTablePopup(false);
   }
-  const handleTableChange=(tableData)=>{
-    console.log(tableData);
+  const handleTableChange=async(tableData)=>{
+    const bodyData = {
+      tableDetails:tableData,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/table`,bodyData,
+      { headers }
+  );
+  console.log(resData);
   }
   const openAddRestaurantOfferPopup=()=>{
     setAddRestaurantOfferPopup(true)
@@ -176,8 +233,20 @@ function RestaurantDetails() {
   const closeAddRestaurantOfferPopup=()=>{
     setAddRestaurantOfferPopup(false)
   }
-  const handleAddRestaurantOffer=(restaurantOffer)=>{
-    console.log(restaurantOffer)
+  const handleAddRestaurantOffer=async(restaurantOffer)=>{
+    const bodyData = {
+      restaurantOffer:restaurantOffer,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/offer`,bodyData,
+      { headers }
+  );
+  console.log(resData);
   }
   const openChangeAvailabilityPopup=()=>{
     setChangeAvailabilityPopup(true)
@@ -185,8 +254,20 @@ function RestaurantDetails() {
   const closeChangeAvailabilityPopup=()=>{
     setChangeAvailabilityPopup(false)
   }
-  const handleChangeAvailability=(availabilityData)=>{
-    console.log(availabilityData)
+  const handleChangeAvailability=async(availabilityData)=>{
+    const bodyData = {
+      availabilityData,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/availability`,bodyData,
+      { headers }
+  );
+  console.log(resData);
   }
   useEffect(() => {
     async function fetchRestuarantDetail() {
@@ -250,7 +331,8 @@ function RestaurantDetails() {
             <div>{item.name}</div>
             <div>{item.price}</div>
             <div>
-              <Button onClick={openAddMenuOfferPopup}>Add Menu Offer</Button>
+              <Button onClick={()=>openAddMenuOfferPopup(item.name)}>Add Menu Offer</Button>
+              
               {
                 isAddMenuOfferPopupOpen&&(
                   <AddMenuOfferPopup
@@ -262,7 +344,7 @@ function RestaurantDetails() {
               
             </div>
             <div>
-              <Button onClick={openUpdateMenuAvailabilityPopup}>Update Menu Availability</Button>
+              <Button onClick={()=>openUpdateMenuAvailabilityPopup(item.name)}>Update Menu Availability</Button>
               {
                 isUpdateMenuAvailabilityPopupOpen && (
                   <UpdateMenuAvailabilityPopup
