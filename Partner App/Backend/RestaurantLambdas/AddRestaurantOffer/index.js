@@ -14,10 +14,6 @@ exports.handler = async (event) => {
     ExpressionAttributeValues: {
       ':restaurantOffer':restaurantOffer
     },
-    ConditionExpression: 'user_id = :userId',
-    ExpressionAttributeValues: {
-      ':userId': userId,
-    },
     ReturnValues: 'ALL_NEW',
   }
   try {

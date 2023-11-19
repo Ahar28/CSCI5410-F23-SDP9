@@ -6,6 +6,10 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const resTab = 'restaurant_details';
 exports.handler = async (event) => {
   const {restaurantId,tableDetails,userId} = event['body-json'];
+  const newTableDetails={
+    size:tableDetails.tableSize,
+    number:tableDetails.tableNumber
+  }
   const params = {
     TableName: resTab,
     Key: { restaurant_id:restaurantId }, 
@@ -13,13 +17,9 @@ exports.handler = async (event) => {
     ExpressionAttributeNames: { '#tables': 'tables' },
     ExpressionAttributeValues: {
       ':new_item': [ 
-        tableDetails
+        newTableDetails
       ],
       ':empty_list': [],
-    },
-    ConditionExpression: 'user_id = :userId',
-    ExpressionAttributeValues: {
-      ':userId': userId,
     },
     ReturnValues: 'ALL_NEW',
   };

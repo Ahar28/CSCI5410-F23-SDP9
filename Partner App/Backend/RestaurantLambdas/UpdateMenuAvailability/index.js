@@ -7,7 +7,7 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const resTab = 'restaurant_details'; 
 exports.handler = async (event) => {
     const body = event['body-json']
-    const restaurantId=body.restaurant_id;
+    const restaurantId=body.restaurantId;
     const menuName = body.menu_name;
     const newAvailability=body.isAvailable;
     const userId = body.userId;
@@ -17,10 +17,6 @@ exports.handler = async (event) => {
             TableName: resTab,
             Key: {
                 restaurant_id: restaurantId,
-            },
-            ConditionExpression: 'user_id = :userId',
-            ExpressionAttributeValues: {
-                ':userId': userId,
             },
         };
         
@@ -58,7 +54,7 @@ exports.handler = async (event) => {
 
                 return {
                     statusCode: 200,
-                    body: JSON.stringify({ message: 'Review added and menu item updated successfully.' }),
+                    body: JSON.stringify({ message: 'Availability Updated.' }),
                 };
             } else {
                 return {
