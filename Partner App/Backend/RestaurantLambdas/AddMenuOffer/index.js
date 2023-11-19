@@ -7,7 +7,7 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const resTab = 'restaurant_details'; 
 exports.handler = async (event) => {
     const body = event['body-json']
-    const restaurantId=body.restaurant_id;
+    const restaurantId=body.restaurantId;
     const menuName = body.menu_name;
     const offer = body.offer;
     const userId=body.userId;
@@ -17,17 +17,12 @@ exports.handler = async (event) => {
             Key: {
                 restaurant_id: restaurantId,
             },
-            ConditionExpression: 'user_id = :userId',
-            ExpressionAttributeValues: {
-                ':userId': userId,
-            },
         };
         
         const restaurantItem = await dynamoDB.get(params).promise();
         
         if (restaurantItem.Item) {
             const menus = restaurantItem.Item.menu;
-           
             let menu;
             // Find the menu item by name
             for(const curr of menus){
@@ -38,9 +33,7 @@ exports.handler = async (event) => {
             }
             
             if (menu) {
-
-                menu.percent_offer=offer;
-
+                menu.percent_offer=Number(offer);
                 // Update the restaurant item in DynamoDB
                 const updateParams = {
                     TableName: resTab,

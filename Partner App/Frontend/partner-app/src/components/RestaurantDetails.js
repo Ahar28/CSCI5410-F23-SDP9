@@ -4,12 +4,25 @@ import "./../RestaurantDetails.css";
 import { Button } from "antd";
 import axios from "axios";
 import { auth } from "../config/firebase";
+import CreateMenuPopup from "./popups/CreateMenuPopup";
+import AddTablesPopup from "./popups/AddTablesPopup";
+import AddRestaurantOfferPopup from "./popups/AddRestaurantOfferPopup";
+import AddMenuOfferPopup from "./popups/AddMenuOfferPopup";
+import UpdateMenuAvailabilityPopup from "./popups/UpdateMenuAvailabilityPopup";
+import ChangeAvailabilityPopup from "./popups/ChangeAvailabilityPopup";
+import './../popup.css';
 
 function RestaurantDetails() {
   const navigate = useNavigate();
 
   const { restaurant_id } = useParams();
-
+  const [isAddMenuPopupOpen,setAddMenuPopup]=useState(false);
+  const [isAddMenuOfferPopupOpen,setAddMenuOfferPopup]=useState(false);
+  const [isUpdateMenuAvailabilityPopupOpen,setUpdateMenuAvailabilityPopup]=useState(false);
+  const [isAddTablePopupOpen,setAddTablePopup]=useState(false);
+  const [isAddRestaurantOfferPopupOpen,setAddRestaurantOfferPopup]=useState(false);
+  const [isChangeAvailabilityPopupOpen,setChangeAvailabilityPopup]=useState(false);
+  const [itemName,setItemName]=useState('');
   const [restaurantData, setRestaurantData] = useState({
     restaurant_name: "indian cuisine",
     address: "100, This street, Halifax, NS A1B 2C3",
@@ -120,7 +133,142 @@ function RestaurantDetails() {
       },
     },
   });
-
+  
+  const openMenuPopup=()=>{
+    setAddMenuPopup(true);
+  }
+  const closeAddMenuPopup=()=>{
+    setAddMenuPopup(false);
+  }
+  const handleMenuChange=async(menuData)=>{
+    const bodyData = {
+      restaurantId:restaurantData.restaurant_id,
+      menuName:menuData.menuName,
+      menuImage:menuData.menuImage,
+      isAvailable:menuData.isAvailable,
+      price:menuData.price,
+      userId:auth.currentUser.uid
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/menu`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  }
+  const openAddMenuOfferPopup=(menuName)=>{
+    setItemName(menuName);
+    setAddMenuOfferPopup(true)
+  }
+  const closeAddMenuOfferPopup=()=>{
+    setAddMenuOfferPopup(false)
+  }
+  const handleAddMenuOfferPopup=async(menuOffer)=>{
+    const bodyData = {
+      menu_name:itemName,
+      offer:menuOffer,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/menu/offer`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  setItemName('');
+  }
+  const openUpdateMenuAvailabilityPopup=(menuName)=>{
+    setItemName(menuName);
+    setUpdateMenuAvailabilityPopup(true)
+  }
+  const closeUpdateMenuAvailabilityPopup=()=>{
+    setUpdateMenuAvailabilityPopup(false);
+  }
+  const handleUpdateMenuAvailability=async(menuAvailability)=>{
+    const bodyData = {
+      menu_name:itemName,
+      isAvailable:menuAvailability,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/menu/availability`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  setItemName('');
+  }
+  const openAddTablePopup=()=>{
+    setAddTablePopup(true);
+  }
+  const closeAddTablePopup=()=>{
+    setAddTablePopup(false);
+  }
+  const handleTableChange=async(tableData)=>{
+    const bodyData = {
+      tableDetails:tableData,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/table`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  }
+  const openAddRestaurantOfferPopup=()=>{
+    setAddRestaurantOfferPopup(true)
+  }
+  const closeAddRestaurantOfferPopup=()=>{
+    setAddRestaurantOfferPopup(false)
+  }
+  const handleAddRestaurantOffer=async(restaurantOffer)=>{
+    const bodyData = {
+      restaurantOffer:restaurantOffer,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/offer`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  }
+  const openChangeAvailabilityPopup=()=>{
+    setChangeAvailabilityPopup(true)
+  }
+  const closeChangeAvailabilityPopup=()=>{
+    setChangeAvailabilityPopup(false)
+  }
+  const handleChangeAvailability=async(availabilityData)=>{
+    const bodyData = {
+      availabilityData,
+      userId:auth.currentUser.uid,
+      restaurantId:restaurantData.restaurant_id
+    }
+    const headers = {
+      "Content-type": "application/json",
+  };
+  const resData = await axios.post(
+      `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurant/availability`,bodyData,
+      { headers }
+  );
+  console.log(resData);
+  }
   useEffect(() => {
     async function fetchRestuarantDetail() {
       const headers = {
@@ -144,61 +292,114 @@ function RestaurantDetails() {
 
   return (
     <div className="restaurant-details">
-      <h1>{restaurantData.restaurant_name}</h1>
-      <div>
-        <strong>Address:</strong> {restaurantData.address}
-      </div>
-      <div>
-        {" "}
-        {restaurantData.is_open ? (
-          <strong>Open</strong>
-        ) : (
-          <strong>Closed</strong>
-        )}
-      </div>
-      <div className="images">
-        {restaurantData.images.map((image, index) => (
-          <img src={image} alt={`Restaurant Image ${index}`} key={index} />
+  <h1>{restaurantData.restaurant_name}</h1>
+  <div>
+    <strong>Address:</strong> {restaurantData.address}
+  </div>
+  <div>
+    {restaurantData.is_open ? (
+      <>
+        <strong>Open</strong>
+      </>
+    ) : (
+      <>
+        <strong>Closed</strong>
+      </>
+    )}
+  </div>
+  <div className="images">
+    {restaurantData.images.map((image, index) => (
+      <img src={image} alt={`Restaurant Image ${index}`} key={index} />
+    ))}
+  </div>
+  <div>
+    <h2>Menu</h2>
+    <Button onClick={openMenuPopup}>Add Menu</Button>
+    {isAddMenuPopupOpen&&(
+      <CreateMenuPopup
+      isOpen={isAddMenuPopupOpen}
+      onClose={closeAddMenuPopup}
+      onCreateMenu={handleMenuChange}/>
+    )}
+
+  </div>
+  {restaurantData.menu && restaurantData.menu.length > 0 && (
+    <div>
+      
+      <ul>
+        {restaurantData.menu.map((item, index) => (
+          <li key={index}>
+            <div className="menu-item">
+              <img src={item.image} alt={`Menu Item Image ${index}`} />
+            </div>
+            <div>{item.name}</div>
+            <div>{item.price}</div>
+            <div>
+              <Button onClick={()=>openAddMenuOfferPopup(item.name)}>Add Menu Offer</Button>
+              
+              {
+                isAddMenuOfferPopupOpen&&(
+                  <AddMenuOfferPopup
+                isOpen={isAddMenuOfferPopupOpen}
+                onClose={closeAddMenuOfferPopup}
+                onAddMenuOffer={handleAddMenuOfferPopup}/>
+                )
+              }
+              
+            </div>
+            <div>
+              <Button onClick={()=>openUpdateMenuAvailabilityPopup(item.name)}>Update Menu Availability</Button>
+              {
+                isUpdateMenuAvailabilityPopupOpen && (
+                  <UpdateMenuAvailabilityPopup
+                isOpen={isUpdateMenuAvailabilityPopupOpen}
+                onClose={closeUpdateMenuAvailabilityPopup}
+                onUpdateMenuAvailability={handleUpdateMenuAvailability}/>
+                )
+              }
+            </div>
+          </li>
         ))}
-      </div>
-      {restaurantData.menu && restaurantData.menu.length > 0 && (
-        <div>
-          <h2>Menu</h2>
-          <ul>
-            {restaurantData.menu.map((item, index) => (
-              <li key={index}>
-                <div className="menu-item">
-                  <img src={item.image} alt={`Menu Item Image ${index}`} />
-                </div>
-                <div>{item.name}</div>
-                <div>{item.price}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </ul>
+    </div>
+  )}
 
-      {restaurantData.restaurant_offer && (
-        <div>
-          <h2>Restaurant Offer</h2>
-          <div>{restaurantData.restaurant_offer}</div>
-        </div>
-      )}
+<div>
+      <h2>Restaurant Offer</h2>
+      <Button onClick={openAddRestaurantOfferPopup}>Add Restaurant Offer</Button>
+      {
+        isAddRestaurantOfferPopupOpen&&(
+          <AddRestaurantOfferPopup
+          isOpen={isAddRestaurantOfferPopupOpen}
+          onClose={closeAddRestaurantOfferPopup}
+          onAddRestaurantOffer={handleAddRestaurantOffer}/>
+        )
+      }
+        
+  </div>
+  {restaurantData.restaurant_offer ? (
+      <div>{restaurantData.restaurant_offer}</div>
+  ):(<div>
+    <h4>"There are no current offers now."</h4>
+  </div>)}
 
-      {restaurantData.restaurant_reviews &&
-        restaurantData.restaurant_reviews.length > 0 && (
-          <div>
-            <h2>Restaurant Reviews</h2>
-            <ul>
-              {restaurantData.restaurant_reviews.map((review, index) => (
-                <li key={index}>
-                  <div>Rating: {review.rating}</div>
-                  <div>{review.review}</div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+  <div>
+  <h2>Restaurant Reviews</h2>
+  </div>
+  {restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length > 0 && (
+    <div>
+      
+      <ul>
+        {restaurantData.restaurant_reviews.map((review, index) => (
+          <li key={index}>
+            <div>Rating: {review.rating}</div>
+            <div>{review.review}</div>
+          </li>
+        ))}
+      </ul>
+      
+    </div>
+  )}
 
       {restaurantData.restaurant_reviews &&
         restaurantData.restaurant_reviews.length > 0 && (

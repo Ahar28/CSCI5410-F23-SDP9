@@ -1,0 +1,4 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
+    "Fulfilment": "Got it. Here are the opening times: \n {get_restaurant_opening_times}.\nAnything else?"
+}
