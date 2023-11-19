@@ -1,0 +1,98 @@
+/**
+ * Partner App
+ * get reservation details by restaurant id
+ */
+
+const admin = require("firebase-admin");
+
+//Initializing Firebase Admin SDK with service account credentials
+const serviceAccount = require("./serviceAccountKey.json"); // file path for service account credentials
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://serverless-term-assignment.firebaseio.com", // Firebase project URL
+});
+
+// to test it locally
+/*
+ const event = {
+  user_id: 777
+};
+const context = {};
+*/
+
+exports.handler = async (event, context) => {
+  try {
+    console.log(
+      "event is : ",
+      event
+      // "++++ event.queryStringParameters is : ",
+      //  event.queryStringParameters
+    );
+    // Initialize Firestore
+    const db = admin.firestore();
+
+    //extracting user_id
+    //const user_id = event["queryStringParameters"]["user_id"]; //when hitting through api gateway
+    //const user_id = event.user_id; //when hitting directly
+    //const restaurant_id = event.restaurant_id;
+    //const restaurant_id = event["queryStringParameters"]["restaurant_id"];
+    const restaurant_id = parseInt(
+      event["queryStringParameters"]["restaurant_id"],
+      10
+    );
+
+    // Reference to the Firestore collection
+    const collectionRef = db.collection("Customer-Reservation"); // collection name
+
+    // getting the document
+    const docRef = await collectionRef
+      .where("restaurant_id", "==", restaurant_id)
+      .get();
+
+    if (docRef.empty) {
+      console.log("No matching documents.");
+      return;
+    }
+
+    docRef.forEach((doc) => {
+      console.log("doc_id : " + doc.id);
+      console.log(doc.id, "=>", doc.data());
+    });
+
+    // success reponse message
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST",
+        "Access-Control-Allow-Credentials": true,
+      },
+      isBase64Encoded: false,
+      body: JSON.stringify({
+        message: "Document retreived successfully",
+        document: docRef.docs.map((doc) => ({ id: doc.id, data: doc.data() })),
+        //document: docRef.docs.map((doc) => doc.data()),
+      }),
+    };
+  } catch (error) {
+    // error reponse message
+    return {
+      statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      isBase64Encoded: false,
+      body: JSON.stringify({
+        error: "Failed to retreive document",
+        message: error.message,
+      }),
+    };
+  }
+};
+
+//to test it locally
+//const result = exports.handler(event, context);
+//console.log(result);
