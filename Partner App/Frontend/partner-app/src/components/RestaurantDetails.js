@@ -282,9 +282,13 @@ function RestaurantDetails() {
       const resJsonData = JSON.parse(resData.data.body);
       setRestaurantData(resJsonData.Item);
       console.log(resJsonData.Item);
+      sessionStorage.setItem("restaurant_id", resJsonData.Item.restaurant_id);
     }
     fetchRestuarantDetail();
   }, []);
+  const handleEditClick = (restaurant_id) => {
+    navigate(`/restuarant/edit/${restaurant_id}`);
+  };
 
   return (
     <div className="restaurant-details">
@@ -397,74 +401,58 @@ function RestaurantDetails() {
     </div>
   )}
 
-<div>
-    <h2>Tables</h2>
-    <Button onClick={openAddTablePopup}>Add Tables</Button>
-    {isAddTablePopupOpen && (
-      <AddTablesPopup
-      isOpen={isAddTablePopupOpen}
-      onClose={closeAddTablePopup}
-      onCreateTable={handleTableChange}/>
-    )}
-  </div>
-  {restaurantData.tables && restaurantData.tables.length > 0 && (
-    <div>
-      <ul>
-        {restaurantData.tables.map((table, index) => (
-          <li key={index}>
-            <div>Table {table.number}</div>
-            <div>Size: {table.size}</div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
-
-  <div>
-    <h2>Timings</h2>
-    <Button onClick={openChangeAvailabilityPopup}>Change Availability</Button>
-    {isChangeAvailabilityPopupOpen && (
-      <ChangeAvailabilityPopup
-      isOpen={isChangeAvailabilityPopupOpen}
-      onClose={closeChangeAvailabilityPopup}
-      onChangeAvailability={handleChangeAvailability}/>
-    )}
-    
-  </div>
-  {restaurantData.timings  && (
-    <div>
-      <div>
-        Monday: {restaurantData.timings.monday.opening_time} -{" "}
-        {restaurantData.timings.monday.closing_time}
-      </div>
-      <div>
-        Tuesday: {restaurantData.timings.tuesday.opening_time} -{" "}
-        {restaurantData.timings.tuesday.closing_time}
-      </div>
-      <div>
-        Wednesday: {restaurantData.timings.wednesday.opening_time} -{" "}
-        {restaurantData.timings.wednesday.closing_time}
-      </div>
-      <div>
-        Thursday: {restaurantData.timings.thursday.opening_time} -{" "}
-        {restaurantData.timings.thursday.closing_time}
-      </div>
-      <div>
-        Friday: {restaurantData.timings.friday.opening_time} -{" "}
-        {restaurantData.timings.friday.closing_time}
-      </div>
-      <div>
-        Saturday: {restaurantData.timings.saturday.opening_time} -{" "}
-        {restaurantData.timings.saturday.closing_time}
-      </div>
-      <div>
-        Sunday: {restaurantData.timings.sunday.opening_time} -{" "}
-        {restaurantData.timings.sunday.closing_time}
-      </div>
-    </div>
-  )}
-
-
+      {restaurantData.restaurant_reviews &&
+        restaurantData.restaurant_reviews.length > 0 && (
+          <div>
+            <h2>Tables</h2>
+            <ul>
+              {restaurantData.tables.map((table, index) => (
+                <li key={index}>
+                  <div>Table {table.number}</div>
+                  <div>Size: {table.size}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      {restaurantData.timings && restaurantData.timings.length > 0 && (
+        <div>
+          <h2>Timings</h2>
+          <div>
+            Monday: {restaurantData.timings.monday.opening_time} -{" "}
+            {restaurantData.timings.monday.closing_time}
+          </div>
+          <div>
+            Tuesday: {restaurantData.timings.tuesday.opening_time} -{" "}
+            {restaurantData.timings.tuesday.closing_time}
+          </div>
+          <div>
+            wednesday: {restaurantData.timings.wednesday.opening_time} -{" "}
+            {restaurantData.timings.wednesday.closing_time}
+          </div>
+          <div>
+            Thursday: {restaurantData.timings.thursday.opening_time} -{" "}
+            {restaurantData.timings.thursday.closing_time}
+          </div>
+          <div>
+            Friday: {restaurantData.timings.friday.opening_time} -{" "}
+            {restaurantData.timings.friday.closing_time}
+          </div>
+          <div>
+            saturday: {restaurantData.timings.saturday.opening_time} -{" "}
+            {restaurantData.timings.saturday.closing_time}
+          </div>
+          <div>
+            Sunday: {restaurantData.timings.sunday.opening_time} -{" "}
+            {restaurantData.timings.sunday.closing_time}
+          </div>
+        </div>
+      )}
+      {restaurantData.user_id === auth.currentUser.uid && (
+        <Button onClick={() => handleEditClick(restaurantData.restaurant_id)}>
+          Edit
+        </Button>
+      )}
     </div>
   );
 }

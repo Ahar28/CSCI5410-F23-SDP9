@@ -19,7 +19,9 @@ const ReservationsByUserID = () => {
         const response = await axios.get(
           `https://7jk304w1wf.execute-api.us-east-1.amazonaws.com/dev/getreservationbyuserid?user_id=${user_id}`
         );
+        console.log("response ", response.data.document);
         setReservations(response.data.document);
+        console.log("reservations are : ", reservations);
       } catch (error) {
         console.error("Error fetching reservations: ", error);
       }
@@ -29,7 +31,7 @@ const ReservationsByUserID = () => {
   }, []);
 
   const handleEditClick = (reservation) => {
-    debugger;
+    
     console.log(reservation);
     navigate(`/edit-reservation`, {
       state: { reservationData: reservation },
