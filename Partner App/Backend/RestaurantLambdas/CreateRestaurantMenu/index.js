@@ -1,14 +1,16 @@
+
 const AWS = require("aws-sdk");
 AWS.config.update({
     region:'us-east-1'
 })
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const s3 = new AWS.S3();
+const mime = require("mime");
 const resTab = 'restaurant_details';
 const bucketName= 'sdp9restimages'
 exports.handler = async (event) => {
-  const {restaurantId,restaurantName,menuName,menuImage,isAvailable,price,userId} = event['body-json'];
-  let uploadedImageLink = uploadImages(menuImage,restaurantName,menuName);
+  const {restaurantId,menuName,menuImage,isAvailable,price,userId} = event['body-json'];
+  let uploadedImageLink = await uploadImages(menuImage,restaurantId,menuName);
   const params = {
     TableName: resTab,
     Key: { restaurant_id:restaurantId }, 
@@ -20,14 +22,11 @@ exports.handler = async (event) => {
           name: menuName,
           image:uploadedImageLink,
           price,
-          is_available:isAvailable
+          is_available:isAvailable,
+          percent_offer:0
         },
       ],
       ':empty_list': [],
-    },
-    ConditionExpression: 'user_id = :userId',
-    ExpressionAttributeValues: {
-      ':userId': userId,
     },
     ReturnValues: 'ALL_NEW',
   };
@@ -47,17 +46,21 @@ exports.handler = async (event) => {
   }
 };
 
-async function uploadImages(menuImage,restaurantName,menuName){
-    const imageBuffer = Buffer.from(menuImage, 'base64');
-    const objectKey = restaurantName+'_image_'+menuName+'_image.jpg';
+async function uploadImages(menuImage,restaurantId,menuName){
+    const base64Data = new Buffer.from(menuImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+    const type = menuImage.split(';')[0].split('/')[1];
+    const objectKey = restaurantId+'_image_'+menuName+"."+mime.getExtension(type);
     const params = {
       Bucket: bucketName,
       Key: objectKey,
-      Body: imageBuffer,
+      Body: base64Data,
+      ContentType:`image/${type}`,
+      ACL: 'public-read',
+      ContentEncoding: 'base64'
     };
     try {
       const data = await s3.upload(params).promise();
-      return data;
+      return data.Location
     } catch (error) {
       throw error;
     }

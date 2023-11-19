@@ -10,50 +10,49 @@ exports.handler = async (event) => {
     const {restaurantId,availabilityData,userId}=event['body-json'];
     const timingData = {
       monday:{
-        opening_time:availabilityData.opening_time,
-        closing_time:availabilityData.closing_time
+        opening_time:availabilityData.openingTime,
+        closing_time:availabilityData.closingTime
       },
       tuesday:{
-        opening_time:availabilityData.opening_time,
-        closing_time:availabilityData.closing_time
+        opening_time:availabilityData.openingTime,
+        closing_time:availabilityData.closingTime
       },
       wednesday:{
-        opening_time:availabilityData.opening_time,
-        closing_time:availabilityData.closing_time
+        opening_time:availabilityData.openingTime,
+        closing_time:availabilityData.closingTime
       },
       thursday:{
-        opening_time:availabilityData.opening_time,
-        closing_time:availabilityData.closing_time
+        opening_time:availabilityData.openingTime,
+        closing_time:availabilityData.closingTime
       },
       friday:{
-        opening_time:availabilityData.opening_time,
-        closing_time:availabilityData.closing_time
+        opening_time:availabilityData.openingTime,
+        closing_time:availabilityData.closingTime
       },
       saturday:{
-        opening_time:availabilityData.opening_time,
-        closing_time:availabilityData.closing_time
+        opening_time:availabilityData.openingTime,
+        closing_time:availabilityData.closingTime
       },
       sunday:{
-        opening_time:availabilityData.opening_time,
-        closing_time:availabilityData.closing_time
+        opening_time:availabilityData.openingTime,
+        closing_time:availabilityData.closingTime
       }
+    }
+    const newAvailabilityData={
+      opening_time:availabilityData.openingTime,
+      closing_time:availabilityData.closingTime
     }
     const params = {
     TableName: resTab,
     Key: { restaurant_id:restaurantId }, 
-    UpdateExpression: 'SET #available_times:available_times, #timings = :timings',
-    ExpressionAttributeNames: { '#available_times': 'available_times','#timings': 'timings' },
+    UpdateExpression: 'SET available_times=:available_times, timings = :timings',
     ExpressionAttributeValues: {
-      ':available_times': availabilityData,
+      ':available_times': newAvailabilityData,
       ':timings': timingData,
-    },
-    ConditionExpression: 'user_id = :userId',
-    ExpressionAttributeValues: {
-      ':userId': userId,
     },
     ReturnValues: 'ALL_NEW',
   };
-    const data = await dynamoDB.get(params).promise();
+    const data = await dynamoDB.update(params).promise();
     return {
         statusCode:200,
         body:JSON.stringify("Data has been updated successfully")

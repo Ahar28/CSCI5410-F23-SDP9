@@ -431,7 +431,7 @@ function RestaurantDetails() {
     )}
     
   </div>
-  {restaurantData.timings && restaurantData.timings.length > 0 && (
+  {restaurantData.timings  && (
     <div>
       <div>
         Monday: {restaurantData.timings.monday.opening_time} -{" "}

@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const uuid = require("uuid");
+const mime = require("mime");
 AWS.config.update({
     region:'us-east-1'
 })
@@ -11,7 +12,7 @@ const resTab = 'restaurant_details';
 exports.handler = async (event) => {
   const {restaurantName,base64Images,isOpen,address,userId} = event['body-json'];
   const restaurantId = uuid.v4();
-  let uploadedImageLinks = uploadImages(base64Images,restaurantName);
+  let uploadedImageLinks = await uploadImages(base64Images,restaurantName);
   const params = {
     TableName: resTab,
     Item: {
@@ -43,16 +44,20 @@ async function uploadImages(base64Images,restaurantName){
   let uploadedImageLinks = [];
   let i = 0;
   for(const base64Image of base64Images){
-    const imageBuffer = Buffer.from(base64Image, 'base64');
-    const objectKey = restaurantName+'_image_'+i+'.jpg';
+    const base64Data = new Buffer.from(base64Image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+  const type = base64Image.split(';')[0].split('/')[1];
+    const objectKey = restaurantName+'_image_'+i+"."+type;
     const params = {
       Bucket: bucketName,
       Key: objectKey,
-      Body: imageBuffer,
+      Body: base64Data,
+      ContentType:`image/${type}`,
+      ACL: 'public-read',
+      ContentEncoding: 'base64'
     };
     try {
       const data = await s3.upload(params).promise();
-      uploadedImageLinks.push(data);
+      uploadedImageLinks.push(data.Location);
     } catch (error) {
       throw error;
     }
