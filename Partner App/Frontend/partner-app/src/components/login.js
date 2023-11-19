@@ -5,7 +5,7 @@ import { FaGoogle } from 'react-icons/fa'
 import { Form, Input, Button } from 'antd';
 import { auth , googleProvider} from "../config/firebase";
 import {signInWithEmailAndPassword,signInWithPopup} from 'firebase/auth';
-
+import axios from 'axios';
 
 // Login function
 // elements from 
@@ -26,8 +26,20 @@ function Login() {
       // Call in-built firebase function to log in with email and password
       await signInWithEmailAndPassword(auth,email, password);
 
-      // Redirect to restaurantList Page
-      navigate('/home');
+      const headers = {
+        "Content-type": "application/json",
+      };
+      const resData = await axios.get(
+        `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurantbyuser?userId=${auth.currentUser.uid}`,
+        { headers }
+      );
+      console.log(resData);
+      const resJsonData = JSON.parse(resData.data.body);
+      if(resJsonData.Items.length===0){
+        navigate('/restaurant/create')
+      } else{
+        navigate(`/restaurantpage/${resJsonData.Items[0].restaurant_id}`)
+      }
     } catch (error) {
       // Log and alert error
       console.error('Error logging in with email/password:', error);
@@ -42,8 +54,20 @@ function Login() {
       // Call in-built firebase function to log in with google single sign on pop up
       await signInWithPopup(auth,googleProvider);
 
-      // Redirect to restaurantList Page
-      navigate('/home');
+      const headers = {
+        "Content-type": "application/json",
+      };
+      const resData = await axios.get(
+        `https://gs6b5266pf.execute-api.us-east-1.amazonaws.com/dev/restaurantbyuser?userId=${auth.currentUser.uid}`,
+        { headers }
+      );
+      console.log(resData);
+      const resJsonData = JSON.parse(resData.data.body);
+      if(resJsonData.Items.length===0){
+        navigate('/restaurant/create')
+      } else{
+        navigate(`/restaurantpage/${resJsonData.Items[0].restaurant_id}`)
+      }
 
     } catch (error) {
       // Log and alert error 

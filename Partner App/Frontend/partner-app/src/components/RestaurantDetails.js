@@ -4,12 +4,24 @@ import "./../RestaurantDetails.css";
 import { Button } from "antd";
 import axios from "axios";
 import { auth } from "../config/firebase";
+import CreateMenuPopup from "./popups/CreateMenuPopup";
+import AddTablesPopup from "./popups/AddTablesPopup";
+import AddRestaurantOfferPopup from "./popups/AddRestaurantOfferPopup";
+import AddMenuOfferPopup from "./popups/AddMenuOfferPopup";
+import UpdateMenuAvailabilityPopup from "./popups/UpdateMenuAvailabilityPopup";
+import ChangeAvailabilityPopup from "./popups/ChangeAvailabilityPopup";
+import './../popup.css';
 
 function RestaurantDetails() {
   const navigate = useNavigate();
 
   const { restaurant_id } = useParams();
-
+  const [isAddMenuPopupOpen,setAddMenuPopup]=useState(false);
+  const [isAddMenuOfferPopupOpen,setAddMenuOfferPopup]=useState(false);
+  const [isUpdateMenuAvailabilityPopupOpen,setUpdateMenuAvailabilityPopup]=useState(false);
+  const [isAddTablePopupOpen,setAddTablePopup]=useState(false);
+  const [isAddRestaurantOfferPopupOpen,setAddRestaurantOfferPopup]=useState(false);
+  const [isChangeAvailabilityPopupOpen,setChangeAvailabilityPopup]=useState(false);
   const [restaurantData, setRestaurantData] = useState({
     restaurant_name: "indian cuisine",
     address: "100, This street, Halifax, NS A1B 2C3",
@@ -120,7 +132,62 @@ function RestaurantDetails() {
       },
     },
   });
-
+  
+  const openMenuPopup=()=>{
+    console.log("in open menu popup")
+    setAddMenuPopup(true);
+  }
+  const closeAddMenuPopup=()=>{
+    setAddMenuPopup(false);
+  }
+  const handleMenuChange=(menuData)=>{
+    console.log(menuData);
+  }
+  const openAddMenuOfferPopup=()=>{
+    setAddMenuOfferPopup(true)
+  }
+  const closeAddMenuOfferPopup=()=>{
+    setAddMenuOfferPopup(false)
+  }
+  const handleAddMenuOfferPopup=(menuOffer)=>{
+    console.log(menuOffer);
+  }
+  const openUpdateMenuAvailabilityPopup=()=>{
+    setUpdateMenuAvailabilityPopup(true)
+  }
+  const closeUpdateMenuAvailabilityPopup=()=>{
+    setUpdateMenuAvailabilityPopup(false);
+  }
+  const handleUpdateMenuAvailability=(menuData)=>{
+    console.log(menuData)
+  }
+  const openAddTablePopup=()=>{
+    setAddTablePopup(true);
+  }
+  const closeAddTablePopup=()=>{
+    setAddTablePopup(false);
+  }
+  const handleTableChange=(tableData)=>{
+    console.log(tableData);
+  }
+  const openAddRestaurantOfferPopup=()=>{
+    setAddRestaurantOfferPopup(true)
+  }
+  const closeAddRestaurantOfferPopup=()=>{
+    setAddRestaurantOfferPopup(false)
+  }
+  const handleAddRestaurantOffer=(restaurantOffer)=>{
+    console.log(restaurantOffer)
+  }
+  const openChangeAvailabilityPopup=()=>{
+    setChangeAvailabilityPopup(true)
+  }
+  const closeChangeAvailabilityPopup=()=>{
+    setChangeAvailabilityPopup(false)
+  }
+  const handleChangeAvailability=(availabilityData)=>{
+    console.log(availabilityData)
+  }
   useEffect(() => {
     async function fetchRestuarantDetail() {
       const headers = {
@@ -137,57 +204,105 @@ function RestaurantDetails() {
     }
     fetchRestuarantDetail();
   }, []);
-  const handleEditClick=(restaurant_id)=>{
-    navigate(`/restuarant/edit/${restaurant_id}`)
-  }
 
   return (
     <div className="restaurant-details">
-      <h1>{restaurantData.restaurant_name}</h1>
-      <div>
-        <strong>Address:</strong> {restaurantData.address}
-      </div>
-      <div>
-        {" "}
-        {restaurantData.is_open ? (
-          <strong>Open</strong>
-        ) : (
-          <strong>Closed</strong>
-        )}
-      </div>
-      <div className="images">
-        {restaurantData.images.map((image, index) => (
-          <img src={image} alt={`Restaurant Image ${index}`} key={index} />
-        ))}
-      </div>
-      {restaurantData.menu && restaurantData.menu.length > 0 && (
+  <h1>{restaurantData.restaurant_name}</h1>
+  <div>
+    <strong>Address:</strong> {restaurantData.address}
+  </div>
+  <div>
+    {restaurantData.is_open ? (
+      <>
+        <strong>Open</strong>
+      </>
+    ) : (
+      <>
+        <strong>Closed</strong>
+      </>
+    )}
+  </div>
+  <div className="images">
+    {restaurantData.images.map((image, index) => (
+      <img src={image} alt={`Restaurant Image ${index}`} key={index} />
+    ))}
+  </div>
   <div>
     <h2>Menu</h2>
-    <ul>
-      {restaurantData.menu.map((item, index) => (
-        <li key={index}>
-          <div className="menu-item">
-            <img src={item.image} alt={`Menu Item Image ${index}`} />
-          </div>
-          <div>{item.name}</div>
-          <div>{item.price}</div>
-        </li>
-      ))}
-    </ul>
+    <Button onClick={openMenuPopup}>Add Menu</Button>
+    {isAddMenuPopupOpen&&(
+      <CreateMenuPopup
+      isOpen={isAddMenuPopupOpen}
+      onClose={closeAddMenuPopup}
+      onCreateMenu={handleMenuChange}/>
+    )}
+
   </div>
-)}
+  {restaurantData.menu && restaurantData.menu.length > 0 && (
+    <div>
+      
+      <ul>
+        {restaurantData.menu.map((item, index) => (
+          <li key={index}>
+            <div className="menu-item">
+              <img src={item.image} alt={`Menu Item Image ${index}`} />
+            </div>
+            <div>{item.name}</div>
+            <div>{item.price}</div>
+            <div>
+              <Button onClick={openAddMenuOfferPopup}>Add Menu Offer</Button>
+              {
+                isAddMenuOfferPopupOpen&&(
+                  <AddMenuOfferPopup
+                isOpen={isAddMenuOfferPopupOpen}
+                onClose={closeAddMenuOfferPopup}
+                onAddMenuOffer={handleAddMenuOfferPopup}/>
+                )
+              }
+              
+            </div>
+            <div>
+              <Button onClick={openUpdateMenuAvailabilityPopup}>Update Menu Availability</Button>
+              {
+                isUpdateMenuAvailabilityPopupOpen && (
+                  <UpdateMenuAvailabilityPopup
+                isOpen={isUpdateMenuAvailabilityPopupOpen}
+                onClose={closeUpdateMenuAvailabilityPopup}
+                onUpdateMenuAvailability={handleUpdateMenuAvailability}/>
+                )
+              }
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
 
+<div>
+      <h2>Restaurant Offer</h2>
+      <Button onClick={openAddRestaurantOfferPopup}>Add Restaurant Offer</Button>
+      {
+        isAddRestaurantOfferPopupOpen&&(
+          <AddRestaurantOfferPopup
+          isOpen={isAddRestaurantOfferPopupOpen}
+          onClose={closeAddRestaurantOfferPopup}
+          onAddRestaurantOffer={handleAddRestaurantOffer}/>
+        )
+      }
+        
+  </div>
+  {restaurantData.restaurant_offer ? (
+      <div>{restaurantData.restaurant_offer}</div>
+  ):(<div>
+    <h4>"There are no current offers now."</h4>
+  </div>)}
 
-{restaurantData.restaurant_offer && (
   <div>
-    <h2>Restaurant Offer</h2>
-    <div>{restaurantData.restaurant_offer}</div>
+  <h2>Restaurant Reviews</h2>
   </div>
-)}
-
-      { restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length>0 && (
-        <div>
-      <h2>Restaurant Reviews</h2>
+  {restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length > 0 && (
+    <div>
+      
       <ul>
         {restaurantData.restaurant_reviews.map((review, index) => (
           <li key={index}>
@@ -196,12 +311,22 @@ function RestaurantDetails() {
           </li>
         ))}
       </ul>
-      </div>
-      )}
+      
+    </div>
+  )}
 
-{ restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length>0 && (
-        <div>
-      <h2>Tables</h2>
+<div>
+    <h2>Tables</h2>
+    <Button onClick={openAddTablePopup}>Add Tables</Button>
+    {isAddTablePopupOpen && (
+      <AddTablesPopup
+      isOpen={isAddTablePopupOpen}
+      onClose={closeAddTablePopup}
+      onCreateTable={handleTableChange}/>
+    )}
+  </div>
+  {restaurantData.tables && restaurantData.tables.length > 0 && (
+    <div>
       <ul>
         {restaurantData.tables.map((table, index) => (
           <li key={index}>
@@ -210,11 +335,22 @@ function RestaurantDetails() {
           </li>
         ))}
       </ul>
-      </div>
-)}
-{ restaurantData.timings && restaurantData.timings.length>0 && (
+    </div>
+  )}
+
   <div>
-      <h2>Timings</h2>
+    <h2>Timings</h2>
+    <Button onClick={openChangeAvailabilityPopup}>Change Availability</Button>
+    {isChangeAvailabilityPopupOpen && (
+      <ChangeAvailabilityPopup
+      isOpen={isChangeAvailabilityPopupOpen}
+      onClose={closeChangeAvailabilityPopup}
+      onChangeAvailability={handleChangeAvailability}/>
+    )}
+    
+  </div>
+  {restaurantData.timings && restaurantData.timings.length > 0 && (
+    <div>
       <div>
         Monday: {restaurantData.timings.monday.opening_time} -{" "}
         {restaurantData.timings.monday.closing_time}
@@ -224,7 +360,7 @@ function RestaurantDetails() {
         {restaurantData.timings.tuesday.closing_time}
       </div>
       <div>
-        wednesday: {restaurantData.timings.wednesday.opening_time} -{" "}
+        Wednesday: {restaurantData.timings.wednesday.opening_time} -{" "}
         {restaurantData.timings.wednesday.closing_time}
       </div>
       <div>
@@ -236,18 +372,16 @@ function RestaurantDetails() {
         {restaurantData.timings.friday.closing_time}
       </div>
       <div>
-        saturday: {restaurantData.timings.saturday.opening_time} -{" "}
+        Saturday: {restaurantData.timings.saturday.opening_time} -{" "}
         {restaurantData.timings.saturday.closing_time}
       </div>
       <div>
         Sunday: {restaurantData.timings.sunday.opening_time} -{" "}
         {restaurantData.timings.sunday.closing_time}
       </div>
-      </div>
-)}
-  {restaurantData.user_id === auth.currentUser.uid && (
-      <Button onClick={()=>handleEditClick(restaurantData.restaurant_id)}>Edit</Button>
-    )}
+    </div>
+  )}
+
 
     </div>
   );

@@ -3,6 +3,7 @@ import { Button } from 'antd';
 import "./../CreateRestaurant.css";
 import axios from 'axios';
 import { auth } from '../config/firebase';
+import { Navigate } from 'react-router-dom';
 
 const CreateRestaurant = () => {
   const [formData, setFormData] = useState({
@@ -44,13 +45,13 @@ const CreateRestaurant = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission, you can send formData to the server or perform other actions
-    const bodyData={
-       restaurantName:formData.restaurantName,
-       address:formData.address,
-       isOpen:formData.isOpen,
-       base64Images:formData.base64Images,
-       userId:auth.currentUser.uid 
-    }
+        const bodyData={
+            restaurantName:formData.restaurantName,
+            address:formData.address,
+            isOpen:formData.isOpen,
+            base64Images:formData.base64Images,
+            userId:auth.currentUser.uid 
+        }
         const headers = {
             "Content-type": "application/json",
         };
@@ -59,9 +60,8 @@ const CreateRestaurant = () => {
             { headers }
         );
         console.log(resData);
-        const resJsonData = JSON.parse(resData.data.body);
-    
-    console.log(formData);
+        Navigate('/');
+        
   };
 
   return (
