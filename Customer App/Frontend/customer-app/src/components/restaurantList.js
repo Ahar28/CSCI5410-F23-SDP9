@@ -10,6 +10,7 @@ import axios from 'axios';
 import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
 import { KOMMUNICATE_APP_ID } from '../config/kommunicate';
 
+
 Kommunicate.init(KOMMUNICATE_APP_ID, {
   automaticChatOpenOnNavigation: true,
   popupWidget: true
