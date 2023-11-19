@@ -17,9 +17,10 @@ const EditReservationForm = () => {
   const [no_of_people, setNumberOfPeople] = useState("");
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
-  console.log("restaurant_id : ", reservationData.restaurant_id);
+  // console.log("restaurant_id : ", reservationData.restaurant_id);
 
   useEffect(() => {
+    debugger;
     console.log("reservationData ahar :", reservationData);
     const user_id = sessionStorage.getItem("userId");
     setUserID(user_id);
@@ -79,6 +80,7 @@ const EditReservationForm = () => {
 
   const handleEditReservation = async () => {
     setloading(true);
+    debugger;
     var response;
     try {
       const datetime = `${date} ${time}`;
@@ -99,28 +101,9 @@ const EditReservationForm = () => {
       setloading(false);
       navigate("/view-reservations");
     } catch (error) {
-      console.log(response);
+      // console.log(response);
       // Handle errors, e.g., display an error message to the user
       console.error("Error updating reservation: ", error);
-    }
-  };
-
-  const handleDelete = async () => {
-    setloading(true);
-    var response;
-    try {
-      // Make an API DELETE request to delete the reservation
-      response = await axios.delete(
-        `https://example-api.com/delete-reservation/${reservationData.reservation_id}`
-      );
-
-      // Handle a successful deletion
-      setloading(false);
-      navigate("/view-reservations");
-    } catch (error) {
-      console.log(response);
-      // Handle errors, e.g., display an error message to the user
-      console.error("Error deleting reservation: ", error);
     }
   };
 
@@ -167,14 +150,6 @@ const EditReservationForm = () => {
                 onClick={() => handleEditReservation()}
               >
                 Confirm Changes
-              </Button>
-              <Button
-                variant="danger"
-                type="button"
-                style={{ margin: "20px 20px" }}
-                onClick={() => handleDelete()}
-              >
-                Delete Reservation
               </Button>
             </>
           ) : (

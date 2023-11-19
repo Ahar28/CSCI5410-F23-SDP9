@@ -53,14 +53,13 @@ const ReservationsByUserID = () => {
 
       // Handle a successful deletion
       console.log("Reservation deleted successfully");
-      debugger;
+
       navigate("/view-reservations");
       // Reload the page
-      debugger;
+
       window.location.reload();
       // You may want to fetch the reservations again after deletion
       // to update the UI with the latest data.
-      fetchReservations();
     } catch (error) {
       // Handle errors, e.g., display an error message to the user
       console.error("Error deleting reservation: ", error);
