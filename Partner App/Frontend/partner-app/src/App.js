@@ -8,6 +8,7 @@ import RestaurantDetails from "./components/RestaurantDetails";
 import CreateRestaurant from "./components/CreateRestaurant";
 import ReservationsByRestID from "./components/ReservationByRestID";
 import EditReservationForm from "./components/EditReservation";
+import CreateReservationForm from "./components/CreateReservation";
 
 function App() {
   return (
@@ -21,6 +22,10 @@ function App() {
           element={<RestaurantDetails />}
         />
         <Route path="/restaurant/create" element={<CreateRestaurant />}></Route>
+        <Route
+          path="/create-reservation"
+          element={<CreateReservationForm />}
+        ></Route>
         <Route
           path="/view-reservations"
           element={<ReservationsByRestID />}
