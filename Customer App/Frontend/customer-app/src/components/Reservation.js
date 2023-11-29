@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Form, Row, Col, Button } from "react-bootstrap";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 
 const ReservationForm = () => {
@@ -10,7 +9,7 @@ const ReservationForm = () => {
   //const [dateTime, setDateTime] = useState("");
   const { restaurant_id } = useParams();
   const navigate = useNavigate();
-  //const reservationDate = restaurant_id;
+  //const reservationDate = restaurant_id;x
   const [isloading, setloading] = useState(false);
   const [user_id, setUserID] = useState("");
   const [time, setTime] = useState("");
@@ -44,24 +43,28 @@ const ReservationForm = () => {
     }
   };
 
-  const handleReservation = async (restaurant_id) => {
+  const handleReservation = async (restaurant_id, restaurantData) => {
     setloading(true);
     var response;
     try {
       const datetime = `${date} ${time}`;
       // Make an API POST request to create a reservation
+      // const restaurant_name = restaurantData.restaurant_name;
 
       response = await axios.post(
         //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
         //"https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
         //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
-        "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
+        // "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
+        "https://d2x4or4oci.execute-api.us-east-1.amazonaws.com/dev/create-reservation-customer-res-name", //createreservationwithCOnditionRestaurantName
         //"https://837jfnbfoh.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //crateReservationwithLayers
         {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
           user_id,
           restaurant_id: parseInt(restaurant_id, 10),
+          //restaurant_id: parsedRestaurantId,
+          restaurant_name: restaurantData.restaurant_name,
         }
       );
 
@@ -84,6 +87,9 @@ const ReservationForm = () => {
         <Row>
           <Row>
             <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
+            <Form.Label>
+              Restaurant Name is : {restaurantData.restaurant_name}{" "}
+            </Form.Label>
           </Row>
           <Form.Group as={Col} controlId="formGridEmail">
             <Form.Label>No of People</Form.Label>
@@ -116,7 +122,7 @@ const ReservationForm = () => {
               variant="primary"
               type="submit"
               style={{ margin: "20px auto" }}
-              onClick={() => handleReservation(restaurant_id)}
+              onClick={() => handleReservation(restaurant_id, restaurantData)}
             >
               Reserve table
             </Button>
