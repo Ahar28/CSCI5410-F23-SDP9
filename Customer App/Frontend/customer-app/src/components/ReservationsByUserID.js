@@ -31,7 +31,6 @@ const ReservationsByUserID = () => {
   }, []);
 
   const handleEditClick = (reservation) => {
-    
     console.log(reservation);
     navigate(`/edit-reservation`, {
       state: { reservationData: reservation },
@@ -95,6 +94,10 @@ const ReservationsByUserID = () => {
                       <br /> */}
                     {/* <strong>Restaurant ID:</strong> {reservation.restaurant_id}
                       <br /> */}
+                    <strong>
+                      Restaurant_name : {reservation.data.restaurant_name}
+                    </strong>{" "}
+                    <br></br>
                     <strong>No of People :</strong>{" "}
                     {/* {reservation.data.no_of_people} */}
                     {reservation.data.no_of_people

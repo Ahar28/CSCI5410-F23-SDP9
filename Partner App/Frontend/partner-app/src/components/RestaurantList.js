@@ -1,19 +1,19 @@
 // Import modules and functions
-import React, { useState, useEffect } from 'react';
-import { LogoutOutlined } from '@ant-design/icons';
-import { useNavigate, Link } from 'react-router-dom';
-import { Button } from 'antd';
-import { signOut } from 'firebase/auth';
-import { auth } from '../config/firebase';
-import { Card } from 'antd';
-import axios from 'axios';
-import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
-import { KOMMUNICATE_APP_ID, KOMMUNICATE_LOADED } from '../config/kommunicate';
+import React, { useState, useEffect } from "react";
+import { LogoutOutlined } from "@ant-design/icons";
+import { useNavigate, Link } from "react-router-dom";
+import { Button } from "antd";
+import { signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
+import { Card } from "antd";
+import axios from "axios";
+// import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
+// import { KOMMUNICATE_APP_ID, KOMMUNICATE_LOADED } from "../config/kommunicate";
 
-Kommunicate.init(KOMMUNICATE_APP_ID, {
-    automaticChatOpenOnNavigation: true,
-    popupWidget: true
-  });
+// Kommunicate.init(KOMMUNICATE_APP_ID, {
+//   automaticChatOpenOnNavigation: true,
+//   popupWidget: true,
+// });
 
 const { Meta } = Card;
 // Restaurant List function
@@ -58,19 +58,20 @@ function RestaurantList() {
       if (user) {
         // User is signed in, set the user state
         setUser(user);
-        
-        const isKommunicateLoaded = JSON.parse(localStorage.getItem(KOMMUNICATE_LOADED));
-        
+
+        const isKommunicateLoaded = JSON.parse(
+          localStorage.getItem(KOMMUNICATE_LOADED)
+        );
+
         // Load Kommunicate iframe once
         if (isKommunicateLoaded !== "true") {
           Kommunicate.init(KOMMUNICATE_APP_ID, {
             automaticChatOpenOnNavigation: true,
             popupWidget: true,
-            userId: auth.currentUser.uid
+            userId: auth.currentUser.uid,
           });
           localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
         }
-
       } else {
         // No user is signed in
         setUser(null);
@@ -82,7 +83,7 @@ function RestaurantList() {
         navigate("/");
 
         //Force reload after log out to clear Kommunicate conversations
-        window.location.reload()
+        window.location.reload();
       }
     });
 
@@ -144,6 +145,10 @@ function RestaurantList() {
     navigate("/view-reservations");
   };
 
+  const handleCreateReservation = async () => {
+    navigate("/create-reservation");
+  };
+
   // Sign Out function
   const handleSignOut = async () => {
     try {
@@ -185,6 +190,9 @@ function RestaurantList() {
           </Button>
           <Button type="primary" onClick={handleViewRestaurant}>
             View Reservations
+          </Button>
+          <Button type="primary" onClick={handleCreateReservation}>
+            Create Reservation
           </Button>
         </div>
 

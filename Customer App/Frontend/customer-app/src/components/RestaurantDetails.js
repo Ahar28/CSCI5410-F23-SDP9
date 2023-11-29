@@ -167,91 +167,92 @@ function RestaurantDetails() {
         ))}
       </div>
       {restaurantData.menu && restaurantData.menu.length > 0 && (
-  <div>
-    <h2>Menu</h2>
-    <ul>
-      {restaurantData.menu.map((item, index) => (
-        <li key={index}>
-          <div className="menu-item">
-            <img src={item.image} alt={`Menu Item Image ${index}`} />
-          </div>
-          <div>{item.name}</div>
-          <div>{item.price}</div>
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
-
-
-{restaurantData.restaurant_offer && (
-  <div>
-    <h2>Restaurant Offer</h2>
-    <div>{restaurantData.restaurant_offer}</div>
-  </div>
-)}
-
-      { restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length>0 && (
         <div>
-      <h2>Restaurant Reviews</h2>
-      <ul>
-        {restaurantData.restaurant_reviews.map((review, index) => (
-          <li key={index}>
-            <div>Rating: {review.rating}</div>
-            <div>{review.review}</div>
-          </li>
-        ))}
-      </ul>
-      </div>
+          <h2>Menu</h2>
+          <ul>
+            {restaurantData.menu.map((item, index) => (
+              <li key={index}>
+                <div className="menu-item">
+                  <img src={item.image} alt={`Menu Item Image ${index}`} />
+                </div>
+                <div>{item.name}</div>
+                <div>{item.price}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
-{ restaurantData.restaurant_reviews && restaurantData.restaurant_reviews.length>0 && (
+      {restaurantData.restaurant_offer && (
         <div>
-      <h2>Tables</h2>
-      <ul>
-        {restaurantData.tables.map((table, index) => (
-          <li key={index}>
-            <div>Table {table.number}</div>
-            <div>Size: {table.size}</div>
-          </li>
-        ))}
-      </ul>
-      </div>
-)}
+          <h2>Restaurant Offer</h2>
+          <div>{restaurantData.restaurant_offer}</div>
+        </div>
+      )}
 
-{ restaurantData.timings && restaurantData.timings.length>0 && (
-  <div>
-      <h2>Timings</h2>
-      <div>
-        Monday: {restaurantData.timings.monday.opening_time} -{" "}
-        {restaurantData.timings.monday.closing_time}
-      </div>
-      <div>
-        Tuesday: {restaurantData.timings.tuesday.opening_time} -{" "}
-        {restaurantData.timings.tuesday.closing_time}
-      </div>
-      <div>
-        wednesday: {restaurantData.timings.wednesday.opening_time} -{" "}
-        {restaurantData.timings.wednesday.closing_time}
-      </div>
-      <div>
-        Thursday: {restaurantData.timings.thursday.opening_time} -{" "}
-        {restaurantData.timings.thursday.closing_time}
-      </div>
-      <div>
-        Friday: {restaurantData.timings.friday.opening_time} -{" "}
-        {restaurantData.timings.friday.closing_time}
-      </div>
-      <div>
-        saturday: {restaurantData.timings.saturday.opening_time} -{" "}
-        {restaurantData.timings.saturday.closing_time}
-      </div>
-      <div>
-        Sunday: {restaurantData.timings.sunday.opening_time} -{" "}
-        {restaurantData.timings.sunday.closing_time}
-      </div>
-      </div>
-)}
+      {restaurantData.restaurant_reviews &&
+        restaurantData.restaurant_reviews.length > 0 && (
+          <div>
+            <h2>Restaurant Reviews</h2>
+            <ul>
+              {restaurantData.restaurant_reviews.map((review, index) => (
+                <li key={index}>
+                  <div>Rating: {review.rating}</div>
+                  <div>{review.review}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+      {restaurantData.restaurant_reviews &&
+        restaurantData.restaurant_reviews.length > 0 && (
+          <div>
+            <h2>Tables</h2>
+            <ul>
+              {restaurantData.tables.map((table, index) => (
+                <li key={index}>
+                  <div>Table {table.number}</div>
+                  <div>Size: {table.size}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+      {restaurantData.timings && restaurantData.timings.length > 0 && (
+        <div>
+          <h2>Timings</h2>
+          <div>
+            Monday: {restaurantData.timings.monday.opening_time} -{" "}
+            {restaurantData.timings.monday.closing_time}
+          </div>
+          <div>
+            Tuesday: {restaurantData.timings.tuesday.opening_time} -{" "}
+            {restaurantData.timings.tuesday.closing_time}
+          </div>
+          <div>
+            wednesday: {restaurantData.timings.wednesday.opening_time} -{" "}
+            {restaurantData.timings.wednesday.closing_time}
+          </div>
+          <div>
+            Thursday: {restaurantData.timings.thursday.opening_time} -{" "}
+            {restaurantData.timings.thursday.closing_time}
+          </div>
+          <div>
+            Friday: {restaurantData.timings.friday.opening_time} -{" "}
+            {restaurantData.timings.friday.closing_time}
+          </div>
+          <div>
+            saturday: {restaurantData.timings.saturday.opening_time} -{" "}
+            {restaurantData.timings.saturday.closing_time}
+          </div>
+          <div>
+            Sunday: {restaurantData.timings.sunday.opening_time} -{" "}
+            {restaurantData.timings.sunday.closing_time}
+          </div>
+        </div>
+      )}
       <Button onClick={() => handleReserveClick(restaurantData.restaurant_id)}>
         Reserve
       </Button>
