@@ -15,6 +15,10 @@ function Login() {
   // navigate variable to use for BrowserRouter
   const navigate = useNavigate();
 
+  const redirectToPartnerApp = () => {
+    window.location.href = 'https://partner-app-dw7d62t47q-uc.a.run.app/';
+  };
+  
   // function used if login done through Email and Password
   const handleEmailPasswordLogin = async (values) => {
     const { email, password } = values;
@@ -102,9 +106,13 @@ function Login() {
         <center>
           <Button icon={<FaGoogle />} onClick={handleGoogleSignIn}>
             Login with Google
-          </Button>{" "}
+          </Button>
           <br />
           Don't have an account? <Link to="/signup">Sign up</Link>
+          <br /> <br />
+          <Button onClick={redirectToPartnerApp}>
+            Go to Partner App
+          </Button>
         </center>
       </div>
     </div>
