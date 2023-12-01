@@ -50,7 +50,8 @@ const CreateRestaurant = () => {
             address:formData.address,
             isOpen:formData.isOpen,
             base64Images:formData.base64Images,
-            userId:auth.currentUser.uid 
+            userId:auth.currentUser.uid,
+            userEmail:auth.currentUser.email
         }
         const headers = {
             "Content-type": "application/json",
