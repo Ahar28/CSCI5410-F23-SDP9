@@ -7,6 +7,7 @@ ARG src="/Admin App/Frontend/admin-app/package.json"
 ARG rootsrc="/Admin App/Frontend/admin-app/"
 
 # ARG nginxsrc="/Customer App/Frontend/customer-app/nginx/nginx.conf"
+#added commment to trigger deploment
 
 COPY ${src} .
 
