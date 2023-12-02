@@ -87,9 +87,6 @@ function RestaurantList() {
 
     fetchRestuarants();
   }, []);
-  useEffect(()=>{
-    
-  })
 
   // Sign Out function
   const handleSignOut = async () => {
