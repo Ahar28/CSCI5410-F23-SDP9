@@ -10,11 +10,6 @@ import axios from "axios";
 import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
 import { KOMMUNICATE_APP_ID, KOMMUNICATE_LOADED } from "../config/kommunicate";
 
-Kommunicate.init(KOMMUNICATE_APP_ID, {
-  automaticChatOpenOnNavigation: true,
-  popupWidget: true,
-});
-
 const { Meta } = Card;
 // Restaurant List function
 // elements from
@@ -118,21 +113,6 @@ function RestaurantList() {
         restaurantDetails[0].restaurant_id
       );
     }
-
-    //   async function editRestuarantsRes (){
-    //     const headers = {
-    //       'Content-type':'application/json'
-    //     }
-    //     await axios.put("https://da6qjyjjn2.execute-api.us-east-1.amazonaws.com/dev/edit-reservation",{
-    //       "user_id": 1,
-    //       "restaurant_id": 1,
-    //       "no_of_people": 999,
-    //       "reservation_id": "XcKZPeeUYbeQH5eQIQQB",
-    //       "reservationDatePostman" : "2023-10-31 15:33:33"
-    //     });
-    //   }
-
-    //   editRestuarantsRes()
 
     fetchRestuarants();
   }, []);
