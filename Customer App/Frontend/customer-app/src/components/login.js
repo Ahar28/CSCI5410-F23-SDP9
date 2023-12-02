@@ -44,7 +44,10 @@ function Login() {
       // Call in-built firebase function to log in with google single sign on pop up
       const response = await signInWithPopup(auth, googleProvider);
       const userId = response?.user?.uid ?? "";
+      const user_email = response?.user?.email ?? "";
+      console.log("response of login is : ",response);
       sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("user_email", user_email);
 
       // Redirect to restaurantList Page
       navigate("/home");

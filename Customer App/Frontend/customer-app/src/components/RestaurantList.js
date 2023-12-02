@@ -16,6 +16,7 @@ Kommunicate.init(KOMMUNICATE_APP_ID, {
 });
 
 const { Meta } = Card;
+
 // Restaurant List function
 // elements from
 // [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password
@@ -70,40 +71,8 @@ function RestaurantList() {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    async function fetchRestuarants() {
-      const headers = {
-        "Content-type": "application/json",
-      };
-      const resData = await axios.get(
-        "https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",
-        { headers }
-      );
-      console.log(resData);
-      const resJsonData = JSON.parse(resData.data.body);
-      setRestaurants(resJsonData);
-    }
-
-    async function editRestuarantsRes() {
-      const headers = {
-        "Content-type": "application/json",
-      };
-      await axios.put(
-        "https://da6qjyjjn2.execute-api.us-east-1.amazonaws.com/dev/edit-reservation",
-        {
-          user_id: 1,
-          restaurant_id: 1,
-          no_of_people: 999,
-          reservation_id: "XcKZPeeUYbeQH5eQIQQB",
-          reservationDatePostman: "2023-10-31 15:33:33",
-        }
-      );
-    }
-
-    editRestuarantsRes();
-
-    fetchRestuarants();
-  }, []);
+  
+ 
 
   // Sign Out function
   const handleSignOut = async () => {

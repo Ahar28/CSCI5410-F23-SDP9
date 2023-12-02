@@ -12,6 +12,7 @@ const ReservationForm = () => {
   //const reservationDate = restaurant_id;x
   const [isloading, setloading] = useState(false);
   const [user_id, setUserID] = useState("");
+  const [user_email, setUserEmail] = useState("");
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
   const [no_of_people, setNumberOfPeople] = useState("");
@@ -22,6 +23,11 @@ const ReservationForm = () => {
   useEffect(() => {
     const user_id = sessionStorage.getItem("userId");
     setUserID(user_id);
+  });
+
+  useEffect(() => {
+    const user_email = sessionStorage.getItem("user_email");
+    setUserID(user_email);
   });
 
   const {
@@ -56,8 +62,9 @@ const ReservationForm = () => {
         //"https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
         //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
         // "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
-        "https://d2x4or4oci.execute-api.us-east-1.amazonaws.com/dev/create-reservation-customer-res-name", //createreservationwithCOnditionRestaurantName
+        //"https://d2x4or4oci.execute-api.us-east-1.amazonaws.com/dev/create-reservation-customer-res-name", //createreservationwithCOnditionRestaurantName
         //"https://837jfnbfoh.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //crateReservationwithLayers
+        "https://b7g6enck49.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //new lab lambda
         {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
@@ -65,6 +72,7 @@ const ReservationForm = () => {
           restaurant_id: parseInt(restaurant_id, 10),
           //restaurant_id: parsedRestaurantId,
           restaurant_name: restaurantData.restaurant_name,
+          user_email   
         }
       );
 
