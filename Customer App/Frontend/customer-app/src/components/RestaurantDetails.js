@@ -190,12 +190,12 @@ function RestaurantDetails() {
         </div>
       )}
 
-      {restaurantData.restaurant_reviews &&
-        restaurantData.restaurant_reviews.length > 0 && (
+      {restaurantData.Reviews &&
+        restaurantData.Reviews.length > 0 && (
           <div>
             <h2>Restaurant Reviews</h2>
             <ul>
-              {restaurantData.restaurant_reviews.map((review, index) => (
+              {restaurantData.Reviews.map((review, index) => (
                 <li key={index}>
                   <div>Rating: {review.rating}</div>
                   <div>{review.review}</div>
@@ -205,8 +205,8 @@ function RestaurantDetails() {
           </div>
         )}
 
-      {restaurantData.restaurant_reviews &&
-        restaurantData.restaurant_reviews.length > 0 && (
+      {restaurantData.tables &&
+        restaurantData.tables.length > 0 && (
           <div>
             <h2>Tables</h2>
             <ul>
@@ -220,7 +220,7 @@ function RestaurantDetails() {
           </div>
         )}
 
-      {restaurantData.timings && restaurantData.timings.length > 0 && (
+      {restaurantData.timings && (
         <div>
           <h2>Timings</h2>
           <div>

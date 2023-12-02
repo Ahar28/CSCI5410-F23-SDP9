@@ -3,9 +3,10 @@ import { Button } from 'antd';
 import "./../CreateRestaurant.css";
 import axios from 'axios';
 import { auth } from '../config/firebase';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const CreateRestaurant = () => {
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     restaurantName: '',
     base64Images: [],
@@ -61,8 +62,7 @@ const CreateRestaurant = () => {
             { headers }
         );
         console.log(resData);
-        Navigate('/');
-        
+        navigate('/'); 
   };
 
   return (
