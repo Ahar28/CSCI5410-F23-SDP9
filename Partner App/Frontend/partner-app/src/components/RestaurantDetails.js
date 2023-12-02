@@ -157,6 +157,7 @@ function RestaurantDetails() {
       { headers }
   );
   console.log(resData);
+  window.location.reload(); 
   }
   const openAddMenuOfferPopup=(menuName)=>{
     setItemName(menuName);
@@ -181,6 +182,7 @@ function RestaurantDetails() {
   );
   console.log(resData);
   setItemName('');
+  window.location.reload(); 
   }
   const openUpdateMenuAvailabilityPopup=(menuName)=>{
     setItemName(menuName);
@@ -204,6 +206,7 @@ function RestaurantDetails() {
       { headers }
   );
   console.log(resData);
+  window.location.reload(); 
   setItemName('');
   }
   const openAddTablePopup=()=>{
@@ -226,6 +229,7 @@ function RestaurantDetails() {
       { headers }
   );
   console.log(resData);
+  window.location.reload(); 
   }
   const openAddRestaurantOfferPopup=()=>{
     setAddRestaurantOfferPopup(true)
@@ -247,6 +251,7 @@ function RestaurantDetails() {
       { headers }
   );
   console.log(resData);
+  window.location.reload(); 
   }
   const openChangeAvailabilityPopup=()=>{
     setChangeAvailabilityPopup(true)
@@ -268,6 +273,7 @@ function RestaurantDetails() {
       { headers }
   );
   console.log(resData);
+  window.location.reload(); 
   }
   useEffect(() => {
     async function fetchRestuarantDetail() {
@@ -286,9 +292,6 @@ function RestaurantDetails() {
     }
     fetchRestuarantDetail();
   }, []);
-  const handleEditClick = (restaurant_id) => {
-    navigate(`/restuarant/edit/${restaurant_id}`);
-  };
 
   return (
     <div className="restaurant-details">
@@ -401,8 +404,8 @@ function RestaurantDetails() {
     </div>
   )}
 
-      {restaurantData.restaurant_reviews &&
-        restaurantData.restaurant_reviews.length > 0 && (
+      {restaurantData.tables &&
+        restaurantData.tables.length > 0 && (
           <div>
             <h2>Tables</h2>
             <ul>
@@ -415,7 +418,19 @@ function RestaurantDetails() {
             </ul>
           </div>
         )}
-      {restaurantData.timings && restaurantData.timings.length > 0 && (
+      <div>
+      <Button onClick={openAddTablePopup}>Add Table</Button>
+      {
+        isAddTablePopupOpen&&(
+          <AddTablesPopup
+          isOpen={isAddTablePopupOpen}
+          onClose={closeAddTablePopup}
+          onCreateTable={handleTableChange}/>
+        )
+      }
+        
+  </div>
+      {restaurantData.timings && (
         <div>
           <h2>Timings</h2>
           <div>
@@ -448,11 +463,18 @@ function RestaurantDetails() {
           </div>
         </div>
       )}
-      {restaurantData.user_id === auth.currentUser.uid && (
-        <Button onClick={() => handleEditClick(restaurantData.restaurant_id)}>
-          Edit
-        </Button>
-      )}
+      <div>
+      <Button onClick={openChangeAvailabilityPopup}>update Timing</Button>
+      {
+        isChangeAvailabilityPopupOpen&&(
+          <ChangeAvailabilityPopup
+          isOpen={isChangeAvailabilityPopupOpen}
+          onClose={closeChangeAvailabilityPopup}
+          onChangeAvailability={handleChangeAvailability}/>
+        )
+      }
+        
+  </div>
     </div>
   );
 }
