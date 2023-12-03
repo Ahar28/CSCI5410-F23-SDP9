@@ -46,6 +46,10 @@ const CreateReservationForm = () => {
     }
   };
 
+  const handleHomeClick = () => {
+    navigate("/home");
+  };
+
   const handleReservation = async (restaurant_id) => {
     setloading(true);
     var response;
@@ -54,8 +58,8 @@ const CreateReservationForm = () => {
       // Make an API POST request to create a reservation
 
       response = await axios.post(
-        "https://tmcslgdz06.execute-api.us-east-1.amazonaws.com/dev/create-reservation-partnerapp",
-
+        //"https://tmcslgdz06.execute-api.us-east-1.amazonaws.com/dev/create-reservation-partnerapp",
+          "https://38irl8wai5.execute-api.us-east-1.amazonaws.com/dev/create-reservation",
         {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
@@ -77,12 +81,16 @@ const CreateReservationForm = () => {
   };
 
   return (
+    <>
+     <Button   onClick={() => handleHomeClick()} variant="primary" style={{color: "white",}}>
+                          Home 
+                        </Button>
     <Container style={{ maxWidth: "600px" }}>
       <h2 style={{ textAlign: "center" }}>Reserve your table</h2>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Row>
-            <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
+            {/* <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label> */}
           </Row>
           <Form.Group as={Col} controlId="formGridEmail">
             <Form.Label>No of People</Form.Label>
@@ -132,6 +140,7 @@ const CreateReservationForm = () => {
         </div>
       )}
     </Container>
+    </>
   );
 };
 
