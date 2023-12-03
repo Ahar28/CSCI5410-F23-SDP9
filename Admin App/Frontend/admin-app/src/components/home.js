@@ -44,7 +44,7 @@ function HomePage() {
         
         <div style={{width:'700px'}}>
           <h2>Top 10 Restaurants</h2>
-          <iframe src="https://lookerstudio.google.com/embed/reporting/fe4b8aa0-6401-4964-bd80-c529f5dade66/page/6YbjD" width="600" height="475"></iframe>
+          <iframe src="https://lookerstudio.google.com/embed/reporting/eb522f0b-9fdf-4507-95e8-1dda53b4cc53/page/0tcjD" width="600" height="475"></iframe>
         </div>
 
         <div style={{width:'700px'}}>
