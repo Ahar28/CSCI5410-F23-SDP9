@@ -18,7 +18,8 @@ const ReservationsByUserID = () => {
       try {
         const response = await axios.get(
           `https://7jk304w1wf.execute-api.us-east-1.amazonaws.com/dev/getreservationbyuserid?user_id=${user_id}`
-        );
+          //`https://b7g6enck49.execute-api.us-east-1.amazonaws.com/dev/get-reservation-by-userid?user_id=${user_id}`
+          );
         console.log("response ", response.data.document);
         setReservations(response.data.document);
         console.log("reservations are : ", reservations);
@@ -104,11 +105,11 @@ const ReservationsByUserID = () => {
                       ? reservation.data.no_of_people
                       : reservation.data.required_capacity}
                     <br />
-                    <strong>Doc id : </strong> {reservation.id}
-                    <br />
+                    {/* <strong>Doc id : </strong> {reservation.id} */}
+                    {/* <br /> */}
                     <strong>Reservation Date:</strong>{" "}
                     {new Date(
-                      reservation.data.reservation_date._seconds * 1000
+                      (reservation.data.reservation_date._seconds + (4 * 3600 )) * 1000
                     ).toLocaleString()}
                     <br></br>
                     <Button
