@@ -1,6 +1,5 @@
 """
 Standard util methods to manage dialog state
-Note: This file has been taken from AWS Lex V2 airlines bot template
 """
 
 import traceback
@@ -140,6 +139,7 @@ def get_slot(slotname, intent, **kwargs):
         slotvalue = slot.get('value')
         if slotvalue:
             interpretedValue = slotvalue.get('interpretedValue')
+            resolvedValues = slotvalue.get('resolvedValues')
             originalValue = slotvalue.get('originalValue')
             if kwargs.get('preference') == 'interpretedValue':
                 return interpretedValue
@@ -148,6 +148,8 @@ def get_slot(slotname, intent, **kwargs):
             # where there is no preference
             elif interpretedValue:
                 return interpretedValue
+            elif resolvedValues:
+                return resolvedValues
             else:
                 return originalValue
         else:
@@ -266,4 +268,10 @@ def get_previous_slot_to_elicit(intent_request):
     session_attributes = get_session_attributes(intent_request)
     if session_attributes: return session_attributes.get('previous_slot_to_elicit')
     return None
-        
+
+# Get user id from Kommunicate
+def get_from(intent_request):
+    try:
+        return intent_request['requestAttributes']['from']
+    except:
+        return None

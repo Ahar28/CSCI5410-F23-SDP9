@@ -1,0 +1,5 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a matching {restaurant_name} with your account. Please tell me the restaurant name again",
+    "Fulfilment": "Got it.\nHere are the bookings between {start_date} and {end_date}:\n{bookings}\nAnything else?",
+    "FulfilmentNoBookings": "Got it.\n There are no bookings between {start_date} and {end_date}.\nAnything else?"
+}

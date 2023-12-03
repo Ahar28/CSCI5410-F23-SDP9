@@ -1,0 +1,7 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
+    "RatingOutOfRange": "Rating {rating} is out of range. Please provide a digit rating between 1 and 5",
+    "RatingNotInt": "Rating {rating} contains decimals. Please provide a digit rating between 1 and 5",
+    "FulfilmentSuccess": "Successfully published feedback for {restaurant_name}\nReview: {review}\nRating: {rating}/5\nAnything else?",
+    "FulfilmentFailed": "Sorry we're unable to publish feedback for {restaurant_name}\nReview: {review}\nRating: {rating}.\n Please try again later."
+}

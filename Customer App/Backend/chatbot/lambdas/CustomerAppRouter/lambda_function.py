@@ -17,13 +17,16 @@ import get_restaurant_opening_times
 import get_restaurant_location
 import get_restaurant_available_menu
 import get_restaurant_available_reservation
+import book_a_reservation
+import provide_restaurant_review_rating
+import provide_menu_item_review_rating
 
 import boto3
 
 client = boto3.client('lambda')
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+# logger.setLevel(logging.DEBUG)
     
 # --- Main handler & Dispatch ---
 
@@ -61,6 +64,12 @@ def dispatch(intent_request):
         next_state = get_restaurant_available_menu.handler(intent_request, client)
     elif intent_name == 'GetReservationAvailability':
         next_state = get_restaurant_available_reservation.handler(intent_request, client)
+    elif intent_name == 'BookAReservation':
+        next_state = book_a_reservation.handler(intent_request, client)
+    elif intent_name == 'ProvideRestaurantReview':
+        next_state = provide_restaurant_review_rating.handler(intent_request, client)
+    elif intent_name == 'ProvideMenuItemReview':
+        next_state = provide_menu_item_review_rating.handler(intent_request, client)
     return next_state
 
 

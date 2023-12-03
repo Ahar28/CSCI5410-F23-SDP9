@@ -1,0 +1,8 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
+    "InvalidDate": "Invalid date format. Please tell me the date again",
+    "InvalidTime": "Invalid time format. Please tell me the time again",
+    "InvalidTimeAmbiguous": "Ambiguous time format. Please tell me the time again",
+    "FulfilmentSuccess": "Successfully updated opening {opening_time} and closing {closing_time} for {restaurant_name}.\nAnything else?",
+    "FulfilmentFailed": "Sorry we're unable updated opening {opening_time} and closing {closing_time} for {restaurant_name}.\nAnything else?",
+}

@@ -18,6 +18,12 @@ import get_restaurant_location
 import get_restaurant_available_menu
 import get_restaurant_available_reservation
 import get_restaurant_rating
+import get_restaurant_reviews
+import get_restaurant_menu_item_reviews
+import get_restaurant_booking_information_date
+import get_restaurant_booking_information_week
+import get_restaurant_booking_information_month
+import update_restaurant_timings
 
 import boto3
 
@@ -54,6 +60,10 @@ def dispatch(intent_request):
         next_state = fallback.handler(intent_request)
     elif intent_name == 'GetRestaurantRating':
         next_state = get_restaurant_rating.handler(intent_request, client)
+    elif intent_name == 'GetRestaurantReviews':
+        next_state = get_restaurant_reviews.handler(intent_request, client)
+    elif intent_name == 'GetRestaurantMenuItemReviews':
+        next_state = get_restaurant_menu_item_reviews.handler(intent_request, client)
     elif intent_name == 'GetRestaurants':
         next_state = get_restaurants.handler(intent_request, client)
     elif intent_name == 'GetRestaurantOpeningTime':
@@ -64,6 +74,14 @@ def dispatch(intent_request):
         next_state = get_restaurant_available_menu.handler(intent_request, client)
     elif intent_name == 'GetReservationAvailability':
         next_state = get_restaurant_available_reservation.handler(intent_request, client)
+    elif intent_name == 'GetBookingInformationByDay':
+        next_state = get_restaurant_booking_information_date.handler(intent_request, client)
+    elif intent_name == 'GetBookingInformationByWeek':
+        next_state = get_restaurant_booking_information_week.handler(intent_request, client)
+    elif intent_name == 'GetBookingInformationByMonth':
+        next_state = get_restaurant_booking_information_month.handler(intent_request, client)
+    elif intent_name == 'UpdateOpeningTimes':
+        next_state = update_restaurant_timings.handler(intent_request, client)
     return next_state
 
 

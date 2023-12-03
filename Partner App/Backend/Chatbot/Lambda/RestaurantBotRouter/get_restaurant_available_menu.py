@@ -13,14 +13,7 @@ def handler(intent_request, client):
     responses = Responses('get_available_menu')
     restaurant_name = dialog.get_slot('RestaurantName', intent)
     
-    if restaurant_name:
-        dialog.set_session_attribute(intent_request, 'restaurant_name', restaurant_name)
-        session_attributes = dialog.get_session_attributes(intent_request)
-        
-    restaurant_name_from_session = dialog.get_session_attribute(intent_request, 'restaurant_name')
-    if restaurant_name_from_session:
-        dialog.set_slot('RestaurantName', restaurant_name_from_session, intent)
-        restaurant_name = restaurant_name_from_session
+
         
     if restaurant_name and not intent['state'] == 'Fulfilled':
         does_restaurant_match = restaurant_system.check_restaurant_name(restaurant_name, client)
