@@ -36,6 +36,7 @@ const ReservationForm = () => {
   const {
     state: { restaurantData },
   } = useLocation();
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,6 +55,7 @@ const ReservationForm = () => {
 
   const addToCart = (menuItem) => {
     setCartItems([...cartItems, menuItem]);
+    console.log("reservationData : ",restaurantData)
   };
 
   // const removeFromCart = (menuItem) => {
@@ -80,6 +82,12 @@ const ReservationForm = () => {
       // Make an API POST request to create a reservation
       // const restaurant_name = restaurantData.restaurant_name;
 
+       // Create an array to store selected menu items and their quantities
+    const selectedMenuItems = cartItems.map((item) => ({
+      name: item.name,
+      quantity: cartItems.filter((cartItem) => cartItem === item).length,
+    }));
+
       response = await axios.post(
         
         // "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
@@ -92,12 +100,14 @@ const ReservationForm = () => {
           user_id,
           restaurant_id: restaurant_id,
           restaurant_name: restaurantData.restaurant_name,
-          user_email  
+          user_email,
+          selectedMenuItems,
         }
       );
 
       // Handle a successful reservation
       setReservationData(response.data);
+    
       setloading(false);
       navigate("/view-reservations");
     } catch (error) {
@@ -213,24 +223,7 @@ const ReservationForm = () => {
             </Button>
           ) : (
             <Spinner animation="border" style={{ margin: "20px auto" }} />
-          )}
-             {/* {restaurantData.menu && restaurantData.menu.length > 0 && (
-        <div>
-          <h2>Menu</h2>
-          <ul>
-            {restaurantData.menu.map((item, index) => (
-              <li key={index}>
-                <div className="menu-item">
-                  <img src={item.image} alt={`Menu Item Image ${index}`} />
-                </div>
-                <div>{item.name}</div>
-                <div>{item.price}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )} */}
-      
+          )}      
         </Row>
       </Form>
 
