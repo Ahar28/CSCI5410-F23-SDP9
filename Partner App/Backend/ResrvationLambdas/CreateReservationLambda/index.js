@@ -18,7 +18,9 @@ exports.handler = async (event) => {
   try {
     
     const db = admin.firestore(); // Initialize Firestore
-    //console.log("event is: ", event);
+    console.log("event is: ", event);
+    console.log("type of event.body is : ",typeof(event.body)," event.body :",event.body);
+    
     //const reservationDetails = JSON.parse(event);
     const reservationDetails = JSON.parse(event.body);
 
@@ -54,17 +56,20 @@ exports.handler = async (event) => {
     
     console.log("restaurantDetails :",restaurantDetails);
     
-    if (restaurant_id !== parseInt(restaurantDetails.Item.restaurant_id)) {
+    if (restaurant_id !== restaurantDetails.Item.restaurant_id) {
       return {
         statusCode: 400,
         message: "The restaurant does not exist",
       };
     }
 
+if (restaurantDetails.Item && restaurantDetails.Item.timings) {
+  
     const restaurantOpening =
-      restaurantDetails.Item.timings[dayName].opening_time;
+      restaurantDetails.Item.timings[dayName]?.opening_time;
     const restaurantClosing =
-      restaurantDetails.Item.timings[dayName].closing_time;
+      restaurantDetails.Item.timings[dayName]?.closing_time;
+      
     console.log("restaurant opening time ====== " + restaurantOpening);
 
     const openingHour = parseInt(restaurantOpening.toString().substr(0, 2));
@@ -121,6 +126,34 @@ exports.handler = async (event) => {
         }),
       };
     }
+}
+  else{
+    
+     const reservationsDocs = db.collection("Customer-Reservation");
+      const addedReservation = await reservationsDocs.add({
+        restaurant_id: restaurant_id,
+        reservation_date:
+          admin.firestore.Timestamp.fromDate(newReservationDate),
+        required_capacity: no_of_people,
+        user_id: user_id,
+      });
+
+     return {
+        statusCode: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          message: "Reservation made successfully ",
+          document_id: addedReservation.id,
+        }),
+      };
+    
+  }
   } catch (error) {
     console.log(error);
     return {
@@ -132,4 +165,3 @@ exports.handler = async (event) => {
     };
   }
 };
-2

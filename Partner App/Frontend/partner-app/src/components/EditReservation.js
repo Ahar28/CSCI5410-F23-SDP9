@@ -27,12 +27,17 @@ const EditReservationForm = () => {
 
   useEffect(() => {
     if (reservationData) {
-      setNumberOfPeople(reservationData.data.no_of_people.toString());
+      if ( reservationData.data && reservationData.data.no_of_people && typeof reservationData.data.no_of_people === 'number') {
+        setNumberOfPeople(reservationData.data.no_of_people.toString());
+      }else{
+        setNumberOfPeople(reservationData.data.required_capacity.toString());
+      }
+      //setNumberOfPeople(reservationData.data.no_of_people.toString());
       // setDate(reservationData.reservation_date);
       // setTime(reservationData.reservation_time);
       setrestaurantId(reservationData.data.restaurant_id);
       // Assuming reservationData.reservation_date is a plain object
-      const seconds = reservationData.data.reservation_date._seconds;
+      const seconds = reservationData.data.reservation_date._seconds + (4*3600);
       const nanoseconds = reservationData.data.reservation_date._nanoseconds;
 
       // Create a new Date object
@@ -84,8 +89,9 @@ const EditReservationForm = () => {
 
       // Make an API PUT request to update the reservation
       response = await axios.put(
-        `https://fzdux2umz0.execute-api.us-east-1.amazonaws.com/dev/edit-resrvation-partnerapp`,
-        {
+      //  `https://fzdux2umz0.execute-api.us-east-1.amazonaws.com/dev/edit-resrvation-partnerapp`,
+      "https://38irl8wai5.execute-api.us-east-1.amazonaws.com/dev/edit-reservation",  
+      {
           no_of_people: parsedNoOfPeople,
           newreservationDate: datetime,
           user_id,

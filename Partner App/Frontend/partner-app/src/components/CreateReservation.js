@@ -54,8 +54,8 @@ const CreateReservationForm = () => {
       // Make an API POST request to create a reservation
 
       response = await axios.post(
-        "https://tmcslgdz06.execute-api.us-east-1.amazonaws.com/dev/create-reservation-partnerapp",
-
+        //"https://tmcslgdz06.execute-api.us-east-1.amazonaws.com/dev/create-reservation-partnerapp",
+          "https://38irl8wai5.execute-api.us-east-1.amazonaws.com/dev/create-reservation",
         {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
