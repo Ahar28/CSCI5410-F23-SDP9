@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Row, Col, Button } from "react-bootstrap";
+import { Container, Form, Row, Col, Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
+import PopupModal from "./PopupModal";
 
 const ReservationForm = () => {
-  //const { restaurant_id } = useParams();
-  //const [dateTime, setDateTime] = useState("");
-  const { restaurant_id } = useParams();
+
   const navigate = useNavigate();
-  //const reservationDate = restaurant_id;x
+  const { restaurant_id } = useParams();
   const [isloading, setloading] = useState(false);
   const [user_id, setUserID] = useState("");
   const [user_email, setUserEmail] = useState("");
@@ -19,6 +18,10 @@ const ReservationForm = () => {
   const [reservationData, setReservationData] = useState(null);
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
   
   //new
   const [cartItems, setCartItems] = useState([]);
@@ -74,11 +77,27 @@ const ReservationForm = () => {
     }
   };
 
+
+   // Function to show the modal with a message
+   const handleShowModal = (message) => {
+    setModalMessage(message);
+    setShowModal(true);
+  };
+
+  // Function to hide the modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+
+
+
   const handleReservation = async (restaurant_id, restaurantData) => {
     setloading(true);
+    try{
     var response;
-    try {
-      const datetime = `${date} ${time}`;
+
+    const datetime = `${date} ${time}`;
       // Make an API POST request to create a reservation
       // const restaurant_name = restaurantData.restaurant_name;
 
@@ -87,6 +106,7 @@ const ReservationForm = () => {
       name: item.name,
       quantity: cartItems.filter((cartItem) => cartItem === item).length,
     }));
+
 
       response = await axios.post(
         
@@ -105,17 +125,33 @@ const ReservationForm = () => {
         }
       );
 
-      // Handle a successful reservation
-      setReservationData(response.data);
+      // // Handle a successful reservation
+      // setReservationData(response.data);
     
-      setloading(false);
-      navigate("/view-reservations");
-    } catch (error) {
-      console.log(response);
-      // Handle  errors, e.g., display an error message to the user
-      console.error("Error creating reservation: ", error);
-      setReservationData(null);
+      // setloading(false);
+      // navigate("/view-reservations");
+
+      if (response.status === 200) {
+        // Handle a successful reservation
+        setReservationData(response.data);
+        setloading(false);
+        navigate("/view-reservations");
+      } else {
+        // Display an error message using the modal
+        handleShowModal(`Reservation failed with status: ${response.status}`);
+        setReservationData(null);
+        setloading(false);
+      }
     }
+    catch (error) {
+      console.error("Error creating reservation: ", error);
+      // Display an error message using the modal
+      handleShowModal("Error creating reservation. Please try again.");
+      setReservationData(null);
+      setloading(false);
+    }
+
+     
   };
 
 
@@ -226,13 +262,17 @@ const ReservationForm = () => {
           )}      
         </Row>
       </Form>
-
+    
+              {/* Modal for displaying error messages */}
+      <PopupModal show={showModal} onHide={handleCloseModal} message={modalMessage} />
+     
       {reservationData && (
         <div>
           <p>Reservation created successfully!</p>
           <pre>{JSON.stringify(reservationData, null, 2)}</pre>
         </div>
       )}
+      
     </Container>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Row, Col, Button, Spinner } from "react-bootstrap";
+import { Container, Form, Row, Col, Button, Spinner, Modal } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
@@ -15,12 +15,17 @@ const EditReservationForm = () => {
   const [date, setDate] = useState("");
   const [rest_id, setrestaurantId] = useState("");
   const [no_of_people, setNumberOfPeople] = useState("");
+
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   // console.log("restaurant_id : ", reservationData.restaurant_id);
 
   useEffect(() => {
-    debugger;
+    
     console.log("reservationData ahar :", reservationData);
     const user_id = sessionStorage.getItem("userId");
     setUserID(user_id);
@@ -28,7 +33,7 @@ const EditReservationForm = () => {
 
   useEffect(() => {
     if (reservationData) {
-      debugger;
+      
       setNumberOfPeople(reservationData.data.required_capacity.toString());
       // setDate(reservationData.reservation_date);
       // setTime(reservationData.reservation_time);
@@ -47,7 +52,7 @@ const EditReservationForm = () => {
       const hours = newreservationDate.getHours();
       const minutes = newreservationDate.getMinutes();
 
-      debugger;
+      
       const formattedHours = hours.toString().padStart(2, "0");
       const formattedMinutes = minutes.toString().padStart(2, "0");
 
@@ -78,18 +83,38 @@ const EditReservationForm = () => {
     }
   };
 
+  const handleShowSuccessModal = (message) => {
+    setModalMessage(message);
+    setShowSuccessModal(true);
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+  };
+
+  const handleShowErrorModal = (message) => {
+    setModalMessage(message);
+    setShowErrorModal(true);
+  };
+
+  const handleCloseErrorModal = () => {
+    setShowErrorModal(false);
+  };
+
+
   const handleEditReservation = async () => {
     setloading(true);
-    debugger;
+    
     var response;
     try {
       const datetime = `${date} ${time}`;
 
       // Make an API PUT request to update the reservation
       response = await axios.put(
-        `https://pqnultyhi3.execute-api.us-east-1.amazonaws.com/dev/edit-reservation`,
-        {
-          no_of_people: parsedNoOfPeople,
+        //`https://pqnultyhi3.execute-api.us-east-1.amazonaws.com/dev/edit-reservation`,
+       'https://b7g6enck49.execute-api.us-east-1.amazonaws.com/dev/edit-reservation', 
+       {
+          required_capacity: parsedNoOfPeople,
           newreservationDate: datetime,
           user_id,
           reservation_id: reservationData.id,
@@ -97,12 +122,21 @@ const EditReservationForm = () => {
         }
       );
 
+      if (response.status === 200) {
+        handleShowSuccessModal("ahar");
+        setloading(false);
+        navigate("/view-reservations");
+      } else {
+        handleShowErrorModal(`Reservation update failed with status: ${response.status}`);
+        setloading(false);
+      }
+
       // Handle a successful reservation update
-      setloading(false);
-      navigate("/view-reservations");
+      // setloading(false);
+      // navigate("/view-reservations");
     } catch (error) {
-      // console.log(response);
-      // Handle errors, e.g., display an error message to the user
+      handleShowErrorModal("Error updating reservation. Please try again.");
+      setloading(false);
       console.error("Error updating reservation: ", error);
     }
   };
@@ -157,6 +191,31 @@ const EditReservationForm = () => {
           )}
         </Row>
       </Form>
+      {/* Modal for displaying success message */}
+      <Modal show={showSuccessModal} onHide={handleCloseSuccessModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Reservation updated successfully!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseSuccessModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for displaying error message */}
+      <Modal show={showErrorModal} onHide={handleCloseErrorModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleCloseErrorModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

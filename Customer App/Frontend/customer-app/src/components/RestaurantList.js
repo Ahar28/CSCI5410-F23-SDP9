@@ -13,39 +13,37 @@ import { KOMMUNICATE_APP_ID, KOMMUNICATE_LOADED } from "../config/kommunicate";
 const { Meta } = Card;
 
 // Restaurant List function
-// elements from
-// [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password
-// and google sign-in,” Medium,
-// https://blog.bitsrc.io/firebase-authentication-with-react-for-beginners-implementing-email-password-and-google-sign-in-e62d9094e22 (accessed Oct. 17, 2023).
 function RestaurantList() {
-  // navigate variable to use for BrowserRouter
+
   const navigate = useNavigate();
 
   // User Detail variable
   const [user, setUser] = useState(null);
-  const [restaurants, setRestaurants] = useState([
-    {
-      id: 1,
-      restaurant_name: "Restaurant 1",
-      images: [
-        "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-      ],
-    },
-    {
-      id: 2,
-      restaurant_name: "Restaurant 2",
-      images: [
-        "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-      ],
-    },
-    {
-      id: 3,
-      restaurant_name: "Restaurant 3",
-      images: [
-        "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-      ],
-    },
-  ]);
+  const [restaurants, setRestaurants] = useState(
+  //   [
+  //   {
+  //     id: 1,
+  //     restaurant_name: "Restaurant 1",
+  //     images: [
+  //       "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     restaurant_name: "Restaurant 2",
+  //     images: [
+  //       "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     restaurant_name: "Restaurant 3",
+  //     images: [
+  //       "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
+  //     ],
+  //   },
+  // ]
+  );
 
   // Function called when page is loaded, kind of like main function or init function
   useEffect(() => {
