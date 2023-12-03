@@ -27,7 +27,7 @@ const ReservationForm = () => {
 
   useEffect(() => {
     const user_email = sessionStorage.getItem("user_email");
-    setUserID(user_email);
+    setUserEmail(user_email);
   });
 
   const {
@@ -69,10 +69,10 @@ const ReservationForm = () => {
           no_of_people: parsedNoOfPeople,
           reservationDate: datetime,
           user_id,
-          restaurant_id: parseInt(restaurant_id, 10),
+          restaurant_id: restaurant_id,
           //restaurant_id: parsedRestaurantId,
           restaurant_name: restaurantData.restaurant_name,
-          user_email   
+          user_email  
         }
       );
 

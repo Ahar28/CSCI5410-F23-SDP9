@@ -71,7 +71,24 @@ function RestaurantList() {
     return () => unsubscribe();
   }, []);
 
-  
+  useEffect(() => { 
+    async function fetchRestuarants() {
+      const headers = {
+        "Content-type": "application/json",
+      };
+      const resData = await axios.get(
+        "https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",
+        { headers }
+      );
+      console.log(resData);
+      const resJsonData = JSON.parse(resData.data.body);
+      setRestaurants(resJsonData);
+    }
+
+
+    fetchRestuarants();
+  }, []);
+
  
 
   // Sign Out function

@@ -15,40 +15,80 @@ admin.initializeApp({
 exports.handler = async (event) => {
   try {
     // Initialize Firestore
+    console.log("+++++++++++++++++++++++++++=");
     const db = admin.firestore();
-
+    console.log("event is ++== ", event);
+    console.log("event body is ++== ", event.body);
+    console.log("type of event.body: ",typeof(event.body))
+    console.log("before json.parse");
     const reservationDetails = JSON.parse(event.body);
-    const { restaurantId, reservationDate, requiredCapacity, userId } =
+  //  const reservationDetails = event.body;
+    console.log("after json.parse");
+    
+    const { restaurant_id, reservationDate, no_of_people, user_id, user_email,restaurant_name } =
       reservationDetails;
 
     const newReservationDate = new Date(reservationDate);
+    var days = [
+      "sunday",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+    ];
+    const day = newReservationDate;
+    var dayName = days[day.getDay()];
 
+    //console.log(dayName);
+    console.log("restaurant_id is:",restaurant_id);
+    console.log("fetching restaurant  details from restaurant_id");
     const response = await axios.get(
-      `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=2`
+      `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${restaurant_id}`
     );
+  
+    console.log("response: ",response);
+    console.log("response.data: ",response.data);
+    console.log("response.data.body : ",response.data.body);
+    
+    console.log("data of response.data.body : ",typeof(response.data.body));
+    
+    
+    const restaurantDetails = JSON.parse(response.data.body);
 
-    const restaurantDetails = response.data;
-
-    if (restaurantId !== restaurantDetails.restaurant_id) {
-      // return Responses._400({
-      //   message: "The restaurant does not exist",
-      // });
+    if (restaurant_id !== restaurantDetails.Item.restaurant_id) {
+      console.log("restaurant_ids dont match match :")
       return {
         statusCode: 400,
-        body: JSON.stringify({
-          message: "The restaurant does not exist",
+            headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Credentials": true,
+        },
+         body: JSON.stringify({
+          message: "The restaurant does not exist ",
+        
         }),
+      
       };
     }
 
-    const restaurantOpening = restaurantDetails.opening_time;
-    const restaurantClosing = restaurantDetails.closing_time;
-    const [openingHour, openingMinute] = restaurantOpening
-      .split(":")
-      .map(Number);
-    const [closingHour, closingMinute] = restaurantClosing
-      .split(":")
-      .map(Number);
+    const restaurantOpening =
+      restaurantDetails.Item.timings[dayName].opening_time;
+    const restaurantClosing =
+      restaurantDetails.Item.timings[dayName].closing_time;
+    console.log("restaurant opening time ====== " + restaurantOpening);
+
+    const openingHour = parseInt(restaurantOpening.toString().substr(0, 2));
+    const openingMinute = parseInt(restaurantOpening.toString().substr(2, 4));
+
+    const closingHour = parseInt(restaurantClosing.toString().substring(0, 2));
+    const closingMinute = parseInt(
+      restaurantClosing.toString().substring(2, 4)
+    );
 
     // Create opening and closing date from reservation date and restaurant timings
     const openingDate = new Date(newReservationDate);
@@ -67,11 +107,13 @@ exports.handler = async (event) => {
     ) {
       const reservationsDocs = db.collection("Customer-Reservation");
       const addedReservation = await reservationsDocs.add({
-        restaurant_id: restaurantId,
+        restaurant_id: restaurant_id,
         reservation_date:
           admin.firestore.Timestamp.fromDate(newReservationDate),
-        required_capacity: requiredCapacity,
-        user_id: userId,
+        required_capacity: no_of_people,
+        user_id: user_id,
+        user_email:user_email,
+        restaurant_name
       });
 
       return {
@@ -84,12 +126,11 @@ exports.handler = async (event) => {
           "Access-Control-Allow-Credentials": true,
         },
         body: JSON.stringify({
-          message: "Your Reservation has been made successfully",
-          reservation_id: addedReservation.id,
+          message: "Reservation made successfully ",
+          document_id: addedReservation.id,
         }),
       };
     } else {
- 
       return {
         statusCode: 400,
         body: JSON.stringify({
@@ -99,47 +140,12 @@ exports.handler = async (event) => {
     }
   } catch (error) {
     console.log(error);
-    
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Reservation time is outside the restaurant's opening hours",
-      }),
-    };
-  }
-  /*
-    // Data to be added to the Firestore document
-    const dataToStore = {
-      user_id: event.user_id, // Replace with the actual data you want to store
-      restaurant_id: event.restaurant_id,
-      no_of_people: event.no_of_people,
-      //timestamp: new Date().toISOString(),
-      // Add other data fields as needed
-    };
-
-    console.log("data to store json " + JSON.stringify(dataToStore))
-
-    // Reference to the Firestore collection
-    const collectionRef = db.collection('Customer-Reservation'); // Replace with your collection name
-
-    // Add a new document with a generated ID  
-    const docRef = await collectionRef.add(dataToStore);
-  
-    
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: 'Reservation made successfully ',
-        document_id: docRef.id,
-      }),
-    };
-  } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: 'Failed to add document',
+        error: "Failed to add document",
         message: error.message,
       }),
     };
-  } */
+  }
 };
