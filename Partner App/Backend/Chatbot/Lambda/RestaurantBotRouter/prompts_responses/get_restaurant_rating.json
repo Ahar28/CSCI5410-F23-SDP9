@@ -1,4 +1,4 @@
 {
-    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
-    "Fulfilment": "Got it. {restaurant_name} has a rating of {restaurant_rating} .\nAnything else?"
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a matching {restaurant_name} with your account. Please tell me the restaurant name again",
+    "Fulfilment": "Got it. {restaurant_name} has {restaurant_rating}.\nAnything else?"
 }

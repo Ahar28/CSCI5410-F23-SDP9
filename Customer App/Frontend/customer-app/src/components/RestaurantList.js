@@ -8,12 +8,7 @@ import { auth } from "../config/firebase";
 import { Card } from "antd";
 import axios from "axios";
 import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
-import { KOMMUNICATE_APP_ID } from "../config/kommunicate";
-
-Kommunicate.init(KOMMUNICATE_APP_ID, {
-  automaticChatOpenOnNavigation: true,
-  popupWidget: true,
-});
+import { KOMMUNICATE_APP_ID, KOMMUNICATE_LOADED } from "../config/kommunicate";
 
 const { Meta } = Card;
 
@@ -59,11 +54,32 @@ function RestaurantList() {
       if (user) {
         // User is signed in, set the user state
         setUser(user);
+
+        const isKommunicateLoaded = JSON.parse(
+          localStorage.getItem(KOMMUNICATE_LOADED)
+        );
+
+        // Load Kommunicate iframe once
+        if (isKommunicateLoaded !== "true") {
+          Kommunicate.init(KOMMUNICATE_APP_ID, {
+            automaticChatOpenOnNavigation: true,
+            popupWidget: true,
+            userId: auth.currentUser.uid,
+          });
+          localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
+        }
       } else {
         // No user is signed in
         setUser(null);
+
+        //Clear Kommunicate local storage to prevent unauthorized access
+        localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(false));
+
         //Redirect to login page
         navigate("/");
+
+        //Force reload after log out to clear Kommunicate conversations
+        window.location.reload();
       }
     });
 

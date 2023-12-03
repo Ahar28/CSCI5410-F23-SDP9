@@ -34,7 +34,7 @@ def check_restaurant_owner(restaurant_name, owner_id, client):
             
     #User doesn't own the mentioned restaurant        
     return False
-
+    
 def get_restaurant_opening_times(restaurant_name, client):
     apiResponse = client.invoke(
             FunctionName = 'GetRestaurantOpeningTimes',
@@ -80,6 +80,86 @@ def get_restaurant_rating(restaurant_name, client):
             FunctionName = 'apiHelper',
             InvocationType = 'RequestResponse',
             Payload = json.dumps({'function': 'getRestaurantRating', 'restaurant_name': restaurant_name})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+
+def get_restaurant_reviews(restaurant_name, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'getRestaurantReviews', 'restaurant_name': restaurant_name})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+
+def get_restaurant_menu_items(restaurant_name, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'getRestaurantMenuItems', 'restaurant_name': restaurant_name})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+    
+def check_restaurant_menu_item(restaurant_name, menu_item, client):
+    menu_items = get_restaurant_menu_items(restaurant_name, client)
+    print(menu_items, len(menu_items))
+    
+    for item in menu_items:
+        if item['name'].lower() == menu_item.lower():
+            return True
+            
+    return False
+    
+    
+def get_restaurant_menu_item_reviews(restaurant_name, menu_item, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'getRestaurantMenuItemReviews', 'restaurant_name': restaurant_name, 'menu_item': menu_item})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+
+def get_restaurant_booking_by_date(restaurant_name, date, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'getRestaurantReservationsBookingByDate', 'restaurant_name': restaurant_name, 'date': date})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+    
+def get_restaurant_booking_by_week(restaurant_name, date, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'getRestaurantReservationsBookingByWeek', 'restaurant_name': restaurant_name, 'date': date})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+
+def get_restaurant_booking_by_month(restaurant_name, date, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'getRestaurantReservationsBookingByMonth', 'restaurant_name': restaurant_name, 'date': date})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+
+def update_restaurant_timings(restaurant_name, opening_time, closing_time, user_id, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({
+                'function': 'updateTimings',
+                'restaurant_name': restaurant_name,
+                'opening_time': opening_time,
+                'closing_time': closing_time,
+                'user_id': user_id,
+            })
         )
 
     return json.load(apiResponse['Payload'])['values']

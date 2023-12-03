@@ -9,15 +9,16 @@ def handler(intent_request, client):
     intent = dialog.get_intent(intent_request)
     active_contexts = dialog.get_active_contexts(intent_request)
     session_attributes = dialog.get_session_attributes(intent_request)
-    prompts = Prompts('get_restaurant_rating')
-    responses = Responses('get_restaurant_rating')
+    prompts = Prompts('get_restaurant_booking_by_date')
+    responses = Responses('get_restaurant_booking_by_date')
     restaurant_name = dialog.get_slot('RestaurantName', intent)
+    date = dialog.get_slot('BookingDate', intent)
     user_id = dialog.get_from(intent_request)
     
     # #For testing purpose
-    # user_id = "BGbFnGLjAGh4NP0PnSiv05sj8Hm1"
-    # restaurant_name = "Mexican Restaurant"
-    
+    user_id = "CGQcEYmdgEU1Fx4iI2qqHn0xLXK2"
+    restaurant_name = "Restauant_ahar"
+    print(date)
     if restaurant_name and not intent['state'] == 'Fulfilled':
         does_restaurant_match = restaurant_system.check_restaurant_owner(restaurant_name, user_id, client)
         
@@ -27,17 +28,22 @@ def handler(intent_request, client):
                 'RestaurantName', active_contexts, session_attributes, intent,
                 [{'contentType': 'PlainText', 'content': prompt}]
                 )
-        else:
-            restaurant_rating = restaurant_system.get_restaurant_rating(restaurant_name, client)
-            
-            if not restaurant_rating:
-                restaurant_rating = "No ratings"
+        
+        if date:
+            restaurant_bookings = restaurant_system.get_restaurant_booking_by_date(restaurant_name, date, client)
+            # print("menu_item reviews",menu_item,restaurant_menu_item_reviews)
+            print("got bookings ", restaurant_bookings)
+            if not restaurant_bookings:
+                response = responses.get('FulfilmentNoBookings', date=date)
             else:
-                restaurant_rating = f"{restaurant_rating} ratings"
+                bookings_message = ''
+                for i in range(len(restaurant_bookings)):
+                    print("Booking ", restaurant_bookings[i])
+                    bookings_message += f'{i+1}) time: {restaurant_bookings[i]["datetime"]} capacity: {restaurant_bookings[i]["data"]["required_capacity"]}\n'
+                response = responses.get('Fulfilment', bookings=bookings_message, date=date)
                 
-            response = responses.get('Fulfilment', restaurant_name=restaurant_name, restaurant_rating=restaurant_rating)
             return dialog.elicit_intent(active_contexts, 
-                            session_attributes, intent, 
-                            [{'contentType': 'PlainText', 'content': response}])
+                        session_attributes, intent, 
+                        [{'contentType': 'PlainText', 'content': response}])
  
     return dialog.delegate(active_contexts, session_attributes, intent)                    

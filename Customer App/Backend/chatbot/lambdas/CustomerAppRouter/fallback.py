@@ -1,6 +1,3 @@
-"""
-Note: This file has been taken from AWS Lex V2 airlines bot template
-"""
 import dialogstate_utils as dialog
 import random
 from prompts_responses import Prompts

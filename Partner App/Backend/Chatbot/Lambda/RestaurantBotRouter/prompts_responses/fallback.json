@@ -1,6 +1,7 @@
 {
     "GetRestaurantOpeningTime":"Sorry? If you want to check for restaurant opening times, say, 'show restaurant opening times'",
-    "GetRestaurants":"Sorry? If you want to all restaurants, say, 'show all restaurants'",
+    "GetRestaurantRating":"Sorry? If you want to restaurant rating, say, 'I want the restaurant rating'",
+    "GetRestaurantReviews":"Sorry? If you want to restaurant reviews, say, 'I want the restaurant reviews'",
     "Welcome": "Hi! How can I help you today?",
-    "DefaultFallback": "Some of the things I can help you with are, Get all restaurants, Get a restaurant opening times. Now can you please rephrase your request?"
+    "DefaultFallback": "Some of the things I can help you with are, Get restaurant rating, Get a restaurant opening times, Get restaurant reviews, Get restaurant menu item reviews. Now can you please rephrase your request?"
 }

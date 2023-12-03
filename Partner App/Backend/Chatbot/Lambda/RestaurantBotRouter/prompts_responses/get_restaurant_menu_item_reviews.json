@@ -1,0 +1,6 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a matching {restaurant_name} with your account. Please tell me the restaurant name again",
+    "InvalidMenuItemPrompt": "Sorry. I couldn't find {menu_item} in {restaurant_name}. Please tell me the menu item again",
+    "Fulfilment": "Got it.\nHere are {menu_item} reviews:\n{menu_item_reviews}\nAnything else?",
+    "FulfilmentNoReviews": "Got it.\n{menu_item} has no reviews.\nAnything else?"
+}
