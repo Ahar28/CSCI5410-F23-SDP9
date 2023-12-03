@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "serverless-term-assignment",
+  "private_key_id": "41dcbae7972294ecfbbb0f2d67654767a8ea1e3f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCpgBMxgkcFAYoB\ny8/VVKEzu0VGea1m8TyHiTvS5pjlQWszuaHbLa/5dukqJBiV03/a3LfH9H3wCyKb\nOzMR9+AtallY7DIvThum8JnMBKBGuR1Jw9mM2Akcw5ZPcAPGvLHH2sQ/CdzFak0D\nCN69S6Dtzp4Cc82L2HmjE8Zx3uk2v5wYpwW4VMw84eccEdsbS0lKg8Yr3W2hs+7u\nAeVxGPPdlSWWNNsyXe0kTddM3XbyQOQyNsvo1b6OL7tqYTxCqglu3GNfmsleh3Dq\nprssCRWgG+yCmHD8ZLcmtaQ5Wx/nB755WgsQNXncbXoTal6UQz3/bmsc3T8eNtj9\nuPmAS/IXAgMBAAECggEAIoBrZ7x48E/r44m0+FuNpJYN99Z0sWuRQpVwk/FUVfYG\n+DRk+dRG6aSGuYk3Z+fxMn+S+SSPLflWRfq63oFyJExte2g4nuBrSIPZCmo2pa6w\ng39WHREsaap2Qh0u55kpJuEk6R/8zEJjAqcfj7CBRWa1SxJ/WGPr/oHb9vnExtvM\nm+Kc3vraHXuLbFTdGJZim3KQW5TsnSOizUZ0SzOOM2rzBZ6D5/irFNfmnF4rh5A2\nUnkI+HDmCbNxTCnEuZ7VJmIfgV4ffSa8fnK8gz5xjGbXlA3IZ/XxFUzMqe93DlCo\nbx3YZC+vNcbr3nA3lpkJlKHfIX4Pmtx5CQdrjMisoQKBgQDlYBqdK1gpL8zdCQQr\nJTzFMnt4n3pMupxAtoZT9e1hCJRLPo8C7Vo/p6ZxKXlLRlkFb3zxudu3BRtL1RAL\nA7IoV+NiahhJ8IPJQNkfK1GhddtOjSPQQ6TwMvxLb2LdJKztmEvIBHA3Gp4QbcEQ\nQg/I6gqrxt7ersm/1N7SkMMDbQKBgQC9LMfOsJwMvtSKzlin8zn6gHuGnivbPYVz\nZlwkhk20oHnvmCzDMG5k/rUmWByN0PyPQsbV7uvvOpnd5bRZ8PypfbGURjtSxLZT\nDJwx4VdVQJUhx5pPFzKXrnLrMpfn6oGuauA24O+lD4dg8mvbldDkWxmGAdcNvsvS\n+HvNCz3VEwKBgQCBhpOAzUkreOKmrsC73HtEoA05QFU/nuE9adTQ9L7nXIDhPKJl\ndMLRz0od/N2RtFfwydQ0bE+2Ohv/5oD4t02Tmo28tUyh9D93FjeFcmDWXEdLREhF\nAu3Q9fmiX3PkjSFZyfaBLIBxnYZEoLW1CJkBS6ha+CJCfVFQElUBct2swQKBgEmB\nce3tD+Wf7MQ2o5o21ytv6w+GvDHHOOh7OIh0qxLpXBfuAE6jrfGOSuMoT4gHUWt1\nHf+Yg5KEKa9gBvD/w500GuErXPevOc0RVEvJbH7Sxl/GyD29HMp1XW/oS8Awjc0w\n+Ag65MM1Qnw4FhLPpshkYYmBg4dywI4sQSaOHKuDAoGBAMnGKXBQ/NV8cY1tb/in\nIeCOBmhZZVFZmDOqA+icemDiT3B8W3pWBmGxYk43YS+m/1Es5GkLjmkN933bYMlQ\nwCljqQEfFtEyHMzTda8QPxH7DD8Po4Y1TOcr9EDKbGvjmbtj7c14t8fUI7tSfv3Q\nBiTiBWk36PGOyU+wD8BtTg/Y\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-jr7su@serverless-term-assignment.iam.gserviceaccount.com",
+  "client_id": "111492928589442036920",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-jr7su%40serverless-term-assignment.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

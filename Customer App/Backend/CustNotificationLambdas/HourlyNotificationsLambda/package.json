@@ -1,0 +1,11 @@
+{
+  "name": "HourlyNotificationsLambda",
+  "version": "1.0.0",
+  "description": "Description of your Lambda function",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "firebase-admin": "^10.0.1",
+    "aws-sdk": "^2.1049.0"
+  }
+}
