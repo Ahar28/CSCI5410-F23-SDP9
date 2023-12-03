@@ -1,4 +1,4 @@
-.container {
+.restaurant-container{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -6,7 +6,7 @@
     height: 100vh; /* This ensures the container takes up the full height of the viewport */
 }
 
-form {
+form.create-restaurant-form {
   max-width: 400px;
   margin: 20px auto;
   padding: 20px;

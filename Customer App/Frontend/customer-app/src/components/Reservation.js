@@ -19,6 +19,9 @@ const ReservationForm = () => {
   const [reservationData, setReservationData] = useState(null);
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
+  
+  //new
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     const user_id = sessionStorage.getItem("userId");
@@ -49,6 +52,26 @@ const ReservationForm = () => {
     }
   };
 
+  const addToCart = (menuItem) => {
+    setCartItems([...cartItems, menuItem]);
+  };
+
+  // const removeFromCart = (menuItem) => {
+  //   const updatedCart = cartItems.filter((item) => item !== menuItem);
+  //   setCartItems(updatedCart);
+  // };
+
+  const removeFromCart = (menuItem) => {
+    const itemIndex = cartItems.findIndex((item) => item === menuItem);
+  
+    if (itemIndex !== -1) {
+      const updatedCart = [...cartItems];
+      updatedCart.splice(itemIndex, 1);
+  
+      setCartItems(updatedCart);
+    }
+  };
+
   const handleReservation = async (restaurant_id, restaurantData) => {
     setloading(true);
     var response;
@@ -58,9 +81,7 @@ const ReservationForm = () => {
       // const restaurant_name = restaurantData.restaurant_name;
 
       response = await axios.post(
-        //"https://nhmbrue00f.execute-api.us-east-1.amazonaws.com/dev/create-restaurant-reservation",
-        //"https://xt9cbpo2ye.execute-api.us-east-1.amazonaws.com/dev/createreservation",
-        //"https://y63heby3kj.execute-api.us-east-1.amazonaws.com/dev/createresrevation",
+        
         // "https://k8mh0utk2m.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //createreservationAhar
         //"https://d2x4or4oci.execute-api.us-east-1.amazonaws.com/dev/create-reservation-customer-res-name", //createreservationwithCOnditionRestaurantName
         //"https://837jfnbfoh.execute-api.us-east-1.amazonaws.com/dev/create-reservation", //crateReservationwithLayers
@@ -70,7 +91,6 @@ const ReservationForm = () => {
           reservationDate: datetime,
           user_id,
           restaurant_id: restaurant_id,
-          //restaurant_id: parsedRestaurantId,
           restaurant_name: restaurantData.restaurant_name,
           user_email  
         }
@@ -88,18 +108,24 @@ const ReservationForm = () => {
     }
   };
 
+
+
   return (
     <Container style={{ maxWidth: "600px" }}>
       <h2 style={{ textAlign: "center" }}>Reserve your table</h2>
+      <br></br>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Row>
-            <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label>
+            {/* <Form.Label>Restaurant ID is : {restaurant_id} </Form.Label> */}
+            
             <Form.Label>
-              Restaurant Name is : {restaurantData.restaurant_name}{" "}
+              Restaurant Name : {restaurantData.restaurant_name}{" "}
             </Form.Label>
+           
           </Row>
           <Form.Group as={Col} controlId="formGridEmail">
+          <br></br>
             <Form.Label>No of People</Form.Label>
             <Form.Control
               type="number"
@@ -125,6 +151,57 @@ const ReservationForm = () => {
           </Form.Group>
         </Row>
         <Row>
+          <div>
+            <br></br>
+            <h2>Menu</h2>
+            {restaurantData.menu.map((menuItem, index) => (
+              <div key={index}>
+                <Form.Group controlId={`menuItemName-${index}`}>
+                  <p>{menuItem.name}</p>
+                </Form.Group>
+                <Form.Group controlId={`menuItemImage-${index}`}>
+                  <img src={menuItem.image} alt={`Item ${index}`} style={{ maxWidth: '100px', maxHeight: '100px' }} />
+                </Form.Group>
+                <Form.Group controlId={`menuItemPrice-${index}`}>
+                  <p></p>
+                  <p>{menuItem.price}</p>
+                </Form.Group>
+                <div>
+                  <Button
+                    variant="primary"
+                    onClick={() => addToCart(menuItem)}
+                    style={{ marginRight: "10px" }}
+                  >
+                    +
+                  </Button>
+                  <span>{cartItems.filter((item) => item === menuItem).length}</span>
+                  <Button
+                    variant="danger"
+                    onClick={() => removeFromCart(menuItem)}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    -
+                  </Button>
+                </div>
+                <hr />
+              </div>
+            ))}
+            {cartItems.length > 0 && (
+              <div>
+                <h2>Cart</h2>
+                <ul>
+                  {Array.from(new Set(cartItems)).map((cartItem, index) => (
+                    <li key={index}>
+                      <div>{cartItem.name}</div>
+                      <div>Quantity: {cartItems.filter((item) => item === cartItem).length}</div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </Row>
+        <Row> 
           {!isloading ? (
             <Button
               variant="primary"
@@ -137,6 +214,23 @@ const ReservationForm = () => {
           ) : (
             <Spinner animation="border" style={{ margin: "20px auto" }} />
           )}
+             {/* {restaurantData.menu && restaurantData.menu.length > 0 && (
+        <div>
+          <h2>Menu</h2>
+          <ul>
+            {restaurantData.menu.map((item, index) => (
+              <li key={index}>
+                <div className="menu-item">
+                  <img src={item.image} alt={`Menu Item Image ${index}`} />
+                </div>
+                <div>{item.name}</div>
+                <div>{item.price}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )} */}
+      
         </Row>
       </Form>
 

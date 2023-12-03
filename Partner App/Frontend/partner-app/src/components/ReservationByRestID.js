@@ -99,8 +99,9 @@ const ReservationsByRestID = () => {
 
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Reservations of your Restaurant</h1>
+     
       <Container>
+      <h1 style={{ textAlign: "center" }}>Reservations of your Restaurant</h1>
         <Row>
           {reservations.map((reservation, index) => (
             <Col key={reservation.id} md={4}>
