@@ -107,12 +107,14 @@ const ReservationsByRestID = () => {
             <Col key={reservation.id} md={4}>
               <Card style={{ margin: "10px" }}>
                 <Card.Body>
-                  <Card.Title>Reservation ID: {reservation.id}</Card.Title>
+                  {/* <Card.Title>Reservation ID: {reservation.id}</Card.Title> */}
                   <Card.Text>
-                    <strong>User ID:</strong> {reservation.data.user_id}
-                    <br />
-                    <strong>Restaurant ID:</strong>{" "}
-                    {reservation.data.restaurant_id}
+                    {/* <strong>User ID:</strong> {reservation.data.user_id} */}
+                   
+                    {/* <strong>Restaurant ID:</strong>{" "}
+                    {reservation.data.restaurant_id} */}
+                    <strong>Restaurant Name</strong>{" "}
+                    {reservation.data.restaurant_name}
                     <br />
                     <strong>No. of People:</strong>{" "}
                     {reservation.data.no_of_people
@@ -126,17 +128,7 @@ const ReservationsByRestID = () => {
                     <br />
                     {reservation.status === "Pending" && (
                       <>
-                        <Button
-                          onClick={() => handleEditClick(reservation)}
-                          variant="primary"
-                          style={{
-                            marginRight: "5px",
-                            backgroundColor: "blue",
-                            color: "white",
-                          }}
-                        >
-                          Edit
-                        </Button>{" "}
+                      
                         <Button
                           onClick={() => handleApproveClick(index)}
                           style={{
@@ -156,6 +148,19 @@ const ReservationsByRestID = () => {
                           }}
                         >
                           Reject
+                        </Button>{" "}
+                        <br></br>
+                        <br></br>
+                        <Button
+                          onClick={() => handleEditClick(reservation)}
+                          variant="primary"
+                          style={{
+                            marginRight: "5px",
+                            backgroundColor: "blue",
+                            color: "white",
+                          }}
+                        >
+                          Edit
                         </Button>{" "}
                         <Button
                           onClick={() => handleDeleteClick(reservation)}
