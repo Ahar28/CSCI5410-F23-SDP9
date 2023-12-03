@@ -15,25 +15,25 @@ function HomePage() {
   // navigate variable to use for BrowserRouter
   const navigate = useNavigate();
   
-  // Sign Out function
-  const handleSignOut = async () => {
+  // // Sign Out function
+  // const handleSignOut = async () => {
     
-    try {
-      // Redirect to the login page after signing out
-      navigate('/'); 
-    } catch (error) {
-      // Log error
-      console.error('Error signing out:', error);
-      alert('Sign out error')
-    }
-  };
+  //   try {
+  //     // Redirect to the login page after signing out
+  //     navigate('/'); 
+  //   } catch (error) {
+  //     // Log error
+  //     console.error('Error signing out:', error);
+  //     alert('Sign out error')
+  //   }
+  // };
 
   // Frontend elements
   return (
     <div>
-      <div style={{ float: 'right', padding: '10px'  }}>
+      {/* <div style={{ float: 'right', padding: '10px'  }}>
         <Button icon={<LogoutOutlined />} onClick={handleSignOut}>Sign Out</Button> 
-      </div>
+      </div> */}
 
       <div>
         <h1>Admin panel</h1>
