@@ -16,6 +16,7 @@ Kommunicate.init(KOMMUNICATE_APP_ID, {
 });
 
 const { Meta } = Card;
+
 // Restaurant List function
 // elements from
 // [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password
@@ -70,7 +71,7 @@ function RestaurantList() {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     async function fetchRestuarants() {
       const headers = {
         "Content-type": "application/json",
@@ -87,6 +88,8 @@ function RestaurantList() {
 
     fetchRestuarants();
   }, []);
+
+ 
 
   // Sign Out function
   const handleSignOut = async () => {

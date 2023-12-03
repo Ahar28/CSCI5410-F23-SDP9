@@ -1,6 +1,3 @@
-/**
- * create reservation
- */
 const admin = require("firebase-admin");
 const axios = require("axios");
 
@@ -25,7 +22,10 @@ exports.handler = async (event) => {
   //  const reservationDetails = event.body;
     console.log("after json.parse");
     
-    const { restaurant_id, reservationDate, no_of_people, user_id, user_email,restaurant_name } =
+    const { restaurant_id, reservationDate, no_of_people, user_id, user_email,restaurant_name
+    //new
+      , selectedMenuItems, 
+    } =
       reservationDetails;
 
     const newReservationDate = new Date(reservationDate);
@@ -56,6 +56,10 @@ exports.handler = async (event) => {
     
     
     const restaurantDetails = JSON.parse(response.data.body);
+    // console.log("restaurantDetails after calling the get api ",restaurantDetails);
+    // console.log("type of restaurantDetails.Item :",typeof(restaurantDetails.Item));
+    // console.log("restaurant_id sent in the request :",restaurant_id);
+    // console.log("restaurant_id form the api call: ",restaurantDetails.restaurant_id);
 
     if (restaurant_id !== restaurantDetails.Item.restaurant_id) {
       console.log("restaurant_ids dont match match :")
@@ -113,7 +117,9 @@ exports.handler = async (event) => {
         required_capacity: no_of_people,
         user_id: user_id,
         user_email:user_email,
-        restaurant_name
+        restaurant_name,
+        
+        selectedMenuItems: selectedMenuItems || [], // Store selectedMenuItems or an empty array if it's null/undefined
       });
 
       return {

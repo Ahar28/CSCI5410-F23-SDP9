@@ -68,7 +68,7 @@ const CreateRestaurant = () => {
   return (
     <div className="container">
         <h2>Create Restaurant</h2>
-    <form onSubmit={handleSubmit}>
+    <form className='create-restaurant-form' onSubmit={handleSubmit}>
       <label>
         Restaurant Name:
         <input

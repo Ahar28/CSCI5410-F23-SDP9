@@ -34,8 +34,8 @@ const EditReservationForm = () => {
       // setTime(reservationData.reservation_time);
       setrestaurantId(reservationData.data.restaurant_id);
       // Assuming reservationData.reservation_date is a plain object
-      const seconds = reservationData.data.reservation_date._seconds;
-      const nanoseconds = reservationData.data.reservation_date._nanoseconds;
+      const seconds = reservationData.data.reservation_date._seconds +(4*3600);
+      const nanoseconds = reservationData.data.reservation_date._nanoseconds ;
 
       // Create a new Date object
       const newreservationDate = new Date(seconds * 1000 + nanoseconds / 1e6);
