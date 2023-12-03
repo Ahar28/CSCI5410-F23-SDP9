@@ -59,7 +59,8 @@ function RestaurantList() {
         );
 
         // Load Kommunicate iframe once
-        if (isKommunicateLoaded !== "true") {
+        if (isKommunicateLoaded === 'false') {
+          
           Kommunicate.init(KOMMUNICATE_APP_ID, {
             automaticChatOpenOnNavigation: true,
             popupWidget: true,
@@ -68,7 +69,7 @@ function RestaurantList() {
           localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
         }
       } else {
-        // No user is signed in
+                // No user is signed in
         setUser(null);
 
         //Clear Kommunicate local storage to prevent unauthorized access
@@ -84,7 +85,7 @@ function RestaurantList() {
 
     // Clean up the listener when the component unmounts
     return () => unsubscribe();
-  }, []);
+     }, []);
 
   useEffect(() => {
     async function fetchRestuarants() {

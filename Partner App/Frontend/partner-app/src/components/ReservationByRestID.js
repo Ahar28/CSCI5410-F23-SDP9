@@ -96,16 +96,22 @@ const ReservationsByRestID = () => {
     setShowModal(false);
     setReservationToDelete(null);
   };
+  const handleHomeClick = () => {
+    navigate("/home");
+  };
 
   return (
     <>
-     
+       <Button   onClick={() => handleHomeClick()} variant="primary" style={{color: "white",}}>
+                          Home 
+                        </Button>
       <Container>
       <h1 style={{ textAlign: "center" }}>Reservations of your Restaurant</h1>
         <Row>
           {reservations.map((reservation, index) => (
             <Col key={reservation.id} md={4}>
-              <Card style={{ margin: "10px" }}>
+              {/* <Card style={{ margin: "10px" }}> */}
+              <Card style={{ margin: "10px", minWidth: "400px", maxWidth: "550px" }}>
                 <Card.Body>
                   {/* <Card.Title>Reservation ID: {reservation.id}</Card.Title> */}
                   <Card.Text>
@@ -128,7 +134,7 @@ const ReservationsByRestID = () => {
                     <br />
                     {reservation.status === "Pending" && (
                       <>
-                      
+                      <br></br>
                         <Button
                           onClick={() => handleApproveClick(index)}
                           style={{

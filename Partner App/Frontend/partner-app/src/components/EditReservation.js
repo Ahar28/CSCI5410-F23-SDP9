@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Row, Col, Button, Spinner } from "react-bootstrap";
+import { Container, Form, Row, Col, Button, Spinner, Card } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
@@ -112,11 +112,11 @@ const EditReservationForm = () => {
 
   return (
     <Container style={{ maxWidth: "600px" }}>
-      <h2 style={{ textAlign: "center" }}>Edit your Reservation</h2>
+      <h2 style={{ textAlign: "center" }}>Edit Reservations</h2>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Row>
-            <Form.Label>Restaurant ID is : {rest_id} </Form.Label>
+            {/* <Form.Label>Restaurant ID is : {rest_id} </Form.Label> */}
           </Row>
           <Form.Group as={Col} controlId="formGridEmail">
             <Form.Label>No of People</Form.Label>

@@ -294,6 +294,7 @@ function RestaurantDetails() {
   }, []);
 
   return (
+    <>
     <div className="restaurant-details">
   <h1>{restaurantData.restaurant_name}</h1>
   <div>
@@ -476,6 +477,7 @@ function RestaurantDetails() {
         
   </div>
     </div>
+    </>
   );
 }
 export default RestaurantDetails;
