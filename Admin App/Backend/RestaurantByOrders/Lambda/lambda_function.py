@@ -33,7 +33,8 @@ def lambda_handler(event, context):
 
     for reservation in reservations:
         restaurant_id = str(reservation['restaurant_id'])
-        restaurant_order_count[restaurant_id] += 1
+        if restaurant_id in restaurant_order_count:
+            restaurant_order_count[restaurant_id] += 1
     
     restaurant_orders = [(restaurant_names[restaurant_id], restaurant_order_count[restaurant_id]) for restaurant_id in restaurant_names]
         
