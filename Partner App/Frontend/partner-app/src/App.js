@@ -9,6 +9,7 @@ import CreateRestaurant from "./components/CreateRestaurant";
 import ReservationsByRestID from "./components/ReservationByRestID";
 import EditReservationForm from "./components/EditReservation";
 import CreateReservationForm from "./components/CreateReservation";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
