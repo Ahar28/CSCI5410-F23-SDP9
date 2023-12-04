@@ -141,7 +141,7 @@ const EditReservationForm = () => {
     var response;
     try {
       const datetime = `${date} ${time}`;
-        debugger;
+        
         // Calculate the total capacity of all tables
         const totalCapacity = restaurantData.tables.reduce(
           (total, table) => total + parseInt(table.size, 10),
