@@ -58,6 +58,11 @@ const ReservationForm = () => {
 
   };
 
+  const handleHomeClick = () => {
+    navigate("/home");
+  };
+
+  //cart
   const addToCart = (menuItem) => {
     setCartItems([...cartItems, menuItem]);
     console.log("reservationData : ",restaurantData)
@@ -90,7 +95,6 @@ const ReservationForm = () => {
     var response;
     try{
     
-      
       const datetime = `${date} ${time}`;
 
       // Calculate the total capacity of all tables
@@ -170,6 +174,7 @@ catch{
 
   return (
     <>
+    <Button   onClick={() => handleHomeClick()} variant="primary" style={{color: "white",}}> Home </Button>
     <Container style={{ maxWidth: "600px" }}>
       <h2 style={{ textAlign: "center",fontWeight: 'bold',fontSize: '2.0em'  }}>Reserve your table</h2>
       
@@ -204,7 +209,6 @@ catch{
             <Form.Control
               type="time"
               value={time}
-              // step="1"
               onChange={(e) => handleChange(e, "time")}
             />
           </Form.Group>
