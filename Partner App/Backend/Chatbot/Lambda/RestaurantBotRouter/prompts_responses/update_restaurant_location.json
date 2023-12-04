@@ -1,0 +1,5 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
+    "FulfilmentSuccess": "Successfully updated location {location} for {restaurant_name}.\nAnything else?",
+    "FulfilmentFailed": "Sorry we're unable updated location {location} for {restaurant_name}.\nAnything else?"
+}

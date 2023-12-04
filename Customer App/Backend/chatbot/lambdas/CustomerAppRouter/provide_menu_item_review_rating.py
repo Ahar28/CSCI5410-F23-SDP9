@@ -16,9 +16,7 @@ def handler(intent_request, client):
     menu_item = dialog.get_slot('MenuItem', intent)
     review = dialog.get_slot('Review', intent)
     rating = dialog.get_slot('Rating', intent)
-    user_id = dialog.get_from(intent_request)
-    
-    user_id="8cWoLpnUBZOBBrnNP6jZhhPVJoj2"
+    user_id, user_email = dialog.get_from(intent_request)
 
     if restaurant_name and not intent['state'] == 'Fulfilled':
         does_restaurant_match = restaurant_system.check_restaurant_name(restaurant_name, client)

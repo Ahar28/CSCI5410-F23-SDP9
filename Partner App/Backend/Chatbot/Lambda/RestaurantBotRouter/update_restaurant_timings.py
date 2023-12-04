@@ -9,19 +9,18 @@ def handler(intent_request, client):
     intent = dialog.get_intent(intent_request)
     active_contexts = dialog.get_active_contexts(intent_request)
     session_attributes = dialog.get_session_attributes(intent_request)
-    prompts = Prompts('book_a_reservation')
-    responses = Responses('book_a_reservation')
+    prompts = Prompts('update_restaurant_timings')
+    responses = Responses('update_restaurant_timings')
     
     restaurant_name = dialog.get_slot('RestaurantName', intent)
     opening_time = dialog.get_slot('OpeningTime', intent)
     closing_time = dialog.get_slot('ClosingTime', intent)
 
-    user_id = dialog.get_from(intent_request)
+    user_id, user_email = dialog.get_from(intent_request)
     
-    user_id="Vut5ce880vWsysKq3Mj137DYPQs1"
     
     if restaurant_name and not intent['state'] == 'Fulfilled':
-        does_restaurant_match = restaurant_system.check_restaurant_name(restaurant_name, client)
+        does_restaurant_match = restaurant_system.check_restaurant_owner(restaurant_name, user_id, client)
         
         if not does_restaurant_match:
             prompt = prompts.get('InvalidRestaurantNamePrompt')
@@ -71,7 +70,7 @@ def handler(intent_request, client):
                     )
                     
         if opening_time and closing_time:
-            update_successful = restaurant_system.update_restaurant_timings(restaurant_name, opening_time, closing_time, client)
+            update_successful = restaurant_system.update_restaurant_timings(restaurant_name, opening_time, closing_time, user_id, client)
             if update_successful:
                 response = responses.get('FulfilmentSuccess', restaurant_name=restaurant_name, opening_time=opening_time, closing_time=closing_time)
             else:

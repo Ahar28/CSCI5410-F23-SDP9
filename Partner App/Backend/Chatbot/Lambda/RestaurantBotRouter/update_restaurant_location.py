@@ -9,22 +9,16 @@ def handler(intent_request, client):
     intent = dialog.get_intent(intent_request)
     active_contexts = dialog.get_active_contexts(intent_request)
     session_attributes = dialog.get_session_attributes(intent_request)
-    prompts = Prompts('get_available_menu')
-    responses = Responses('get_available_menu')
-    restaurant_name = dialog.get_slot('RestaurantName', intent)
-    user_id, user_email = dialog.get_from(intent_request)
+    prompts = Prompts('update_restaurant_location')
+    responses = Responses('update_restaurant_location')
     
-    if restaurant_name:
-        dialog.set_session_attribute(intent_request, 'restaurant_name', restaurant_name)
-        session_attributes = dialog.get_session_attributes(intent_request)
-        
-    restaurant_name_from_session = dialog.get_session_attribute(intent_request, 'restaurant_name')
-    if restaurant_name_from_session:
-        dialog.set_slot('RestaurantName', restaurant_name_from_session, intent)
-        restaurant_name = restaurant_name_from_session
-        
+    restaurant_name = dialog.get_slot('RestaurantName', intent)
+    location = dialog.get_slot('Location', intent)
+
+    user_id,user_email = dialog.get_from(intent_request)
+    
     if restaurant_name and not intent['state'] == 'Fulfilled':
-        does_restaurant_match = restaurant_system.check_restaurant_name(restaurant_name, client)
+        does_restaurant_match = restaurant_system.check_restaurant_owner(restaurant_name, user_id, client)
         
         if not does_restaurant_match:
             prompt = prompts.get('InvalidRestaurantNamePrompt')
@@ -32,9 +26,14 @@ def handler(intent_request, client):
                 'RestaurantName', active_contexts, session_attributes, intent,
                 [{'contentType': 'PlainText', 'content': prompt}]
                 )
-        else:
-            restaurant_menu= restaurant_system.get_restaurant_available_menu(restaurant_name, client)
-            response = responses.get('Fulfilment', restaurant_name=restaurant_name, restaurant_menu=restaurant_menu)
+                    
+        if location:
+            update_successful = restaurant_system.update_restaurant_location(restaurant_name, location, client)
+            if update_successful:
+                response = responses.get('FulfilmentSuccess', restaurant_name=restaurant_name, location=location)
+            else:
+                response = responses.get('FulfilmentFailed', restaurant_name=restaurant_name, location=location)
+                
             return dialog.elicit_intent(active_contexts, 
                             session_attributes, intent, 
                             [{'contentType': 'PlainText', 'content': response}])
