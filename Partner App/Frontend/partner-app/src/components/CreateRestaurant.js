@@ -62,7 +62,7 @@ const CreateRestaurant = () => {
             { headers }
         );
         console.log(resData);
-        navigate('/'); 
+        navigate('/home'); 
   };
 
   return (

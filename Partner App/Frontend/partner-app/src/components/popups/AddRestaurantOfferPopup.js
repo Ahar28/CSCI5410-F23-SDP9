@@ -18,7 +18,7 @@ const AddRestaurantOfferPopup = ({ isOpen, onClose, onAddRestaurantOffer }) => {
   return (
     <div className={`popup ${isOpen ? 'open' : ''}`}>
       <div className="popup-content">
-        <h2>Add Menu Offer</h2>
+        <h2>Add Restaurant Offer</h2>
         
         {/* Form fields */}
         
