@@ -28,7 +28,9 @@ function Login() {
       // Call in-built firebase function to log in with email and password
       const response = await signInWithEmailAndPassword(auth, email, password);
       const userId = response?.user?.uid ?? "";
+      const user_email = response?.user?.email ?? "";
       sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("user_email", user_email);
 
       // Redirect to restaurantList Page
       navigate("/home");

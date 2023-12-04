@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Container, Form, Row, Col, Button, Spinner, Modal } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import PopupModal from "./PopupModal";
 
 const EditReservationForm = () => {
+  
   const { restaurant_id } = useParams();
   const location = useLocation();
   const { reservationData } = location.state || {};
@@ -15,6 +17,10 @@ const EditReservationForm = () => {
   const [date, setDate] = useState("");
   const [rest_id, setrestaurantId] = useState("");
   const [no_of_people, setNumberOfPeople] = useState("");
+  const [restaurantData, setRestaurantData] = useState(null);
+
+  //for popup
+  const [showModal, setShowModal] = useState(false);
 
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
@@ -26,15 +32,32 @@ const EditReservationForm = () => {
 
   useEffect(() => {
     
-    console.log("reservationData ahar :", reservationData);
+    console.log("reservationData  :", reservationData);
     const user_id = sessionStorage.getItem("userId");
     setUserID(user_id);
   }, []);
 
   useEffect(() => {
+    async function fetchRestuarantDetail() {
+      const headers = {
+        "Content-type": "application/json",
+      };
+      const resData = await axios.get(
+        `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${reservationData.data.restaurant_id}`,
+        { headers }
+      );
+      console.log("restaurant Edit",resData);
+      const resJsonData = JSON.parse(resData.data.body);
+      setRestaurantData(resJsonData.Item);
+      console.log(resJsonData.Item);
+    }
+    fetchRestuarantDetail();
+  }, []);
+
+  useEffect(() => {
     if (reservationData) {
       
-      setNumberOfPeople(reservationData.data.required_capacity.toString());
+      setNumberOfPeople(reservationData.data.no_of_people.toString());
       // setDate(reservationData.reservation_date);
       // setTime(reservationData.reservation_time);
       setrestaurantId(reservationData.data.restaurant_id);
@@ -71,6 +94,16 @@ const EditReservationForm = () => {
     e.preventDefault();
     // Add your form submission logic here
   };
+  
+  const handleShowModal = (message) => {
+    setModalMessage(message);
+    setShowModal(true);
+  };
+
+    // Function to hide the modal
+    const handleCloseModal = () => {
+      setShowModal(false);
+    };
 
   const handleChange = (e, key) => {
     if (key === "no_of_people") {
@@ -108,28 +141,54 @@ const EditReservationForm = () => {
     var response;
     try {
       const datetime = `${date} ${time}`;
+        debugger;
+        // Calculate the total capacity of all tables
+        const totalCapacity = restaurantData.tables.reduce(
+          (total, table) => total + parseInt(table.size, 10),
+          0
+        );
+
+         // Check if no_of_people is greater than the total capacity
+      if (parsedNoOfPeople > totalCapacity) {
+        handleShowModal(
+          `The number of people exceeds the total capacity of tables.`
+        );
+        setloading(false);
+        return;
+      }
 
       // Make an API PUT request to update the reservation
+
+      try{
       response = await axios.put(
         //`https://pqnultyhi3.execute-api.us-east-1.amazonaws.com/dev/edit-reservation`,
        'https://b7g6enck49.execute-api.us-east-1.amazonaws.com/dev/edit-reservation', 
        {
-          required_capacity: parsedNoOfPeople,
+          no_of_people: parsedNoOfPeople,
           newreservationDate: datetime,
           user_id,
           reservation_id: reservationData.id,
           restaurant_id: reservationData.data.restaurant_id,
         }
       );
+      handleShowSuccessModal("Reservation edited Successfully");
+      setloading(false);
+      navigate("/view-reservations");
 
-      if (response.status === 200) {
-        handleShowSuccessModal("ahar");
-        setloading(false);
-        navigate("/view-reservations");
-      } else {
-        handleShowErrorModal(`Reservation update failed with status: ${response.status}`);
-        setloading(false);
+      }catch(error){
+        handleShowErrorModal("Error updating reservation.Time outside restaurant hours.");
+      setloading(false);
+      console.error("Error updating reservation: ", error);
       }
+
+      // if (response.status === 200) {
+      //   handleShowSuccessModal("ahar");
+      //   setloading(false);
+      //   navigate("/view-reservations");
+      // } else {
+      //   handleShowErrorModal(`Reservation update failed with status: ${response.status}`);
+      //   setloading(false);
+      // }
 
       // Handle a successful reservation update
       // setloading(false);
@@ -144,28 +203,29 @@ const EditReservationForm = () => {
   return (
     <Container style={{ maxWidth: "600px" }}>
       <h2 style={{ textAlign: "center" }}>Edit your Reservation</h2>
+      <br></br>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Row>
-            <Form.Label>Restaurant ID is : {rest_id} </Form.Label>
+            {/* <Form.Label>Restaurant ID is : {rest_id} </Form.Label> */}
           </Row>
           <Form.Group as={Col} controlId="formGridEmail">
-            <Form.Label>No of People</Form.Label>
+            <Form.Label style={{ fontWeight: "bold"}}>No of People</Form.Label>
             <Form.Control
               type="number"
               placeholder="party size "
               value={no_of_people}
               onChange={(e) => handleChange(e, "no_of_people")}
               min={1}
-              max={20}
+              max={1000}
             />
-            <Form.Label>Date</Form.Label>
+            <Form.Label style={{ fontWeight: "bold"}}>Date</Form.Label>
             <Form.Control
               type="date"
               value={date}
               onChange={(e) => handleChange(e, "date")}
             />
-            <Form.Label>Time</Form.Label>
+            <Form.Label style={{ fontWeight: "bold"}}>Time</Form.Label>
             <Form.Control
               type="time"
               value={time}
@@ -191,6 +251,7 @@ const EditReservationForm = () => {
           )}
         </Row>
       </Form>
+      <PopupModal show={showModal} onHide={handleCloseModal} message={modalMessage} />
       {/* Modal for displaying success message */}
       <Modal show={showSuccessModal} onHide={handleCloseSuccessModal}>
         <Modal.Header closeButton>
