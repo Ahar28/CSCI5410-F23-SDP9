@@ -163,3 +163,71 @@ def update_restaurant_timings(restaurant_name, opening_time, closing_time, user_
         )
 
     return json.load(apiResponse['Payload'])['values']
+    
+def update_restaurant_location(restaurant_name, location, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({
+                'function': 'updateLocation',
+                'restaurant_name': restaurant_name,
+                'location': location
+            })
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+    
+def get_restaurant_reservations(restaurant_name, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'getRestaurantReservations', 'restaurant_name': restaurant_name})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+
+
+def check_reservation(restaurant_name, reservation_id, client):
+    reservations = get_restaurant_reservations(restaurant_name, client)
+    print(reservation_id, reservations, len(reservations))
+    
+    for reservation in reservations:
+        if reservation['id'] == reservation_id:
+            print("Found reservation", reservation_id)
+            return True
+            
+    return False
+
+def get_reservation(restaurant_name, reservation_id, client):
+    reservations = get_restaurant_reservations(restaurant_name, client)
+    print(reservations, len(reservations))
+    
+    for reservation in reservations:
+        if reservation['id'] == reservation_id:
+            return reservation
+            
+    return None
+
+def cancel_reservation(reservation_id, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'deleteReservation', 'reservation_id': reservation_id})
+        )
+
+    return json.load(apiResponse['Payload'])['values']
+
+def edit_reservation(restaurant_name, reservation_id, booking_date, booking_time, capacity, client):
+    apiResponse = client.invoke(
+            FunctionName = 'apiHelper',
+            InvocationType = 'RequestResponse',
+            Payload = json.dumps({'function': 'editReservation',
+            'restaurant_name': restaurant_name,
+            'reservation_id': reservation_id,
+            'booking_date': booking_date,
+            'booking_time': booking_time,
+            'capacity': capacity,
+            })
+        )
+
+    return json.load(apiResponse['Payload'])['values']

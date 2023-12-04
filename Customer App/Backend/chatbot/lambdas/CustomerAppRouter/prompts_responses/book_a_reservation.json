@@ -4,5 +4,16 @@
     "InvalidTime": "Invalid time format. Please tell me the time again",
     "InvalidTimeAmbiguous": "Ambiguous time format. Please tell me the time again",
     "FulfilmentSuccess": "Successfully made a reservation for {restaurant_name} on {date} at {time} for {capacity} people.\nAnything else?",
-    "FulfilmentFailed": "Sorry we're not able to make a reservation for {restaurant_name} on {date} at {time} for {capacity} people as {reservation_message}.\n Please try again."
+    "FulfilmentSuccessWithMenuItems": "Successfully made a reservation for {restaurant_name} on {date} at {time} for {capacity} people with {menu_items}.\nAnything else?",
+    "FulfilmentFailed": "Sorry we're not able to make a reservation for {restaurant_name} on {date} at {time} for {capacity} people as {reservation_message}.\n Please try again.",
+    "GetMenuItem": "Please give the menu item?",
+    "InvalidMenuItem": "Sorry, I couldn't find {menu_item} in {restaurant_name}.\n Please try again.",
+    "GetMenuItemQuantity": "How many {menu_item} do you want?",
+    "QuantiyOutOfRange": "Quantity {quantity} is out of range. Please provide a quantity greater than 0",
+    "QuantityNotInt": "Quantity {quantity} contains decimals. Please provide a quantity greater than 0",
+    "AddMenuItems": "Do you want to add menu items to the reservation?",
+    "AddAnotherMenuItem": "Do you want to add another menu item?",
+    "BookingDate": "Which date?",
+    "BookingTime": "What time?",
+    "Capacity": "How many people?"
 }

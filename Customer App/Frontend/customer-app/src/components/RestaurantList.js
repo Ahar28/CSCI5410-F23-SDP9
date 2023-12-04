@@ -13,39 +13,37 @@ import { KOMMUNICATE_APP_ID, KOMMUNICATE_LOADED } from "../config/kommunicate";
 const { Meta } = Card;
 
 // Restaurant List function
-// elements from
-// [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password
-// and google sign-in,” Medium,
-// https://blog.bitsrc.io/firebase-authentication-with-react-for-beginners-implementing-email-password-and-google-sign-in-e62d9094e22 (accessed Oct. 17, 2023).
 function RestaurantList() {
-  // navigate variable to use for BrowserRouter
+
   const navigate = useNavigate();
 
   // User Detail variable
   const [user, setUser] = useState(null);
-  const [restaurants, setRestaurants] = useState([
-    {
-      id: 1,
-      restaurant_name: "Restaurant 1",
-      images: [
-        "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-      ],
-    },
-    {
-      id: 2,
-      restaurant_name: "Restaurant 2",
-      images: [
-        "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-      ],
-    },
-    {
-      id: 3,
-      restaurant_name: "Restaurant 3",
-      images: [
-        "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
-      ],
-    },
-  ]);
+  const [restaurants, setRestaurants] = useState(
+  //   [
+  //   {
+  //     id: 1,
+  //     restaurant_name: "Restaurant 1",
+  //     images: [
+  //       "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     restaurant_name: "Restaurant 2",
+  //     images: [
+  //       "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
+  //     ],
+  //   },
+  //   {
+  //     id: 3,
+  //     restaurant_name: "Restaurant 3",
+  //     images: [
+  //       "https://sdp9restimages.s3.amazonaws.com/Effective-Strategies-To-Improve-Your-Restaurant-Service-And-Provide-A-Stellar-Guest-Experience.jpg",
+  //     ],
+  //   },
+  // ]
+  );
 
   // Function called when page is loaded, kind of like main function or init function
   useEffect(() => {
@@ -56,24 +54,25 @@ function RestaurantList() {
         setUser(user);
 
         const isKommunicateLoaded = JSON.parse(
-          localStorage.getItem(KOMMUNICATE_LOADED)
+          sessionStorage.getItem(KOMMUNICATE_LOADED)
         );
+        const Kommunicate_user_key = auth.currentUser.uid + "|" + auth.currentUser.email
 
         // Load Kommunicate iframe once
-        if (isKommunicateLoaded !== "true") {
+        if (!isKommunicateLoaded) {
           Kommunicate.init(KOMMUNICATE_APP_ID, {
             automaticChatOpenOnNavigation: true,
             popupWidget: true,
-            userId: auth.currentUser.uid,
+            userId: Kommunicate_user_key,
           });
-          localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
+          sessionStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
         }
       } else {
         // No user is signed in
         setUser(null);
 
         //Clear Kommunicate local storage to prevent unauthorized access
-        localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(false));
+        sessionStorage.removeItem(KOMMUNICATE_LOADED);
 
         //Redirect to login page
         navigate("/");
@@ -96,7 +95,9 @@ function RestaurantList() {
         "https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",
         { headers }
       );
+
       console.log(resData);
+
       const resJsonData = JSON.parse(resData.data.body);
       setRestaurants(resJsonData);
     }
@@ -132,21 +133,24 @@ function RestaurantList() {
 
   // Frontend elements
   return (
-    <div>
+    <>
+    
       <div style={{ float: "right", padding: "10px" }}>
         <Button icon={<LogoutOutlined />} onClick={handleSignOut}>
           Sign Out
         </Button>
         <Button onClick={handleViewReservation}>Your Reservations</Button>
       </div>
-
+    
       <div>
         <h1 style={{ textAlign: "center" }}>Restaurant List</h1>
+        <br></br>
+        <br></br>
         <ul>
-          {restaurants.map((restaurant) => (
+          {restaurants?.map((restaurant) => (
             <Card
               style={{
-                width: 300,
+                width: 450,
               }}
               cover={<img alt="example" src={restaurant.images[0]} />}
               actions={[
@@ -163,7 +167,7 @@ function RestaurantList() {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 }
 

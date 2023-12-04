@@ -272,6 +272,6 @@ def get_previous_slot_to_elicit(intent_request):
 # Get user id from Kommunicate
 def get_from(intent_request):
     try:
-        return intent_request['requestAttributes']['from']
+        return intent_request['requestAttributes']['from'].split("|")
     except:
-        return None
+        return None,None

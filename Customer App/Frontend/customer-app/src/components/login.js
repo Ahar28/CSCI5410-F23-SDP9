@@ -1,4 +1,3 @@
-// Import modules and functions
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
@@ -11,7 +10,9 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 // [1] Matheshyogeswaran, “Firebase Auth with react: Implement email/password
 // and google sign-in,” Medium,
 // https://blog.bitsrc.io/firebase-authentication-with-react-for-beginners-implementing-email-password-and-google-sign-in-e62d9094e22 (accessed Oct. 17, 2023).
+
 function Login() {
+  
   // navigate variable to use for BrowserRouter
   const navigate = useNavigate();
 
@@ -27,7 +28,9 @@ function Login() {
       // Call in-built firebase function to log in with email and password
       const response = await signInWithEmailAndPassword(auth, email, password);
       const userId = response?.user?.uid ?? "";
+      const user_email = response?.user?.email ?? "";
       sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("user_email", user_email);
 
       // Redirect to restaurantList Page
       navigate("/home");
@@ -60,6 +63,7 @@ function Login() {
 
   // frontend elements
   return (
+    <>
     <div
       style={{
         display: "flex",
@@ -119,6 +123,7 @@ function Login() {
         </center>
       </div>
     </div>
+    </>
   );
 }
 

@@ -13,12 +13,10 @@ def handler(intent_request, client):
     responses = Responses('get_restaurant_booking_information_week')
     restaurant_name = dialog.get_slot('RestaurantName', intent)
     date = dialog.get_slot('BookingWeekStart', intent)
-    user_id = dialog.get_from(intent_request)
+    user_id, user_email = dialog.get_from(intent_request)
     
    
-    # #For testing purpose
-    user_id = "CGQcEYmdgEU1Fx4iI2qqHn0xLXK2"
-    restaurant_name = "Restauant_ahar"
+
     print(date)
     if restaurant_name and not intent['state'] == 'Fulfilled':
         does_restaurant_match = restaurant_system.check_restaurant_owner(restaurant_name, user_id, client)
@@ -45,7 +43,7 @@ def handler(intent_request, client):
                 bookings_message = ''
                 for i in range(len(restaurant_bookings)):
                     print("Booking ", restaurant_bookings[i])
-                    bookings_message += f'{i+1}) time: {restaurant_bookings[i]["datetime"]} capacity: {restaurant_bookings[i]["data"]["required_capacity"]}\n'
+                    bookings_message += f'{i+1}) time: {restaurant_bookings[i]["datetime"]} capacity: {restaurant_bookings[i]["data"]["no_of_people"]} reservation id: {restaurant_bookings[i]["id"]}\n'
                 response = responses.get('Fulfilment', bookings=bookings_message, end_date=end_date, start_date=date)
                 
             return dialog.elicit_intent(active_contexts, 

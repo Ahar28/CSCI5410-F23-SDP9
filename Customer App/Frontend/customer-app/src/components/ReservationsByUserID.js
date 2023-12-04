@@ -60,10 +60,8 @@ const ReservationsByUserID = () => {
       // Reload the page
 
       window.location.reload();
-      // You may want to fetch the reservations again after deletion
-      // to update the UI with the latest data.
     } catch (error) {
-      // Handle errors, e.g., display an error message to the user
+
       console.error("Error deleting reservation: ", error);
     }
   };
@@ -91,22 +89,18 @@ const ReservationsByUserID = () => {
                 <Card.Body>
                   <Card.Title>Reservation ID: {index + 1}</Card.Title>
                   <Card.Text>
-                    {/* <strong>User ID:</strong> {reservation.user_id}
-                      <br /> */}
-                    {/* <strong>Restaurant ID:</strong> {reservation.restaurant_id}
-                      <br /> */}
+                 
                     <strong>
                       Restaurant_name : {reservation.data.restaurant_name}
                     </strong>{" "}
                     <br></br>
                     <strong>No of People :</strong>{" "}
-                    {/* {reservation.data.no_of_people} */}
+                    
                     {reservation.data.no_of_people
                       ? reservation.data.no_of_people
                       : reservation.data.required_capacity}
                     <br />
-                    {/* <strong>Doc id : </strong> {reservation.id} */}
-                    {/* <br /> */}
+                   
                     <strong>Reservation Date:</strong>{" "}
                     {new Date(
                       (reservation.data.reservation_date._seconds + (4 * 3600 )) * 1000

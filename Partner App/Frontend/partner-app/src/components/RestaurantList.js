@@ -55,25 +55,26 @@ function RestaurantList() {
         setUser(user);
 
         const isKommunicateLoaded = JSON.parse(
-          localStorage.getItem(KOMMUNICATE_LOADED)
+          sessionStorage.getItem(KOMMUNICATE_LOADED)
         );
+        const Kommunicate_user_key = auth.currentUser.uid + "|" + auth.currentUser.email
 
         // Load Kommunicate iframe once
-        if (isKommunicateLoaded === 'false') {
+        if (!isKommunicateLoaded) {
           
           Kommunicate.init(KOMMUNICATE_APP_ID, {
             automaticChatOpenOnNavigation: true,
             popupWidget: true,
-            userId: auth.currentUser.uid,
+            userId: Kommunicate_user_key,
           });
-          localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
+          sessionStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
         }
       } else {
                 // No user is signed in
         setUser(null);
 
         //Clear Kommunicate local storage to prevent unauthorized access
-        localStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(false));
+        sessionStorage.removeItem(KOMMUNICATE_LOADED);
 
         //Redirect to login page
         navigate("/");

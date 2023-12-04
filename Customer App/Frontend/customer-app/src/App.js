@@ -15,7 +15,7 @@ function App() {
   // Routing tree
   return (
     <div>
-      <NotificationSubscriber /> {/* Include NotificationSubscriber */}
+      {/* <NotificationSubscriber /> Include NotificationSubscriber */}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

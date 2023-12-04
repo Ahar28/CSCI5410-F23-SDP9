@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./../RestaurantDetails.css";
-import { Button } from "antd";
+import { Button } from "react-bootstrap";
 import axios from "axios";
 
 function RestaurantDetails() {
@@ -137,10 +137,6 @@ function RestaurantDetails() {
     fetchRestuarantDetail();
   }, []);
 
-  // const handleReserveClick = async (restaurant_id) => {
-  //   navigate("/Reservation/${restaurant_id}"); // reservation page name
-  // };
-
   const handleReserveClick = async (restaurant_id) => {
     navigate(`/Reservation/${restaurant_id}`, {
       state: { restaurantData }, // Pass restaurantData as state
@@ -148,12 +144,18 @@ function RestaurantDetails() {
   };
 
   return (
+    <>
     <div className="restaurant-details">
-      <h1>{restaurantData.restaurant_name}</h1>
+    <span style={{ fontWeight: 'bold', fontSize: '2.2em' }}>
+    {restaurantData.restaurant_name}
+        </span>
+
+      <br></br>
       <div>
         <strong>Address:</strong> {restaurantData.address}
       </div>
       <div>
+        <br></br>
         {" "}
         {restaurantData.is_open ? (
           <strong>Open</strong>
@@ -161,41 +163,80 @@ function RestaurantDetails() {
           <strong>Closed</strong>
         )}
       </div>
+      <br></br>
       <div className="images">
-        {restaurantData.images.map((image, index) => (
+        {restaurantData?.images?.map((image, index) => (
           <img src={image} alt={`Restaurant Image ${index}`} key={index} />
         ))}
       </div>
-      {restaurantData.menu && restaurantData.menu.length > 0 && (
+      <br></br>
+      {/* {restaurantData?.menu && restaurantData.menu?.length > 0 && (
         <div>
           <h2>Menu</h2>
+          <br></br>
           <ul>
-            {restaurantData.menu.map((item, index) => (
+            {restaurantData?.menu?.map((item, index) => (
               <li key={index}>
                 <div className="menu-item">
                   <img src={item.image} alt={`Menu Item Image ${index}`} />
                 </div>
-                <div>{item.name}</div>
-                <div>{item.price}</div>
+                <div>
+                  Dish : {item.name}
+                  </div>
+                <div>
+                 Price: $ {item.price}
+                  </div>
+                <br></br>
               </li>
             ))}
           </ul>
         </div>
-      )}
+      )} */}
+      <div>
+  <h1 style={{ fontWeight: 'bold' }}>Menu</h1>
+  <br />
+  <ul>
+    {restaurantData?.menu?.map((item, index) => (
+      <li key={index}>
+        <div className="menu-item">
+          <img src={item.image} alt={`Menu Item Image ${index}`} />
+        </div>
+        <div>
+          Dish: {item.name}
+        </div>
+        <div>
+          Price: $ {item.price}
+        </div>
+        <br />
+      </li>
+    ))}
+  </ul>
+</div>
+
 
       {restaurantData.restaurant_offer && (
         <div>
-          <h2>Restaurant Offer</h2>
-          <div>{restaurantData.restaurant_offer}</div>
-        </div>
+        <span style={{ fontWeight: 'bold', fontSize: '1.6em' }}>
+          Restaurant Offer: 
+        </span>
+        {" "}{restaurantData.restaurant_offer}
+      </div>
+        // <div>
+        //   <h2>Restaurant Offer</h2>
+        //   <div>
+        // {restaurantData.restaurant_offer}
+        //     </div>
+          
+        // </div>
       )}
 
-      {restaurantData.Reviews &&
+        <br></br>
+      {/* {restaurantData.Reviews &&
         restaurantData.Reviews.length > 0 && (
           <div>
             <h2>Restaurant Reviews</h2>
             <ul>
-              {restaurantData.Reviews.map((review, index) => (
+              {restaurantData?.Reviews?.map((review, index) => (
                 <li key={index}>
                   <div>Rating: {review.rating}</div>
                   <div>{review.review}</div>
@@ -203,14 +244,28 @@ function RestaurantDetails() {
               ))}
             </ul>
           </div>
-        )}
+        )} */}
 
+<div>
+  <h3 style={{ fontWeight: 'bold' }}>Restaurant Reviews</h3>
+  <ul>
+    {restaurantData?.Reviews?.map((review, index) => (
+      <li key={index}>
+        <div>Rating: {review.rating}</div>
+        <div>{review.review}</div>
+      </li>
+    ))}
+  </ul>
+</div>
+
+        
+{/* 
       {restaurantData.tables &&
         restaurantData.tables.length > 0 && (
           <div>
             <h2>Tables</h2>
             <ul>
-              {restaurantData.tables.map((table, index) => (
+              {restaurantData?.tables?.map((table, index) => (
                 <li key={index}>
                   <div>Table {table.number}</div>
                   <div>Size: {table.size}</div>
@@ -218,9 +273,21 @@ function RestaurantDetails() {
               ))}
             </ul>
           </div>
-        )}
+        )} */}
 
-      {restaurantData.timings && (
+<div>
+  <h3 style={{ fontWeight: 'bold' }}>Tables</h3>
+  <ul>
+    {restaurantData?.tables?.map((table, index) => (
+      <li key={index}>
+        <div>Table {table.number}</div>
+        <div>Size: {table.size}</div>
+      </li>
+    ))}
+  </ul>
+</div>
+
+      {/* {restaurantData.timings && (
         <div>
           <h2>Timings</h2>
           <div>
@@ -252,11 +319,39 @@ function RestaurantDetails() {
             {restaurantData.timings.sunday.closing_time}
           </div>
         </div>
-      )}
+      )} */}
+      <div>
+
+  <h3 style={{ fontWeight: 'bold' }}>Timings</h3>
+  <div>
+    Monday: {restaurantData.timings.monday.opening_time} - {restaurantData.timings.monday.closing_time}
+  </div>
+  <div>
+    Tuesday: {restaurantData.timings.tuesday.opening_time} - {restaurantData.timings.tuesday.closing_time}
+  </div>
+  <div>
+    Wednesday: {restaurantData.timings.wednesday.opening_time} - {restaurantData.timings.wednesday.closing_time}
+  </div>
+  <div>
+    Thursday: {restaurantData.timings.thursday.opening_time} - {restaurantData.timings.thursday.closing_time}
+  </div>
+  <div>
+    Friday: {restaurantData.timings.friday.opening_time} - {restaurantData.timings.friday.closing_time}
+  </div>
+  <div>
+    Saturday: {restaurantData.timings.saturday.opening_time} - {restaurantData.timings.saturday.closing_time}
+  </div>
+  <div>
+    Sunday: {restaurantData.timings.sunday.opening_time} - {restaurantData.timings.sunday.closing_time}
+  </div>
+</div>
+
+
       <Button onClick={() => handleReserveClick(restaurantData.restaurant_id)}>
         Reserve
       </Button>
     </div>
+    </>
   );
 }
 export default RestaurantDetails;

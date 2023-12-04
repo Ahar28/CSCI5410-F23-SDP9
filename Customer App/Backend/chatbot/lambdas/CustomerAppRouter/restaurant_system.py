@@ -58,7 +58,7 @@ def get_restaurant_available_reservation_slots(restaurant_name, client):
     return available_reservation
     
 
-def book_a_reservation(restaurant_name, booking_date, booking_time, capacity, client, user_id):
+def book_a_reservation(restaurant_name, booking_date, booking_time, capacity, client, user_id, user_email, menu_items):
     apiResponse = client.invoke(
             FunctionName = 'apiHelper',
             InvocationType = 'RequestResponse',
@@ -68,7 +68,10 @@ def book_a_reservation(restaurant_name, booking_date, booking_time, capacity, cl
                 'booking_date': booking_date,
                 'booking_time': booking_time,
                 'capacity': capacity,
-                'user_id': user_id})
+                'user_id': user_id,
+                'user_email': user_email,
+                'menu_items': menu_items
+            })
         )
 
     return json.load(apiResponse['Payload'])['values']
@@ -122,3 +125,11 @@ def check_menu_item_name(restaurant_name, menu_item_request, client):
         if menu_item.lower() == menu_item_request.lower():
             return True
     return False
+    
+def get_menu_item_key(restaurant_name, menu_item_request, client):
+    menu_items = get_list_of_menu_items(restaurant_name, client)
+    
+    for menu_item in menu_items:
+        if menu_item.lower() == menu_item_request.lower():
+            return menu_item
+    return menu_item_request

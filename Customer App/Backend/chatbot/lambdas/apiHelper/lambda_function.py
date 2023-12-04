@@ -120,12 +120,11 @@ def getRestaurantReservationsBookingByWeek(restaurant_name, date):
 def getRestaurantReservationsBookingByMonth(restaurant_name, date):
   restaurant_id = getRestaurantId(restaurant_name)
   date = datetime.strptime(date, "%Y-%m-%d")
-  
   return reservation_api.getReservationsByMonth(restaurant_id, date)
 
-def bookAReservation(restaurant_name, booking_date, booking_time, capacity, user_id):
+def bookAReservation(restaurant_name, booking_date, booking_time, capacity, user_id, user_email, menu_items):
   restaurant_id = getRestaurantId(restaurant_name)
-  return reservation_api.bookAReservation(restaurant_name, restaurant_id, booking_date, booking_time, capacity, user_id)
+  return reservation_api.bookAReservation(restaurant_name, restaurant_id, booking_date, booking_time, capacity, user_id, user_email, menu_items)
 
 def provideRestaurantReviewRating(restaurant_name, review, rating, user_id):
   restaurant_id = getRestaurantId(restaurant_name)
@@ -147,8 +146,30 @@ def updateTimings(restaurant_name, opening_time, closing_time, user_id):
   opening_time = int(opening_time[:2])*100 + int(opening_time[3:])
   closing_time = int(closing_time[:2])*100 + int(closing_time[3:])
   return update_api.update_timings(opening_time, closing_time, restaurant_id, user_id)
+
+def updateLocation(restaurant_name, location):
+  restaurant_id = getRestaurantId(restaurant_name)
+  return update_api.update_location(location, restaurant_id)
   
-  
+def getRestaurantReservations(restaurant_name):
+  restaurant_id = getRestaurantId(restaurant_name)
+  return reservation_api.getAllReservations(restaurant_id)
+
+def deleteReservation(reservation_id):
+  return reservation_api.deleteReservation(reservation_id)
+
+def getReservation(restaurant_id, reservation_id):
+    reservations = reservation_api.getAllReservations(restaurant_id)
+    for reservation in reservations:
+        if reservation['id'] == reservation_id:
+            return reservation
+    return None
+    
+def editReservation(restaurant_name,reservation_id, booking_date, booking_time, capacity):
+  restaurant_id = getRestaurantId(restaurant_name)
+  reservation_detail = getReservation(restaurant_id, reservation_id)
+  user_id = reservation_detail['data']['user_id']
+  return reservation_api.editReservation(restaurant_id, reservation_id, user_id, booking_date, booking_time, capacity)
   
 def lambda_handler(event, context):
     print(event,context)
@@ -178,7 +199,7 @@ def lambda_handler(event, context):
     elif event['function'] == 'getRestaurantReservationsBookingByMonth':
       values = getRestaurantReservationsBookingByMonth(event['restaurant_name'], event['date'])
     elif event['function'] == 'bookAReservation':
-      values = bookAReservation(event['restaurant_name'], event['booking_date'], event['booking_time'], event['capacity'], event['user_id'])
+      values = bookAReservation(event['restaurant_name'], event['booking_date'], event['booking_time'], event['capacity'], event['user_id'], event['user_email'], event['menu_items'])
     elif event['function'] == 'provideRestaurantReviewRating':
       values = provideRestaurantReviewRating(event['restaurant_name'], event['review'], event['rating'], event['user_id'])
     elif event['function'] == 'provideMenuItemReviewRating':
@@ -187,6 +208,14 @@ def lambda_handler(event, context):
       values = getMenuItemNames(event['restaurant_name'])
     elif event['function'] == 'updateTimings':
       values = updateTimings(event['restaurant_name'], event['opening_time'], event['closing_time'], event['user_id'])
+    elif event['function'] == 'updateLocation':
+      values = updateLocation(event['restaurant_name'], event['location'])
+    elif event['function'] == 'getRestaurantReservations':
+      values = getRestaurantReservations(event['restaurant_name'])
+    elif event['function'] == 'deleteReservation':
+      values = deleteReservation(event['reservation_id'])
+    elif event['function'] == 'editReservation':
+      values = editReservation(event['restaurant_name'], event['reservation_id'], event['booking_date'], event['booking_time'], event['capacity'])
       
     print("Returning values",values)
     return {

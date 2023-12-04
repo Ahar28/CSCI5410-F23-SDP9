@@ -24,13 +24,16 @@ import get_restaurant_booking_information_date
 import get_restaurant_booking_information_week
 import get_restaurant_booking_information_month
 import update_restaurant_timings
+import update_restaurant_location
+import cancel_reservation
+import edit_reservation
 
 import boto3
 
 client = boto3.client('lambda')
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+# logger.setLevel(logging.DEBUG)
     
 # --- Main handler & Dispatch ---
 
@@ -82,6 +85,12 @@ def dispatch(intent_request):
         next_state = get_restaurant_booking_information_month.handler(intent_request, client)
     elif intent_name == 'UpdateOpeningTimes':
         next_state = update_restaurant_timings.handler(intent_request, client)
+    elif intent_name == 'UpdateLocation':
+        next_state = update_restaurant_location.handler(intent_request, client)
+    elif intent_name == 'CancelReservation':
+        next_state = cancel_reservation.handler(intent_request, client)
+    elif intent_name == 'EditReservation':
+        next_state = edit_reservation.handler(intent_request, client)
     return next_state
 
 

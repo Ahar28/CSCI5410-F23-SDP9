@@ -13,6 +13,7 @@ def handler(intent_request, client):
     responses = Responses('get_available_reservation')
     restaurant_name = dialog.get_slot('RestaurantName', intent)
     reservation_date = dialog.get_slot('ReservationDate', intent)
+    user_id, user_email = dialog.get_from(intent_request)
     
     if restaurant_name:
         dialog.set_session_attribute(intent_request, 'restaurant_name', restaurant_name)
