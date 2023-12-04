@@ -15,12 +15,12 @@ admin.initializeApp({
 
 exports.handler = async (event) => {
   try {
+    
     // Initialize Firestore
     const db = admin.firestore();
 
-    /**
-     * new reservation details sent in by postman
-     */
+    console.log("event: ",event);
+    
     const reservationDetails = JSON.parse(event.body);
     //console.log("printing reservation Details   : ", reservationDetails);
 
@@ -35,9 +35,7 @@ exports.handler = async (event) => {
       user_id,
     } = reservationDetails;
 
-    const reservationDocRef = db
-      .collection("Customer-Reservation")
-      .doc(reservation_id);
+    const reservationDocRef = db.collection("Customer-Reservation").doc(reservation_id);
 
     //console.log("printing reservationDocRef : ", reservationDocRef + "\n");
     const reservation = await reservationDocRef.get();
@@ -45,10 +43,17 @@ exports.handler = async (event) => {
 
     if (!reservation.exists) {
       return {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: "Restaurant reservation does not exist",
-        }),
+              statusCode: 400,
+              headers: {
+                          "Content-Type": "application/json",
+                          "Access-Control-Allow-Headers": "Content-Type",
+                          "Access-Control-Allow-Origin": "*",
+                          "Access-Control-Allow-Methods": "POST",
+                          "Access-Control-Allow-Credentials": true,
+                                   },
+              body: JSON.stringify({
+                message: "Restaurant reservation does not exist",
+              }),
       };
     }
 
@@ -58,6 +63,8 @@ exports.handler = async (event) => {
 
     //converting the current date to UTC
     const currentDate = new Date();
+    console.log("currentDate: ", currentDate);
+    
     const currentUtcDate = new Date(
       Date.UTC(
         currentDate.getUTCFullYear(),
@@ -68,26 +75,28 @@ exports.handler = async (event) => {
         currentDate.getUTCSeconds()
       )
     );
+    
+    console.log("currentUtcDate: ", currentUtcDate);
 
     /**
      * accessing the old reservation date
      */
-    const currentReservationDate =
-      currentReservationData.reservation_date.toDate();
+    const currentReservationDate = currentReservationData.reservation_date.toDate();
     //console.log("currentReservationDate : ",currentReservationDate);
 
     // converting the old reservation date to UTC format
     const reservationUtcDate = new Date(
-      Date.UTC(
-        currentReservationDate.getUTCFullYear(),
-        currentReservationDate.getUTCMonth(),
-        currentReservationDate.getUTCDate(),
-        currentReservationDate.getUTCHours(),
-        currentReservationDate.getUTCMinutes(),
-        currentReservationDate.getUTCSeconds()
-      )
+                                            Date.UTC(
+                                              currentReservationDate.getUTCFullYear(),
+                                              currentReservationDate.getUTCMonth(),
+                                              currentReservationDate.getUTCDate(),
+                                              currentReservationDate.getUTCHours(),
+                                              currentReservationDate.getUTCMinutes(),
+                                              currentReservationDate.getUTCSeconds()
+                                            )
     );
 
+    const newReservationDate = new Date(newreservationDate);
     /**
      * checking if the time at which the user is making the request is 1 hour prior to the old booking/reservation time
      */
@@ -96,23 +105,30 @@ exports.handler = async (event) => {
         `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${restaurant_id}`
         //change here
       );
-
+      
+      console.log("response ",response);
       const restaurantDetailsBody = response.data.body;
       const restaurantDetails = JSON.parse(restaurantDetailsBody);
+      console.log(restaurantDetails);
 
       //console.log(parsedrestaurantDetails.Item.restaurant_id);
       //console.log("restaurantDetails.body .......=====+++++---->>>>",restaurantDetails.body);
       //console.log("currentReservationData.restaurant_id = ",typeof currentReservationData.restaurant_id)
       //console.log("parsedrestaurantDetails.Item.restaurant_id = ",typeof parseInt(parsedrestaurantDetails.Item.restaurant_id));
 
-      if (
-        currentReservationData.restaurant_id !=
-        restaurantDetails.Item.restaurant_id
-      ) {
+      if ( currentReservationData.restaurant_id != restaurantDetails.Item.restaurant_id)
+      {
         return {
           statusCode: 400,
+          headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
           body: JSON.stringify({
-            message: "Restaurant does not exist",
+          message: "Restaurant does not exist",
           }),
         };
       }
@@ -127,25 +143,19 @@ exports.handler = async (event) => {
         "friday",
         "saturday",
       ];
-      //const day = newReservationDate;
-      const day = new Date(newreservationDate);
+      
+      const day = newReservationDate;
       var dayName = daysofweek[day.getDay()];
       console.log("Day name is :", dayName);
 
-      const restaurantOpening =
-        restaurantDetails.Item.timings[dayName].opening_time;
-      const restaurantClosing =
-        restaurantDetails.Item.timings[dayName].closing_time;
+      const restaurantOpening = restaurantDetails.Item.timings[dayName].opening_time;
+      const restaurantClosing = restaurantDetails.Item.timings[dayName].closing_time;
 
       const openingHour = parseInt(restaurantOpening.toString().substr(0, 2));
       const openingMinute = parseInt(restaurantOpening.toString().substr(2, 4));
 
-      const closingHour = parseInt(
-        restaurantClosing.toString().substring(0, 2)
-      );
-      const closingMinute = parseInt(
-        restaurantClosing.toString().substring(2, 4)
-      );
+      const closingHour = parseInt(restaurantClosing.toString().substring(0, 2));
+      const closingMinute = parseInt(restaurantClosing.toString().substring(2, 4));
 
       // Create opening and closing date from reservation date and restaurant timings
       const openingDate = new Date(newreservationDate);
@@ -154,18 +164,18 @@ exports.handler = async (event) => {
       closingDate.setHours(closingHour, closingMinute, 0, 0);
 
       // Adjust for closing times past midnight
-      if (restaurantClosing < restaurantOpening) {
+      if (restaurantClosing < restaurantOpening) 
+      {
         closingDate.setDate(closingDate.getDate() + 1);
       }
-      const newReservationDate = new Date(newreservationDate);
+      
+      //const newReservationDate = new Date(newreservationDate);
       console.log("newreservationDate  ++ ==", newReservationDate);
       console.log("openingDate  == ++ ", openingDate);
       console.log("closingDate  ++ == ", closingDate);
 
-      if (
-        newReservationDate >= openingDate &&
-        newReservationDate <= closingDate
-      ) {
+      if ( newReservationDate >= openingDate && newReservationDate <= closingDate ) 
+      {
         let updatedReservation = {};
 
         if (restaurant_id) {
@@ -173,8 +183,7 @@ exports.handler = async (event) => {
         }
 
         if (newReservationDate) {
-          updatedReservation.reservation_date =
-            admin.firestore.Timestamp.fromDate(newReservationDate);
+          updatedReservation.reservation_date = admin.firestore.Timestamp.fromDate(newReservationDate);
         }
 
         if (no_of_people) {
@@ -204,6 +213,13 @@ exports.handler = async (event) => {
         console.log("this is else loop");
         return {
           statusCode: 400,
+           headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
           body: JSON.stringify({
             message:
               "Reservation time is outside the restaurant's opening hours",
@@ -213,6 +229,13 @@ exports.handler = async (event) => {
     } else {
       return {
         statusCode: 400,
+         headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
         body: JSON.stringify({
           message:
             "Reservations can only be edited 1 hour before the reservation time.",
@@ -224,7 +247,13 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 400,
-
+       headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
       body: JSON.stringify({
         error: "Error deleting restaurant reservations",
         message: error.message,

@@ -95,7 +95,9 @@ function RestaurantList() {
         "https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurants/list",
         { headers }
       );
+
       console.log(resData);
+
       const resJsonData = JSON.parse(resData.data.body);
       setRestaurants(resJsonData);
     }
@@ -131,21 +133,24 @@ function RestaurantList() {
 
   // Frontend elements
   return (
-    <div>
+    <>
+    
       <div style={{ float: "right", padding: "10px" }}>
         <Button icon={<LogoutOutlined />} onClick={handleSignOut}>
           Sign Out
         </Button>
         <Button onClick={handleViewReservation}>Your Reservations</Button>
       </div>
-
+    
       <div>
         <h1 style={{ textAlign: "center" }}>Restaurant List</h1>
+        <br></br>
+        <br></br>
         <ul>
-          {restaurants.map((restaurant) => (
+          {restaurants?.map((restaurant) => (
             <Card
               style={{
-                width: 300,
+                width: 450,
               }}
               cover={<img alt="example" src={restaurant.images[0]} />}
               actions={[
@@ -162,7 +167,7 @@ function RestaurantList() {
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 }
 

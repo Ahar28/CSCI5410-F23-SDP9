@@ -119,13 +119,11 @@ const ReservationsByRestID = () => {
                    
                     {/* <strong>Restaurant ID:</strong>{" "}
                     {reservation.data.restaurant_id} */}
-                    <strong>Restaurant Name</strong>{" "}
-                    {reservation.data.restaurant_name}
+                    {/* <strong>Restaurant Name</strong>{" "} */}
+                    {/* {reservation.data.restaurant_name} */}
                     <br />
                     <strong>No. of People:</strong>{" "}
-                    {reservation.data.no_of_people
-                      ? reservation.data.no_of_people
-                      : reservation.data.required_capacity}
+                    {reservation.data.no_of_people}
                     <br />
                     <strong>Reservation Date:</strong>{" "}
                     {new Date(
@@ -182,7 +180,10 @@ const ReservationsByRestID = () => {
                     )}
                     {reservation.status === "Approved" && (
                       <>
-                        <p>Status: Approved</p>
+                        {/* <p style={{ color:"green",fontWeight: "bold"}}>Status: Approved</p> */}
+                        <span style={{ color: "black", fontWeight: "bold" }}>Status: </span>
+  <span style={{ color: "green", fontWeight: "bold" }}>Approved</span>
+  <br></br>
                         <Button
                           onClick={() => handleEditClick(reservation)}
                           variant="primary"
@@ -197,7 +198,13 @@ const ReservationsByRestID = () => {
                       </>
                     )}
                     {reservation.status === "Rejected" && (
-                      <p>Status: Rejected</p>
+                      <>
+                      {/* <p style={{color:"red", fontWeight: "bold"}}>Status: Rejected</p> */}
+                      
+                      <span style={{ color: "black", fontWeight: "bold" }}>Status: </span>
+<span style={{ color: "red", fontWeight: "bold" }}>Rejected</span>
+<br></br>
+                    </>
                     )}
                   </Card.Text>
                 </Card.Body>
