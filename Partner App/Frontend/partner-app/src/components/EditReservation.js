@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Container, Form, Row, Col, Button, Spinner, Card } from "react-bootstrap";
+import { Container, Form, Row, Col, Button, Spinner, Modal } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import PopupModal from "./PopupModal";
 
 const EditReservationForm = () => {
+
   const { restaurant_id } = useParams();
   const location = useLocation();
   const { reservationData } = location.state || {};
@@ -18,12 +20,50 @@ const EditReservationForm = () => {
   const parsedNoOfPeople = parseInt(no_of_people, 10);
   const parsedRestaurantId = parseInt(restaurant_id, 10);
   // console.log("restaurant_id : ", reservationData.restaurant_id);
+  const [restaurantData, setRestaurantData] = useState(null);
+  
+   //for popup
+   const [showModal, setShowModal] = useState(false);
+ 
+   const [showSuccessModal, setShowSuccessModal] = useState(false);
+   const [showErrorModal, setShowErrorModal] = useState(false);
+   const [modalMessage, setModalMessage] = useState("");
+   // console.log("restaurant_id : ", reservationData.restaurant_id);
 
   useEffect(() => {
     console.log("reservationData ahar :", reservationData);
     const user_id = sessionStorage.getItem("userId");
     setUserID(user_id);
   }, []);
+
+  const handleShowModal = (message) => {
+    setModalMessage(message);
+    setShowModal(true);
+  };
+
+    // Function to hide the modal
+    const handleCloseModal = () => {
+      setShowModal(false);
+    };
+
+
+    const handleShowSuccessModal = (message) => {
+      setModalMessage(message);
+      setShowSuccessModal(true);
+    };
+  
+    const handleCloseSuccessModal = () => {
+      setShowSuccessModal(false);
+    };
+  
+    const handleShowErrorModal = (message) => {
+      setModalMessage(message);
+      setShowErrorModal(true);
+    };
+  
+    const handleCloseErrorModal = () => {
+      setShowErrorModal(false);
+    };
 
   useEffect(() => {
     if (reservationData) {
@@ -80,14 +120,47 @@ const EditReservationForm = () => {
     }
   };
 
+  useEffect(() => {
+    async function fetchRestuarantDetail() {
+      const headers = {
+        "Content-type": "application/json",
+      };
+      const resData = await axios.get(
+        `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${reservationData.data.restaurant_id}`,
+        { headers }
+      );
+      console.log("restaurant Edit",resData);
+      const resJsonData = JSON.parse(resData.data.body);
+      setRestaurantData(resJsonData.Item);
+      console.log(resJsonData.Item);
+    }
+    fetchRestuarantDetail();
+  }, [reservationData.data.restaurant_id]);
+
   const handleEditReservation = async () => {
     setloading(true);
-
+      debugger;
     var response;
     try {
       const datetime = `${date} ${time}`;
 
+         // Calculate the total capacity of all tables
+         const totalCapacity = restaurantData.tables.reduce(
+          (total, table) => total + parseInt(table.size, 10),
+          0
+        );
+
+         // Check if no_of_people is greater than the total capacity
+      if (parsedNoOfPeople > totalCapacity) {
+        handleShowModal(
+          `The number of people exceeds the total capacity of tables.`
+        );
+        setloading(false);
+        return;
+      }
+
       // Make an API PUT request to update the reservation
+      try{
       response = await axios.put(
       //  `https://fzdux2umz0.execute-api.us-east-1.amazonaws.com/dev/edit-resrvation-partnerapp`,
       "https://38irl8wai5.execute-api.us-east-1.amazonaws.com/dev/edit-reservation",  
@@ -103,9 +176,15 @@ const EditReservationForm = () => {
       // Handle a successful reservation update
       setloading(false);
       navigate("/view-reservations");
+      }
+      catch(error){
+        handleShowErrorModal("Error updating reservation.Time outside restaurant hours.");
+      setloading(false);
+      console.error("Error updating reservation: ", error);
+      }
     } catch (error) {
-      // console.log(response);
-      // Handle errors, e.g., display an error message to the user
+      handleShowErrorModal("Error updating reservation. Please try again.");
+      setloading(false);
       console.error("Error updating reservation: ", error);
     }
   };
@@ -160,6 +239,33 @@ const EditReservationForm = () => {
           )}
         </Row>
       </Form>
+      <PopupModal show={showModal} onHide={handleCloseModal} message={modalMessage} />
+      {/* Modal for displaying success message */}
+      <Modal show={showSuccessModal} onHide={handleCloseSuccessModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Reservation updated successfully!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleCloseSuccessModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for displaying error message */}
+      <Modal show={showErrorModal} onHide={handleCloseErrorModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleCloseErrorModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </Container>
   );
 };
