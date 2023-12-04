@@ -4,7 +4,7 @@
 const admin = require('firebase-admin');
 const axios = require("axios");
  
-// Initialize Firebase Admin SDK with your service account credentials
+//Initialize Firebase Admin SDK with  service account credentials
 const serviceAccount = require('./serviceAccountKey.json'); // Update with your file path
  
 admin.initializeApp({
@@ -12,36 +12,39 @@ admin.initializeApp({
   databaseURL: 'https://serverless-term-assignment.firebaseio.com', // Replace with your Firebase project URL
 });
  
- 
 exports.handler = async (event) =>
 {
     try {
             // Initialize Firestore
             const db = admin.firestore();
             
-            /**
-             * new reservation details sent in by postman
-             */
+         
+             
+            console.log("event : ",event); 
+            
             const reservationDetails = JSON.parse(event.body);
             //console.log("printing reservation Details   : ", reservationDetails);
             
+           /**
+             * new reservation details sent in the payload
+             */
             const {
                     reservation_id,
                     restaurant_id,
-                    reservationDatePostman,
+                    //reservationDatePostman,
+                    newreservationDate,
+                    //required_capacity,
                     no_of_people,
                     user_id,
                 }   = reservationDetails;
         
             /*
-            console.log("Postman data....")
- 
             console.log("reservation_id ="+ reservation_id);
             console.log("restaurant_id ="+ restaurant_id);
             console.log("reservationDatePostman ="+ reservationDatePostman);
-            console.log("no_of_people ="+ no_of_people);
+            console.log("required_capacity ="+ required_capacity);
             console.log("user_id ="+ user_id);
-*/
+            */
  
             const reservationDocRef = db.collection("Customer-Reservation").doc(reservation_id);
  
@@ -53,6 +56,13 @@ exports.handler = async (event) =>
             {
                 return {
                         statusCode : 400,
+                        headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
                         body: JSON.stringify({
                         message: "Restaurant reservation does not exist",
                 }),
@@ -66,16 +76,20 @@ exports.handler = async (event) =>
  
             //converting the current date to UTC
             const currentDate = new Date();
+            console.log("currentDate: ", currentDate);
+            
             const currentUtcDate = new Date(
-            Date.UTC(
-                currentDate.getUTCFullYear(),
-                currentDate.getUTCMonth(),
-                currentDate.getUTCDate(),
-                currentDate.getUTCHours(),
-                currentDate.getUTCMinutes(),
-                currentDate.getUTCSeconds()
-            )
+                                            Date.UTC(
+                                                currentDate.getUTCFullYear(),
+                                                currentDate.getUTCMonth(),
+                                                currentDate.getUTCDate(),
+                                                currentDate.getUTCHours(),
+                                                currentDate.getUTCMinutes(),
+                                                currentDate.getUTCSeconds()
+                                            )
             );
+            
+            console.log("currentUtcDate: ", currentUtcDate);
  
             /**
              * accessing the old reservation date
@@ -83,7 +97,7 @@ exports.handler = async (event) =>
             const currentReservationDate = currentReservationData.reservation_date.toDate();
             //console.log("currentReservationDate : ",currentReservationDate);
             
-            // converting the old reservation date to UTC format
+            // converting the  reservation date to UTC format
             const reservationUtcDate = new Date(
                                                     Date.UTC(
                                                         currentReservationDate.getUTCFullYear(),
@@ -95,7 +109,7 @@ exports.handler = async (event) =>
                                                     )
                                                     );
              
- 
+            const newReservationDate = new Date(newreservationDate);
             /**
              * checking if the time at which the user is making the request is 1 hour prior to the old booking/reservation time
              */
@@ -106,8 +120,10 @@ exports.handler = async (event) =>
                    
                 );
             
+                console.log("response ",response);
                 const restaurantDetailsBody = response.data.body;
                 const restaurantDetails = JSON.parse(restaurantDetailsBody)
+                console.log(restaurantDetails);
  
                 //console.log(parsedrestaurantDetails.Item.restaurant_id);
                 //console.log("restaurantDetails.body .......=====+++++---->>>>",restaurantDetails.body);
@@ -119,17 +135,24 @@ exports.handler = async (event) =>
                 {
                         return {
                             statusCode : 400,
+                                      headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
                             body: JSON.stringify({
                             message: "Restaurant does not exist",
                             }),
                         };
                     }
                 
-                
-                //const newReservationDate = new Date(reservationDatePostman);
+    
+               
                 var daysofweek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-                //const day = newReservationDate;
-                const day = new Date(reservationDatePostman)
+                const day = newReservationDate;
+                //const day = new Date(reservationDatePostman)
                 var dayName = daysofweek[day.getDay()];
                 console.log("Day name is :",dayName)
         
@@ -145,8 +168,8 @@ exports.handler = async (event) =>
                 const closingMinute = parseInt(restaurantClosing.toString().substring(2, 4));
  
                 // Create opening and closing date from reservation date and restaurant timings
-                const openingDate = new Date(reservationDatePostman);
-                const closingDate = new Date(reservationDatePostman);
+                const openingDate = new Date(newreservationDate);
+                const closingDate = new Date(newreservationDate);
                 openingDate.setHours(openingHour, openingMinute, 0, 0);
                 closingDate.setHours(closingHour, closingMinute, 0, 0);
  
@@ -156,8 +179,8 @@ exports.handler = async (event) =>
                 {
                     closingDate.setDate(closingDate.getDate() + 1);
                 }
-                const newReservationDate = new Date(reservationDatePostman)
-                console.log("reservationDatePostman  ++ ==",newReservationDate);
+                
+                console.log("newreservationDate  ++ ==",newreservationDate);
                 console.log("openingDate  == ++ ",openingDate);
                 console.log("closingDate  ++ == ",closingDate);
  
@@ -185,16 +208,30 @@ exports.handler = async (event) =>
                 await reservationDocRef.update(updatedReservation);
  
                 return {
-                    statusCode: 200,
-                    body: JSON.stringify({
-                        message: "Reservation successfully edited!"
-                    }),
+                            statusCode: 200,
+                            headers: {
+                                  "Content-Type": "application/json",
+                                  "Access-Control-Allow-Headers": "Content-Type",
+                                  "Access-Control-Allow-Origin": "*",
+                                  "Access-Control-Allow-Methods": "POST",
+                                  "Access-Control-Allow-Credentials": true,
+                },
+                            body: JSON.stringify({
+                                message: "Reservation successfully edited!"
+                            }),
                 };
             }
                 else{
                     console.log("this is else loop");
                     return {
                         statusCode: 400,
+                         headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
                         body: JSON.stringify({
                             message: "Reservation time is outside the restaurant's opening hours",
                         }),
@@ -204,6 +241,13 @@ exports.handler = async (event) =>
             else{
                 return {
                     statusCode: 400,
+                              headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
                     body: JSON.stringify({
                         message:
                         "Reservations can only be edited 1 hour before the reservation time.",
@@ -219,6 +263,13 @@ exports.handler = async (event) =>
                     return{
                         
                         statusCode: 400,
+                                  headers: {
+                             "Content-Type": "application/json",
+                              "Access-Control-Allow-Headers": "Content-Type",
+                              "Access-Control-Allow-Origin": "*",
+                              "Access-Control-Allow-Methods": "POST",
+                              "Access-Control-Allow-Credentials": true,
+                             },
                         
                         body: JSON.stringify({
                             error: "Error deleting restaurant reservations",
