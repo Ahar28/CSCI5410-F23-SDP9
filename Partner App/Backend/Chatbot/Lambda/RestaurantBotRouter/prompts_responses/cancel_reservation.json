@@ -1,0 +1,8 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
+    "InvalidReservationId": "Could not find reservation with {reservation_id} id. Please tell me the reservation id again",
+    "ConfirmReservationDetails": "Reservation details:\nid: {reservation_id}\nData & Time: {datetime}\nNo. of people {no_of_people}\n. Are you sure you want to delete this?",
+    "FulfilmentCancelDeletion": "Cancelled reservation deletion.\nAnything else?",
+    "FulfilmentSuccess": "Successfully deleted reservation {reservation_id} for {restaurant_name}.\nAnything else?",
+    "FulfilmentFailed": "Sorry we're unable to delete reservation {reservation_id} for {restaurant_name}.\nPlease try again later."
+}

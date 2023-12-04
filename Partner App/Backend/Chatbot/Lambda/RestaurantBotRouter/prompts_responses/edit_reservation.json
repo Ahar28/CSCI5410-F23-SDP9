@@ -1,0 +1,11 @@
+{
+    "InvalidRestaurantNamePrompt": "Sorry. I couldn't find a match. Please tell me the restaurant name again",
+    "InvalidReservationId": "Could not find reservation with {reservation_id} id. Please tell me the reservation id again",
+    "ConfirmReservationDetails": "Reservation details:\nid: {reservation_id}\nData & Time: {datetime}\nNo. of people {no_of_people}\n. Are you sure you want to update this?",
+    "FulfilmentCancelUpdate": "Cancelled reservation update.\nAnything else?",
+    "FulfilmentSuccess": "Successfully edited reservation {reservation_id} for {restaurant_name}.\nNew reservation details are:\nData {booking_date}\nTime: {booking_time}\nNo. of people {capacity}\nAnything else?",
+    "FulfilmentFailed": "Sorry we're unable to edit reservation {reservation_id} for {restaurant_name} as {error_msg}.\nPlease try again later.",
+    "InvalidDate": "Invalid date format. Please tell me the date again",
+    "InvalidTime": "Invalid time format. Please tell me the time again",
+    "InvalidTimeAmbiguous": "Ambiguous time format. Please tell me the time again"
+}

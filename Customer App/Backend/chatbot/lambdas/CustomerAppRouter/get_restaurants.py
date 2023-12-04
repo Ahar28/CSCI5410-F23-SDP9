@@ -9,6 +9,7 @@ def handler(intent_request, client):
     intent = dialog.get_intent(intent_request)
     active_contexts = dialog.get_active_contexts(intent_request)
     session_attributes = dialog.get_session_attributes(intent_request)
+    user_id, user_email = dialog.get_from(intent_request)
     
     restaurants = restaurant_system.get_list_of_restaurant_names(client)
     if (restaurants):

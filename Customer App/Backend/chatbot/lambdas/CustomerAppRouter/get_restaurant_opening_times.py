@@ -12,6 +12,7 @@ def handler(intent_request, client):
     prompts = Prompts('get_opening_times')
     responses = Responses('get_opening_times')
     restaurant_name = dialog.get_slot('RestaurantName', intent)
+    user_id, user_email = dialog.get_from(intent_request)
     
     if restaurant_name:
         dialog.set_session_attribute(intent_request, 'restaurant_name', restaurant_name)
