@@ -57,6 +57,7 @@ function RestaurantList() {
         const isKommunicateLoaded = JSON.parse(
           sessionStorage.getItem(KOMMUNICATE_LOADED)
         );
+        const Kommunicate_user_key = auth.currentUser.uid + "|" + auth.currentUser.email
 
         // Load Kommunicate iframe once
         if (!isKommunicateLoaded) {
@@ -64,7 +65,7 @@ function RestaurantList() {
           Kommunicate.init(KOMMUNICATE_APP_ID, {
             automaticChatOpenOnNavigation: true,
             popupWidget: true,
-            userId: auth.currentUser.uid,
+            userId: Kommunicate_user_key,
           });
           sessionStorage.setItem(KOMMUNICATE_LOADED, JSON.stringify(true));
         }
