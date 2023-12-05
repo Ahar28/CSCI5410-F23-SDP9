@@ -321,7 +321,8 @@ function RestaurantDetails() {
         </div>
       )} */}
       <div>
-
+      {restaurantData.timings && (
+      <div>
   <h3 style={{ fontWeight: 'bold' }}>Timings</h3>
   <div>
     Monday: {restaurantData.timings.monday.opening_time} - {restaurantData.timings.monday.closing_time}
@@ -344,6 +345,7 @@ function RestaurantDetails() {
   <div>
     Sunday: {restaurantData.timings.sunday.opening_time} - {restaurantData.timings.sunday.closing_time}
   </div>
+</div>)}
 </div>
 
 
