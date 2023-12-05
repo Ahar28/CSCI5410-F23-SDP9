@@ -13,11 +13,18 @@ exports.notifyReservationChange = functions.firestore
       console.log("New Reservation Data:", newReservation);
       console.log("Old Reservation Data:", oldReservation);
 
-      // Check if newReservation has user_id and fetch user email
+      // Initialize userEmail and restaurantEmail
       let userEmail = '';
-      if (newReservation && newReservation.user_id) {
+      let restaurantEmail = '';
+
+      // Get userId and restaurantId
+      const userId = newReservation ? newReservation.user_id : (oldReservation ? oldReservation.user_id : null);
+      const restaurantId = newReservation ? newReservation.restaurant_id : (oldReservation ? oldReservation.restaurant_id : null);
+
+      // Fetch user email
+      if (userId) {
         try {
-          const userRecord = await admin.auth().getUser(newReservation.user_id);
+          const userRecord = await admin.auth().getUser(userId);
           userEmail = userRecord.email;
           console.log("User email:", userEmail);
         } catch (error) {
@@ -25,17 +32,33 @@ exports.notifyReservationChange = functions.firestore
         }
       }
 
-      // Wrap the data to send in an object with a 'body' key
+      // Fetch restaurant email from the restaurant API
+      if (restaurantId) {
+        try {
+          const restaurantApiUrl = `https://2iqvxzgo50.execute-api.us-east-1.amazonaws.com/dev/restaurant?restaurantId=${restaurantId}`;
+          const restaurantApiResponse = await axios.get(restaurantApiUrl, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const restaurantResponseBody = JSON.parse(restaurantApiResponse.data.body);
+          restaurantEmail = restaurantResponseBody.Item && restaurantResponseBody.Item.creator_email ? restaurantResponseBody.Item.creator_email : '';
+          console.log("Restaurant email:", restaurantEmail);
+        } catch (error) {
+          console.error("Error fetching restaurant email:", error.message);
+        }
+      }
+
+      // Prepare request body
       const requestBody = {
-        body: JSON.stringify({
-          newReservation: newReservation,
-          oldReservation: oldReservation,
-          userEmail: userEmail, // Include userEmail in the data being sent
-          reservationId: context.params.documentId,
-        }),
+        newReservation: newReservation,
+        oldReservation: oldReservation,
+        userEmail: userEmail,
+        restaurantEmail: restaurantEmail,
+        reservationId: context.params.documentId,
       };
 
-      const apiUrl = "https://y2negp2yw9.execute-api.us-east-1.amazonaws.com/dev/sendData";
+      const apiUrl = "https://l2yn9o3m7i.execute-api.us-east-1.amazonaws.com/test/sendData";
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +69,6 @@ exports.notifyReservationChange = functions.firestore
         // Send the request body as a JSON string
         const response = await axios.post(apiUrl, requestBody, config);
         console.log("Data sent. Response:", response.data);
-
         return null;
       } catch (error) {
         console.error("Error sending data to the API:", error.message);
