@@ -3,27 +3,21 @@
 <table style="border-collapse: collapse;">
     <tr style="border: none;">
       <th style="border: none;">Member</th>
-      <th style="border: none;">Banner ID</th>
     </tr>
     <tr style="border: none;">
       <td style="border: none;">Het Mehta</td>
-      <td style="border: none;">B00916261</td>
     </tr>
     <tr style="border: none;">
       <td style="border: none;">Abdul Baseer Khan</td>
-      <td style="border: none;">B00932701</td>
     </tr>
     <tr style="border: none;">
       <td style="border: none;">Aharnish Maheshbhai Solanki</td>
-      <td style="border: none;">B00933563</td>
     </tr>
     <tr style="border: none;">
       <td style="border: none;">Bhargav Kanodiya</td>
-      <td style="border: none;">B00938588</td>
     </tr>
     <tr style="border: none;">
       <td style="border: none;">Om Anand</td>
-      <td style="border: none;">B00947378</td>
     </tr>
   </table>
 
